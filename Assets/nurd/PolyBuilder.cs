@@ -9,7 +9,7 @@ public class PolyBuilder: MonoBehaviour
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 20;
+	private int polyLength = 50;
 
 	// Use this for initialization
 	void Start()
@@ -53,7 +53,7 @@ public class PolyBuilder: MonoBehaviour
 		sjChain.anchor = new Vector3(0f, offsetPolyChain, 0f);
 		sjChain.autoConfigureConnectedAnchor = false;
 		sjChain.connectedAnchor = new Vector3(0f, -offsetPolyChain, 0f);
-		sjChain.spring = 100;
+		sjChain.spring = 1000;
 		sjChain.enableCollision = true;
 		sjChain.damper = 50;
 		sjChain.minDistance = 0.01f;
