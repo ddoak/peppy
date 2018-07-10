@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 23537790638112296}
   - component: {fileID: 136308795077527184}
   m_Layer: 0
-  m_Name: bond_NH_CA
+  m_Name: bond_N_CA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4364595589330640}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: tf_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4553354492183024}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: tf_bond_N_CA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4955318829777580}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: tf_bond_N_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

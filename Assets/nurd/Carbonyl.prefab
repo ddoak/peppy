@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4364595589330640}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: tf_O
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4553354492183024}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: tf_bond_C_N
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4955318829777580}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: tf_bond_C_O
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 23570285277151662}
   - component: {fileID: 136650453113078456}
   m_Layer: 0
-  m_Name: bond_CO_O
+  m_Name: bond_C_O
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,7 +193,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1106350776754678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0.205}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4296339153165744}
