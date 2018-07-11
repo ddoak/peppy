@@ -9,6 +9,8 @@ TagManager:
   - amide
   - calpha
   - carbonyl
+  - phi
+  - psi
   layers:
   - Default
   - TransparentFX

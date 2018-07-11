@@ -9,9 +9,11 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
 
+	public bool setAlphaPhiPsi = false;
+
 
 	public GameObject[] polyArr;
-	private int polyLength = 1;
+	private int polyLength = 5;
 
 	// Use this for initialization
 	void Start()
@@ -37,7 +39,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 				polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
-				if (i > 0)
+				SetRbDrag(polyArr[i]);
+
+			if (i > 0)
 				{
 					AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
 				}
@@ -46,22 +50,27 @@ public class PolyPepBuilder : MonoBehaviour {
 				lastUnitTransform = polyArr[i].transform;
 				polyArr[i + 1] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0));
 				AddBackboneConstraint(polyArr[i], polyArr[i + 1]);
+				SetRbDrag(polyArr[i + 1]);
 
 				lastUnitTransform = polyArr[i + 1].transform;
 				polyArr[i + 2] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0));
 				AddBackboneConstraint(polyArr[i + 1], polyArr[i + 2]);
+				SetRbDrag(polyArr[i + 2]);
 
 				lastUnitTransform = polyArr[i + 2].transform;
 				polyArr[i + 3] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0));
 				AddBackboneConstraint(polyArr[i + 2], polyArr[i + 3]);
+				SetRbDrag(polyArr[i + 3]);
 
 				lastUnitTransform = polyArr[i + 3].transform;
 				polyArr[i + 4] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0));
 				AddBackboneConstraint(polyArr[i + 3], polyArr[i + 4]);
+				SetRbDrag(polyArr[i + 4]);
 
 				lastUnitTransform = polyArr[i + 4].transform;
 				polyArr[i + 5] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0));
 				AddBackboneConstraint(polyArr[i + 4], polyArr[i + 5]);
+				SetRbDrag(polyArr[i + 5]);
 
 			//AddChainConstraint(i);
 		}
@@ -75,6 +84,11 @@ public class PolyPepBuilder : MonoBehaviour {
 		InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
 	}
 
+	void SetRbDrag(GameObject go)
+	{
+		go.GetComponent<Rigidbody>().drag = 20;
+		go.GetComponent<Rigidbody>().angularDrag = 20;
+	}
 	void AddChainConstraint(int pos)
 	{
 		float offsetPolyChain = 0.09f;
@@ -112,12 +126,38 @@ public class PolyPepBuilder : MonoBehaviour {
 		cj.xMotion = ConfigurableJointMotion.Locked;
 		cj.yMotion = ConfigurableJointMotion.Locked;
 		cj.zMotion = ConfigurableJointMotion.Locked;
-		if (go1.tag == "amide" || go1.tag == "calpha")
+		if (go1.tag == "amide")
 		{
 			cj.angularXMotion = ConfigurableJointMotion.Free;
+			cj.tag = "phi";
+			cj.targetRotation = Quaternion.Euler(180-57, 0, 0);
+
+			cj.angularXDrive = new JointDrive
+			{
+				positionSpring = 100.0f,
+				positionDamper = 1,
+				maximumForce = 5.0f
+			};
+
+			//cj.angularXDrive.positionSpring = 100f;
+		}
+		else if (go1.tag == "calpha")
+		{
+			cj.angularXMotion = ConfigurableJointMotion.Free;
+			cj.tag = "psi";
+			cj.targetRotation = Quaternion.Euler(180-47, 0, 0);
+
+			cj.angularXDrive = new JointDrive
+			{
+				positionSpring = 100.0f,
+				positionDamper = 1,
+				maximumForce = 5.0f
+			};
+
 		}
 		else if (go1.tag == "carbonyl")
 		{
+			//peptide bond
 			cj.angularXMotion = ConfigurableJointMotion.Locked;
 		}
 		cj.angularYMotion = ConfigurableJointMotion.Locked;
