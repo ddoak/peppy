@@ -11,31 +11,52 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 10;
+	private int polyLength = 3;
 
 	// Use this for initialization
 	void Start()
 	{
-		polyArr = new GameObject[polyLength];
+		polyArr = new GameObject[polyLength*6];
 
 		// offset from handling cube
-		var offsetPositionBase = new Vector3(0f, -0.2f, 0f);
+		var offsetPositionBase = new Vector3(0.5f, 0f, 0f);
 		// periodic offsets for polymer
-		var offsetPositionUnit = new Vector3(0f, -0.2f, 0f);
+		var offsetPositionUnit = new Vector3(0.3f, 0f, 0f);
 		var offsetRotationUnit = Quaternion.Euler(0, 0, 0); //45
 
-		for (int i = 0; i < polyLength; i++)
+		for (int i = 0; i < polyLength*6; i=i+6)
 		{
+			Transform lastUnitTransform;
 			if (i == 0)
 			{
-				polyArr[i] = Instantiate(amidePf, (transform.position + transform.TransformDirection(offsetPositionBase)), transform.rotation * offsetRotationUnit, transform);
+				lastUnitTransform = transform;
 			}
 			else
 			{
-				Transform lastUnitTransform = polyArr[i - 1].transform;
-				polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + lastUnitTransform.TransformDirection(offsetPositionUnit)), lastUnitTransform.rotation * offsetRotationUnit, transform);
-				AddChainConstraint(i);
+				lastUnitTransform = polyArr[i-1].transform;
 			}
+
+				polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
+
+				lastUnitTransform = polyArr[i].transform;
+				polyArr[i + 1] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0));
+
+				lastUnitTransform = polyArr[i + 1].transform;
+				polyArr[i + 2] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0));
+
+
+				lastUnitTransform = polyArr[i + 2].transform;
+				polyArr[i + 3] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0));
+
+
+				lastUnitTransform = polyArr[i + 3].transform;
+				polyArr[i + 4] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0));
+
+
+				lastUnitTransform = polyArr[i + 4].transform;
+				polyArr[i + 5] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0));
+
+			//AddChainConstraint(i);
 		}
 
 		// test: add arbitrary distance constraints
