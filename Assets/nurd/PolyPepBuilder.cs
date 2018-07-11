@@ -13,7 +13,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 8;
+	private int polyLength = 10;
 
 	// Use this for initialization
 	void Start()
@@ -86,8 +86,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetRbDrag(GameObject go)
 	{
-		go.GetComponent<Rigidbody>().drag = 20;
-		go.GetComponent<Rigidbody>().angularDrag = 20;
+		go.GetComponent<Rigidbody>().drag = 10;
+		go.GetComponent<Rigidbody>().angularDrag = 5;
 	}
 	void AddChainConstraint(int pos)
 	{
@@ -97,7 +97,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjChain.anchor = new Vector3(0f, offsetPolyChain, 0f);
 		sjChain.autoConfigureConnectedAnchor = false;
 		sjChain.connectedAnchor = new Vector3(0f, -offsetPolyChain, 0f);
-		sjChain.spring = 1000;
+		sjChain.spring = 10000;
 		sjChain.enableCollision = true;
 		sjChain.damper = 50;
 		sjChain.minDistance = 0.01f;
@@ -136,7 +136,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				positionSpring = 100.0f,
 				positionDamper = 1,
-				maximumForce = 20.0f
+				maximumForce = 50.0f
 			};
 
 			//cj.angularXDrive.positionSpring = 100f;
@@ -151,7 +151,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				positionSpring = 100.0f,
 				positionDamper = 1,
-				maximumForce = 20.0f
+				maximumForce = 50.0f
 			};
 
 		}
