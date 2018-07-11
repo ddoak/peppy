@@ -13,7 +13,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 5;
+	private int polyLength = 8;
 
 	// Use this for initialization
 	void Start()
@@ -130,13 +130,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			cj.angularXMotion = ConfigurableJointMotion.Free;
 			cj.tag = "phi";
-			cj.targetRotation = Quaternion.Euler(180-57, 0, 0);
+			cj.targetRotation = Quaternion.Euler(180+57, 0, 0);
 
 			cj.angularXDrive = new JointDrive
 			{
 				positionSpring = 100.0f,
 				positionDamper = 1,
-				maximumForce = 5.0f
+				maximumForce = 20.0f
 			};
 
 			//cj.angularXDrive.positionSpring = 100f;
@@ -145,13 +145,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			cj.angularXMotion = ConfigurableJointMotion.Free;
 			cj.tag = "psi";
-			cj.targetRotation = Quaternion.Euler(180-47, 0, 0);
+			cj.targetRotation = Quaternion.Euler(180+47, 0, 0);
 
 			cj.angularXDrive = new JointDrive
 			{
 				positionSpring = 100.0f,
 				positionDamper = 1,
-				maximumForce = 5.0f
+				maximumForce = 20.0f
 			};
 
 		}
