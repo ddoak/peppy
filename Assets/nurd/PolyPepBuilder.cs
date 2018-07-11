@@ -11,7 +11,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 3;
+	private int polyLength = 1;
 
 	// Use this for initialization
 	void Start()
@@ -37,24 +37,31 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 				polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
+				if (i > 0)
+				{
+					AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
+				}
+
 
 				lastUnitTransform = polyArr[i].transform;
 				polyArr[i + 1] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0));
+				AddBackboneConstraint(polyArr[i], polyArr[i + 1]);
 
 				lastUnitTransform = polyArr[i + 1].transform;
 				polyArr[i + 2] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0));
-
+				AddBackboneConstraint(polyArr[i + 1], polyArr[i + 2]);
 
 				lastUnitTransform = polyArr[i + 2].transform;
 				polyArr[i + 3] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0));
-
+				AddBackboneConstraint(polyArr[i + 2], polyArr[i + 3]);
 
 				lastUnitTransform = polyArr[i + 3].transform;
 				polyArr[i + 4] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0));
-
+				AddBackboneConstraint(polyArr[i + 3], polyArr[i + 4]);
 
 				lastUnitTransform = polyArr[i + 4].transform;
 				polyArr[i + 5] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0));
+				AddBackboneConstraint(polyArr[i + 4], polyArr[i + 5]);
 
 			//AddChainConstraint(i);
 		}
@@ -84,7 +91,38 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjChain.tag = "chain";
 	}
 
-
+	void AddBackboneConstraint(GameObject go1, GameObject go2)
+	{
+		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
+		cj.connectedBody = go2.GetComponent<Rigidbody>();
+		if (go1.tag == "amide")
+		{
+			cj.anchor = new Vector3(1.46f, 0f, 0f);
+		}
+		else if (go1.tag == "calpha")
+		{
+			cj.anchor = new Vector3(1.51f, 0f, 0f);
+		}
+		else if (go1.tag == "carbonyl")
+		{
+			cj.anchor = new Vector3(1.33f, 0f, 0f);
+		}
+		cj.autoConfigureConnectedAnchor = false;
+		cj.connectedAnchor = new Vector3(0f, 0f, 0f);
+		cj.xMotion = ConfigurableJointMotion.Locked;
+		cj.yMotion = ConfigurableJointMotion.Locked;
+		cj.zMotion = ConfigurableJointMotion.Locked;
+		if (go1.tag == "amide" || go1.tag == "calpha")
+		{
+			cj.angularXMotion = ConfigurableJointMotion.Free;
+		}
+		else if (go1.tag == "carbonyl")
+		{
+			cj.angularXMotion = ConfigurableJointMotion.Locked;
+		}
+		cj.angularYMotion = ConfigurableJointMotion.Locked;
+		cj.angularZMotion = ConfigurableJointMotion.Locked;
+	}
 
 	void AddDistanceConstraint(GameObject sourceGO, GameObject targetGO, float distance, int springStrength)
 	{

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - chain
   - dist
+  - amide
+  - calpha
+  - carbonyl
   layers:
   - Default
   - TransparentFX
