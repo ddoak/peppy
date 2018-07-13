@@ -10,6 +10,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject carbonylPf;
 
 	public bool setAlphaPhiPsi = true;
+	public bool useColliders = true;
 
 
 	public GameObject[] polyArr;
@@ -44,7 +45,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 			int id = i % 6;
-			Debug.Log("polyArr" + i + " " + id);
+			//Debug.Log("polyArr" + i + " " + id);
 
 
 			//
@@ -79,6 +80,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 			SetRbDrag(polyArr[i]);
+			SetCollidersGameObject(polyArr[i]);
 
 			if (i > 0)
 			{
@@ -98,9 +100,19 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetRbDrag(GameObject go)
 	{
-		go.GetComponent<Rigidbody>().drag = 1;
+		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 1;
 	}
+
+	void SetCollidersGameObject(GameObject go)
+	{
+		var colliders = go.GetComponentsInChildren<Collider>();
+		foreach (var col in colliders)
+		{
+			col.isTrigger = !useColliders;
+		}
+	}
+
 	void AddChainConstraint(int pos)
 	{
 		float offsetPolyChain = 0.09f;
@@ -228,7 +240,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void UpdateBackboneDihedrals()
+	void SetBackboneDihedrals()
 	{
 		int phi;
 		int psi;
@@ -260,18 +272,38 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void UpdateSecStructToggle()
+	void SetColliders()
+	{
+		for (int i = 0; i < polyLength; i++)
+		{
+			SetCollidersGameObject(polyArr[i]);
+		}
+	}
+
+	void UpdateSecondaryStructureSwitch()
 	{
 		if (Input.GetKeyDown(KeyCode.T))
 		{
 			setAlphaPhiPsi = !setAlphaPhiPsi;
-			UpdateBackboneDihedrals();
+			SetBackboneDihedrals();
+			Debug.Log("Secondary Structure " + setAlphaPhiPsi);
+		}
+	}
+
+	void UpdateColliderSwitch()
+	{
+		if (Input.GetKeyDown(KeyCode.C))
+		{
+			useColliders = !useColliders;
+			SetColliders();
+			Debug.Log("Colliders " + useColliders);
 		}
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		UpdateSecStructToggle();
+		UpdateSecondaryStructureSwitch();
+		UpdateColliderSwitch();
 	}
 }
