@@ -13,7 +13,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 	public GameObject[] polyArr;
-	private int polyLength = 20;
+	private int polyLength = 10;
 
 	// Use this for initialization
 	void Start()
@@ -87,8 +87,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetRbDrag(GameObject go)
 	{
-		go.GetComponent<Rigidbody>().drag = 10;
-		go.GetComponent<Rigidbody>().angularDrag = 5;
+		go.GetComponent<Rigidbody>().drag = 1;
+		go.GetComponent<Rigidbody>().angularDrag = 1;
 	}
 	void AddChainConstraint(int pos)
 	{
@@ -98,7 +98,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjChain.anchor = new Vector3(0f, offsetPolyChain, 0f);
 		sjChain.autoConfigureConnectedAnchor = false;
 		sjChain.connectedAnchor = new Vector3(0f, -offsetPolyChain, 0f);
-		sjChain.spring = 10000;
+		sjChain.spring = 1000;
 		sjChain.enableCollision = true;
 		sjChain.damper = 50;
 		sjChain.minDistance = 0.01f;
@@ -129,38 +129,23 @@ public class PolyPepBuilder : MonoBehaviour {
 		cj.xMotion = ConfigurableJointMotion.Locked;
 		cj.yMotion = ConfigurableJointMotion.Locked;
 		cj.zMotion = ConfigurableJointMotion.Locked;
-		if (go1.tag == "amide")
+		if (go1.tag == "amide" || go1.tag == "calpha")
 		{
 			cj.angularXMotion = ConfigurableJointMotion.Free;
-			//cj.tag = "phi";
-			cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix -57
-			//cj.targetRotation = Quaternion.Euler(180 + 139, 0, 0); // beta -139
-
 			cj.angularXDrive = new JointDrive
 			{
-				positionSpring = 100.0f,
+				positionSpring = 20.0f,
 				positionDamper = 1,
-				maximumForce = 50.0f
+				maximumForce = 10.0f
 			};
-
-			//cj.angularXDrive.positionSpring = 100f;
-		}
-		else if (go1.tag == "calpha")
-		{
-			cj.angularXMotion = ConfigurableJointMotion.Free;
-			//
-
-			cj.tag = "psi";
-			cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix -47
-			//cj.targetRotation = Quaternion.Euler(180 - 135, 0, 0); // beta +135
-
-			cj.angularXDrive = new JointDrive
+			if (go1.tag == "amide")
 			{
-				positionSpring = 100.0f,
-				positionDamper = 1,
-				maximumForce = 50.0f
-			};
-
+				cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
+			}
+			else if (go1.tag == "calpha")
+			{
+				cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
+			}
 		}
 		else if (go1.tag == "carbonyl")
 		{
@@ -232,10 +217,50 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	void UpdateBackboneDihedrals()
+	{
+		int phi;
+		int psi;
+
+		if (setAlphaPhiPsi)
+		{
+			phi = -57;
+			psi = -47;
+		}
+		else
+		{
+			phi = -139;
+			psi = 135;
+		}
+
+		for (int i = 0; i < polyLength*6; i++)
+		{
+			if (polyArr[i].tag == "amide")
+			{
+				var cj = polyArr[i].GetComponent<ConfigurableJoint>();
+				cj.targetRotation = Quaternion.Euler(180 - phi, 0, 0); 
+
+			}
+			else if (polyArr[i].tag == "calpha")
+			{
+				var cj = polyArr[i].GetComponent<ConfigurableJoint>();
+				cj.targetRotation = Quaternion.Euler(180 - phi, 0, 0);
+			}
+		}
+	}
+
+	void UpdateSecStructToggle()
+	{
+		if (Input.GetKeyDown(KeyCode.T))
+		{
+			setAlphaPhiPsi = !setAlphaPhiPsi;
+			UpdateBackboneDihedrals();
+		}
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
-
-
+		UpdateSecStructToggle();
 	}
 }
