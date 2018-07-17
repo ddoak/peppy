@@ -222,9 +222,10 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
 		sjHbond.spring = 0;
 		sjHbond.enableCollision = true;
-		sjHbond.minDistance = 2;
-		sjHbond.maxDistance = 2;
-		sjHbond.tolerance = 0f;
+		// distance is absolute not scaled by gameobject ?
+		sjHbond.minDistance = 0.2f;
+		sjHbond.maxDistance = 0.2f;
+		sjHbond.tolerance = 0.02f;
 	}
 
 
@@ -262,10 +263,10 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				//Debug.Log("spring " + s + " " + s.tag);
 
-				if (s.tag == "dist")
+				//if (s.tag == "dist")
 				{
-					var startPoint = polyArr[i].transform.position + polyArr[i].transform.TransformDirection(s.anchor);
-					var endPoint = s.connectedBody.transform.position + s.connectedBody.transform.TransformDirection(s.connectedAnchor);
+					var startPoint = polyArr[i].transform.TransformPoint(s.anchor);					
+					var endPoint = s.connectedBody.transform.TransformPoint(s.connectedAnchor);		
 
 					Color constraintColor = Color.green;
 
@@ -348,5 +349,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		UpdateSecondaryStructureSwitch();
 		UpdateColliderSwitch();
+		UpdateDistanceConstraintGfx();
 	}
 }
