@@ -15,7 +15,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public GameObject[] polyArr;
 
-	private int numResidues = 20;
+	private int numResidues = 10;
 	private int polyLength;
 
 	// Use this for initialization
@@ -60,6 +60,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				case 0:
 					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
+					
 					break;
 				case 1:
 					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), transform);
@@ -79,6 +80,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			}
 
+			polyArr[i].name = ((i/3)+1).ToString() + "_" + polyArr[i].name;
+
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
 
@@ -88,6 +91,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 		}
+
+		//test: alpha helical hbonds
+		AddAlphaHelicalHbondConstraints();
 
 		// test: add arbitrary distance constraints
 		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);
@@ -194,6 +200,43 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjDist.tag = "dist";
 	}
 
+	void AddAlphaHelicalHbondConstraints()
+	{
+		for (int resid = (numResidues - 1); resid > 4; resid --)
+		{
+			AddBackboneHbondConstraint(GetAmideForResidue(resid), GetCarbonylForResidue(resid - 4));
+		}
+	}
+
+	void AddBackboneHbondConstraint(GameObject donorGO, GameObject acceptorGO)
+	{
+		SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
+		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+		sjHbond.autoConfigureConnectedAnchor = false;
+		float axisRotOffset = -90f;
+		float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
+		float NHBondLength = 1.0f;
+		sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide)* NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
+		float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+		float COBondLength = 1.24f;
+		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+		sjHbond.spring = 0;
+		sjHbond.enableCollision = true;
+		sjHbond.minDistance = 2;
+		sjHbond.maxDistance = 2;
+		sjHbond.tolerance = 0f;
+	}
+
+
+	GameObject GetAmideForResidue (int residue)
+	{
+		return (polyArr[residue * 3]);
+	}
+
+	GameObject GetCarbonylForResidue(int residue)
+	{
+		return (polyArr[(residue * 3) + 2]);
+	}
 
 	void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
 	{
