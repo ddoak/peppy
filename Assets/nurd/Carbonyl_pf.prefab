@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 135275618138114996}
   m_Layer: 0
   m_Name: O_carbonyl
-  m_TagString: Untagged
+  m_TagString: O
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 135223915701290648}
   m_Layer: 0
   m_Name: C_carbonyl
-  m_TagString: Untagged
+  m_TagString: C
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

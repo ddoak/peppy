@@ -15,7 +15,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public GameObject[] polyArr;
 
-	private int numResidues = 10;
+	private int numResidues = 30;
 	private int polyLength;
 
 	// Use this for initialization
@@ -60,7 +60,6 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				case 0:
 					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
-					
 					break;
 				case 1:
 					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), transform);
@@ -80,10 +79,51 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			}
 
+			float scaleVDW = 0.75f;
+			float radiusN = 1.0f;
+			float radiusC = 1.0f;
+			float radiusO = 1.0f;
+			float radiusH = 0.75f;
+			float radiusR = 1.25f;
+
+			Transform [] allChildren = GetComponentsInChildren<Transform>();
+			foreach ( Transform child in allChildren)
+			{
+				float atomScale;
+				switch (child.tag)
+				{
+					case "N":
+						atomScale = radiusN * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+					case "C":
+						atomScale = radiusC * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+					case "O":
+						atomScale = radiusO * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+					case "H":
+						atomScale = radiusH * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+					case "R":
+						atomScale = radiusR * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+				}
+					
+			}
+
+
 			polyArr[i].name = ((i/3)+1).ToString() + "_" + polyArr[i].name;
 
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
+
+
+
 
 			if (i > 0)
 			{
@@ -165,7 +205,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				positionSpring = 20.0f,
 				positionDamper = 1,
-				maximumForce = 10.0f
+				maximumForce = 0.1f // 10.0f
 			};
 			if (go1.tag == "amide")
 			{
@@ -220,12 +260,21 @@ public class PolyPepBuilder : MonoBehaviour {
 		float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
 		float COBondLength = 1.24f;
 		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
-		sjHbond.spring = 0;
+		sjHbond.spring = 1000;
+		sjHbond.damper = 5;
 		sjHbond.enableCollision = true;
-		// distance is absolute not scaled by gameobject ?
-		sjHbond.minDistance = 0.2f;
-		sjHbond.maxDistance = 0.2f;
-		sjHbond.tolerance = 0.02f;
+
+		// scale o
+
+
+
+
+		float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
+		float HBondLength = 2.0f;
+
+		sjHbond.minDistance =  HBondLength * scale;
+		sjHbond.maxDistance = HBondLength * scale;
+		sjHbond.tolerance = HBondLength * scale * 0.1f;
 	}
 
 
