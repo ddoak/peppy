@@ -202,9 +202,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			cj.angularXMotion = ConfigurableJointMotion.Free;
 			cj.angularXDrive = new JointDrive
 			{
-				positionSpring = 20.0f,
+				positionSpring = 40.0f,//20.0f
 				positionDamper = 1,
-				maximumForce = 10.0f // 10.0f
+				maximumForce = 40.0f // 10.0f
 			};
 			if (go1.tag == "amide")
 			{
