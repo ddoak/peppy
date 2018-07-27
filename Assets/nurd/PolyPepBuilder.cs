@@ -9,15 +9,13 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
 
-	public bool setAlphaPhiPsi = true;
 	public bool useColliders = true;
 
 	public int secondaryStructure = 0;
 
+	public int numResidues = 30;
 
 	public GameObject[] polyArr;
-
-	private int numResidues = 30;
 	private int polyLength;
 
 	// Use this for initialization
