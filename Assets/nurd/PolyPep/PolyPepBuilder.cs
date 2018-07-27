@@ -385,10 +385,39 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+
+	void UpdateSecondaryStructureSwitch()
+	{
+		int numSecondaryStructures = 3;
+			
+		if (Input.GetKeyDown(KeyCode.P))
+		{
+			secondaryStructure++;
+
+			if (secondaryStructure > numSecondaryStructures)
+			{
+				secondaryStructure = 0;
+			}
+			SetBackboneDihedrals();
+		}
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			secondaryStructure--;
+
+			if (secondaryStructure < 0)
+			{
+				secondaryStructure = numSecondaryStructures;
+			}
+			SetBackboneDihedrals();
+		}
+	}
+
 	void SetBackboneDihedrals()
 	{
 		int phi = 0;
 		int psi = 0;
+
+		Debug.Log("Secondary Structure " + secondaryStructure);
 
 		switch (secondaryStructure)
 		{
@@ -400,6 +429,11 @@ public class PolyPepBuilder : MonoBehaviour {
 				psi = -47;
 				break;
 			case 2:
+				//310 helix
+				phi = -74;
+				psi = -4;
+				break;
+			case 3:
 				//beta sheet
 				phi = -139;
 				psi = 135;
@@ -441,33 +475,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void UpdateSecondaryStructureSwitch()
-	{
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			secondaryStructure++;
 
-			if (secondaryStructure > 2)
-			{
-				secondaryStructure = 0;
-			}
-
-			switch (secondaryStructure)
-			{
-				case 0:
-					Debug.Log("Secondary Structure " + secondaryStructure);
-					break;
-				case 1:
-					Debug.Log("Secondary Structure " + secondaryStructure);
-					break;
-				case 2:
-					Debug.Log("Secondary Structure " + secondaryStructure);
-					break;
-			}
-
-			SetBackboneDihedrals();
-		}
-	}
 
 
 	// Update is called once per frame
