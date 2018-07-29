@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using System;
 using UnityEngine;
 
 public class PolyPepBuilder : MonoBehaviour {
@@ -21,6 +24,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
+		Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
 
@@ -40,7 +45,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 			else
 			{
-				lastUnitTransform = polyArr[i-1].transform;
+				lastUnitTransform = polyArr[i - 1].transform;
 			}
 
 
@@ -86,8 +91,8 @@ public class PolyPepBuilder : MonoBehaviour {
 			float radiusH = 0.75f;
 			float radiusR = 1.25f;
 
-			Transform [] allChildren = GetComponentsInChildren<Transform>();
-			foreach ( Transform child in allChildren)
+			Transform[] allChildren = GetComponentsInChildren<Transform>();
+			foreach (Transform child in allChildren)
 			{
 				float atomScale;
 				switch (child.tag)
@@ -113,11 +118,11 @@ public class PolyPepBuilder : MonoBehaviour {
 						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
 						break;
 				}
-					
+
 			}
 
 
-			polyArr[i].name = ((i/3)+1).ToString() + "_" + polyArr[i].name;
+			polyArr[i].name = ((i / 3) + 1).ToString() + "_" + polyArr[i].name;
 
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
@@ -241,7 +246,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void AddAlphaHelicalHbondConstraints()
 	{
-		for (int resid = (numResidues - 1); resid > 4; resid --)
+		for (int resid = (numResidues - 1); resid > 4; resid--)
 		{
 			//AddBackboneHbondConstraint(GetAmideForResidue(resid), GetCarbonylForResidue(resid - 4));
 			//InitBackboneHBondConstraint(GetAmideForResidue(resid));
@@ -310,9 +315,9 @@ public class PolyPepBuilder : MonoBehaviour {
 		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
 
 		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
-		
+
 		//sjHbond.autoConfigureConnectedAnchor = false;
-		
+
 		//float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
 		//float NHBondLength = 1.0f;
 		//sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide)* NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
@@ -325,7 +330,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	}
 
 
-	GameObject GetAmideForResidue (int residue)
+	GameObject GetAmideForResidue(int residue)
 	{
 		return (polyArr[residue * 3]);
 	}
@@ -366,8 +371,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				//if (s.tag == "dist")
 				{
-					var startPoint = polyArr[i].transform.TransformPoint(s.anchor);					
-					var endPoint = s.connectedBody.transform.TransformPoint(s.connectedAnchor);		
+					var startPoint = polyArr[i].transform.TransformPoint(s.anchor);
+					var endPoint = s.connectedBody.transform.TransformPoint(s.connectedAnchor);
 
 					Color constraintColor = Color.green;
 
@@ -389,7 +394,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	void UpdateSecondaryStructureSwitch()
 	{
 		int numSecondaryStructures = 3;
-			
+
 		if (Input.GetKeyDown(KeyCode.P))
 		{
 			secondaryStructure++;
@@ -448,11 +453,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetBackBoneDihedralsResidue(int resid, int phi, int psi)
 	{
-			var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
-			cjPhi_NCa.targetRotation = Quaternion.Euler(180 - phi, 0, 0);
+		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
+		cjPhi_NCa.targetRotation = Quaternion.Euler(180 - phi, 0, 0);
 
-			var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
-			cjPsi_CaCO.targetRotation = Quaternion.Euler(180 - psi, 0, 0);
+		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
+		cjPsi_CaCO.targetRotation = Quaternion.Euler(180 - psi, 0, 0);
 	}
 
 
@@ -475,8 +480,69 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	private bool Load(string fileName)
+	{
+		// https://answers.unity.com/questions/279750/loading-data-from-a-txt-file-c.html
+		// Handle any problems that might arise when reading the text
+		try
+		{
+			string line;
+			// Create a new StreamReader, tell it which file to read and what encoding the file
+			// was saved as
+			StreamReader theReader = new StreamReader(fileName, Encoding.Default);
+			// Immediately clean up the reader after this block of code is done.
+			// You generally use the "using" statement for potentially memory-intensive objects
+			// instead of relying on garbage collection.
+			// (Do not confuse this with the using directive for namespace at the 
+			// beginning of a class!)
+			using (theReader)
+			{
+				// While there's lines left in the text file, do this:
+				do
+				{
+					line = theReader.ReadLine();
 
+					if (line != null)
+					{
+						// Do whatever you need to do with the text line, it's a string now
+						// In this example, I split it into arguments based on comma
+						// deliniators, then send that array to DoStuff()
+						Debug.Log(line);
+						ReadPhiPsi(line);
+						string[] entries = line.Split(',');
+						if (entries.Length > 0)
+						{
 
+							//DoStuff(entries);
+						}
+
+					}
+				}
+				while (line != null);
+				// Done reading, close the reader and return true to broadcast success    
+				theReader.Close();
+				return true;
+			}
+		}
+		// If anything broke in the try block, we throw an exception with information
+		// on what didn't work
+		catch (Exception e)
+		{
+			Console.WriteLine("{0}\n", e.Message);
+			return false;
+		}
+	}
+
+	void ReadPhiPsi(string line)
+	{
+		Debug.Log("  phi = " + line.Substring(12, 7));
+		Debug.Log("  psi = " + line.Substring(20, 7));
+	}
+
+	//
+	// pymol
+	// phi_psi all
+	//
 
 	// Update is called once per frame
 	void Update()
