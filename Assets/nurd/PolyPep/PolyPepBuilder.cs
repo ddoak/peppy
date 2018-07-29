@@ -24,7 +24,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
@@ -146,6 +146,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		// placeholder: should be created and updated on tick
 		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
+
+		Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 	}
 
 	void SetRbDrag(GameObject go)
@@ -207,9 +209,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			cj.angularXMotion = ConfigurableJointMotion.Free;
 			cj.angularXDrive = new JointDrive
 			{
-				positionSpring = 40.0f,//20.0f
+				positionSpring = 10000.0f, // 40.0f,//20.0f
 				positionDamper = 1,
-				maximumForce = 40.0f // 10.0f
+				maximumForce = 10000.0f, //40.0f // 10.0f
 			};
 			if (go1.tag == "amide")
 			{
@@ -535,8 +537,24 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void ReadPhiPsi(string line)
 	{
-		Debug.Log("  phi = " + line.Substring(12, 7));
-		Debug.Log("  psi = " + line.Substring(20, 7));
+		string resName = line.Substring(1, 3);
+		string residRaw = line.Substring(5, 5);
+		string[] residSplit = residRaw.Split(':');
+
+		int myResid = int.Parse(residSplit[0]);
+		float myPhif = float.Parse(line.Substring(12, 7));
+		float myPsif = float.Parse(line.Substring(20, 7));
+
+		int myPhi = Mathf.RoundToInt(myPhif);
+		int myPsi = Mathf.RoundToInt(myPsif);
+
+
+		Debug.Log("  resname = " + resName);
+		Debug.Log("  resid = " + myResid);
+		Debug.Log("  phi = " + myPhi);
+		Debug.Log("  psi = " + myPsi);
+
+		SetBackBoneDihedralsResidue(myResid, myPhi, myPsi);
 	}
 
 	//
