@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class PolyPepBuilder : MonoBehaviour {
 
@@ -26,6 +27,9 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject[] polyArr;
 	private int polyLength;
 
+	public JointDrive[] chainPhiJointDrives;
+	private JointDrive[] chainPsiJointDrives;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -33,6 +37,25 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
+
+
+		{
+			// init
+			chainPhiJointDrives = new JointDrive[numResidues];
+			chainPsiJointDrives = new JointDrive[numResidues];
+
+			for (int i = 0; i < numResidues; i++)
+			{
+				chainPhiJointDrives[i].maximumForce = 0.0f;
+				chainPhiJointDrives[i].positionDamper = 0;
+				chainPhiJointDrives[i].positionSpring = 0.0f;
+
+				chainPsiJointDrives[i].maximumForce = 0.0f;
+				chainPsiJointDrives[i].positionDamper = 0;
+				chainPsiJointDrives[i].positionSpring = 0.0f;
+			}
+		}
+
 
 		// offset from handling cube
 		var offsetPositionBase = new Vector3(0.5f, 0f, 0f);
@@ -144,7 +167,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			if (i > 0)
 			{
-				AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
+				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
+				AddBackboneConstraint(i);
 			}
 
 		}
@@ -197,11 +221,17 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjChain.tag = "chain";
 	}
 
-	void AddBackboneConstraint(GameObject go1, GameObject go2)
+	void AddBackboneConstraint(int index)
 	{
 		// 
+		// adds a configurable joint between
 		//
-		//
+
+		Assert.IsTrue((index > 0), "Assertion failed");
+
+		GameObject go1 = polyArr[index - 1];
+		GameObject go2 = polyArr[index];
+
 
 		float bondLengthPeptide = 1.33f;
 		float bondLengthAmideCalpha = 1.46f;
@@ -226,27 +256,29 @@ public class PolyPepBuilder : MonoBehaviour {
 		cj.xMotion = ConfigurableJointMotion.Locked;
 		cj.yMotion = ConfigurableJointMotion.Locked;
 		cj.zMotion = ConfigurableJointMotion.Locked;
-		if (go1.tag == "amide" || go1.tag == "calpha")
+		if (go1.tag == "amide")
 		{
 			cj.angularXMotion = ConfigurableJointMotion.Free;
-			cj.angularXDrive = new JointDrive
-			{
-				positionSpring = 0f,//10000.0f, // 40.0f,//20.0f
-				positionDamper = 1,
-				maximumForce = 0f,//10000.0f, //40.0f // 10.0f
-			};
-			{
-				// set initial target for phi and psi
-				if (go1.tag == "amide")
-				{
-					cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
-				}
-				else if (go1.tag == "calpha")
-				{
-					cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
-				}
-			}
-
+			//cj.angularXDrive = new JointDrive
+			//{
+			//	positionSpring = 100f,//10000.0f, // 40.0f,//20.0f
+			//	positionDamper = 1,
+			//	maximumForce = 100f,//10000.0f, //40.0f // 10.0f
+			//};
+			cj.angularXDrive = chainPhiJointDrives[index / 3];
+			cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
+		}
+		else if (go1.tag == "calpha")
+		{
+			cj.angularXMotion = ConfigurableJointMotion.Free;
+			//cj.angularXDrive = new JointDrive
+			//{
+			//	positionSpring = 100f,//10000.0f, // 40.0f,//20.0f
+			//	positionDamper = 1,
+			//	maximumForce = 100f,//10000.0f, //40.0f // 10.0f
+			//};
+			cj.angularXDrive = chainPsiJointDrives[index / 3];
+			cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
 		}
 		else if (go1.tag == "carbonyl")
 		{
@@ -488,6 +520,14 @@ public class PolyPepBuilder : MonoBehaviour {
 		cjPsi_CaCO.targetRotation = Quaternion.Euler(180.0f - psi, 0, 0);
 	}
 
+	void UpdateDriveBackboneDihedralsResidue(int resid)
+	{
+		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
+		cjPhi_NCa.angularXDrive = chainPhiJointDrives[resid];
+
+		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
+		cjPsi_CaCO.angularXDrive = chainPsiJointDrives[resid];
+	}
 
 	void SetColliders()
 	{
@@ -505,6 +545,43 @@ public class PolyPepBuilder : MonoBehaviour {
 			useColliders = !useColliders;
 			SetColliders();
 			Debug.Log("Colliders " + useColliders);
+		}
+	}
+
+	void UpdatePhiPsiDrives()
+	{
+		if (Input.GetKeyDown(KeyCode.B))
+		{
+
+			for (int i = 0; i < numResidues; i++)
+			{
+				chainPhiJointDrives[i].maximumForce = 100.0f;
+				chainPhiJointDrives[i].positionDamper = 1;
+				chainPhiJointDrives[i].positionSpring = 100.0f;
+
+				chainPsiJointDrives[i].maximumForce = 100.0f;
+				chainPsiJointDrives[i].positionDamper = 1;
+				chainPsiJointDrives[i].positionSpring = 100.0f;
+
+				UpdateDriveBackboneDihedralsResidue(i);
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.V))
+		{
+
+			for (int i = 0; i < numResidues; i++)
+			{
+				chainPhiJointDrives[i].maximumForce = 0.0f;
+				chainPhiJointDrives[i].positionDamper = 0;
+				chainPhiJointDrives[i].positionSpring = 0.0f;
+
+				chainPsiJointDrives[i].maximumForce = 0.0f;
+				chainPsiJointDrives[i].positionDamper = 0;
+				chainPsiJointDrives[i].positionSpring = 0.0f;
+
+				UpdateDriveBackboneDihedralsResidue(i);
+			}
 		}
 	}
 
@@ -592,6 +669,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		UpdateSecondaryStructureSwitch();
 		UpdateColliderSwitch();
+		UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
 	}
 }
