@@ -527,6 +527,15 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
 		cjPsi_CaCO.angularXDrive = chainPsiJointDrives[resid];
+
+		// wake rbs
+		var RbAmide = GetAmideForResidue(resid).GetComponent<Rigidbody>();
+		var RbCalpha  = GetCalphaForResidue(resid).GetComponent<Rigidbody>();
+		var RbCarbonyl = GetCarbonylForResidue(resid).GetComponent<Rigidbody>();
+
+		RbAmide.WakeUp();
+		RbCalpha.WakeUp();
+		RbCarbonyl.WakeUp();
 	}
 
 	void SetColliders()
