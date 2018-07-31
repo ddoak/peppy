@@ -12,6 +12,11 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
 
+	// bond lengths used in backbone configurable joints
+	float bondLengthPeptide = 1.33f;
+	float bondLengthAmideCalpha = 1.46f;
+	float bondLengthCalphaCarbonyl = 1.51f;
+
 	public bool useColliders = true;
 
 	public int secondaryStructure = 0;
@@ -32,8 +37,9 @@ public class PolyPepBuilder : MonoBehaviour {
 		// offset from handling cube
 		var offsetPositionBase = new Vector3(0.5f, 0f, 0f);
 		// periodic offsets for polymer
-		var offsetPositionUnit = new Vector3(0.2f, 0f, 0f);
-		var offsetRotationUnit = Quaternion.Euler(0, 0, 0); //45
+		float xOffset = 0.2f; // empirical - enough to keep colliders separated
+		var offsetPositionUnit = new Vector3( xOffset * transform.localScale.x, 0f, 0f);
+
 
 		for (int i = 0; i < polyLength; i++)
 		{
@@ -49,36 +55,45 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 
+
+
 			int id = i % 6;
 			//Debug.Log("polyArr" + i + " " + id);
 
-
 			//
-			// id ==  0   1   2   3   4   5
+			// id ==  0     1     2     3     4     5
 			//
-			//            R       H       O
-			//        N---C---C---N---C---C
-			//        H       O       R
+			//              R           H           O
+			//        N--   C--   C--   N--   C--   C--
+			//        H           O           R
 			//
-
+			// prefab backbone bonds are aligned to Z axis, Y rotations of prefabs create correct backbone bond angles
+			//
+			// prefabs for 2,3 and 4 positions are flipped 180 X to make alternating extended chain
+			
 			switch (id)
 			{
 				case 0:
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * offsetRotationUnit, transform);
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), transform);
 					break;
 				case 1:
+					// Yrot = +69
 					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), transform);
 					break;
 				case 2:
+					// Yrot = +69 -64 = 5
 					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), transform);
 					break;
 				case 3:
+					// Yrot = +69 -64 +58 = 63
 					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), transform);
 					break;
 				case 4:
+					// Yrot = +69 -64 +58 -69 = -6
 					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), transform);
 					break;
 				case 5:
+					// Yrot = +69 -64 +58 -69 +64 = 58
 					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), transform);
 					break;
 
@@ -147,7 +162,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		// placeholder: should be created and updated on tick
 		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
 
-		Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
 	}
 
 	void SetRbDrag(GameObject go)
@@ -183,21 +199,27 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void AddBackboneConstraint(GameObject go1, GameObject go2)
 	{
-		//return;
+		// 
+		//
+		//
+
+		float bondLengthPeptide = 1.33f;
+		float bondLengthAmideCalpha = 1.46f;
+		float bondLengthCalphaCarbonyl = 1.51f;
 
 		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
 		cj.connectedBody = go2.GetComponent<Rigidbody>();
 		if (go1.tag == "amide")
 		{
-			cj.anchor = new Vector3(1.46f, 0f, 0f);
+			cj.anchor = new Vector3(bondLengthAmideCalpha, 0f, 0f);
 		}
 		else if (go1.tag == "calpha")
 		{
-			cj.anchor = new Vector3(1.51f, 0f, 0f);
+			cj.anchor = new Vector3(bondLengthCalphaCarbonyl, 0f, 0f);
 		}
 		else if (go1.tag == "carbonyl")
 		{
-			cj.anchor = new Vector3(1.33f, 0f, 0f);
+			cj.anchor = new Vector3(bondLengthPeptide, 0f, 0f);
 		}
 		cj.autoConfigureConnectedAnchor = false;
 		cj.connectedAnchor = new Vector3(0f, 0f, 0f);
@@ -209,18 +231,22 @@ public class PolyPepBuilder : MonoBehaviour {
 			cj.angularXMotion = ConfigurableJointMotion.Free;
 			cj.angularXDrive = new JointDrive
 			{
-				positionSpring = 10000.0f, // 40.0f,//20.0f
+				positionSpring = 0f,//10000.0f, // 40.0f,//20.0f
 				positionDamper = 1,
-				maximumForce = 10000.0f, //40.0f // 10.0f
+				maximumForce = 0f,//10000.0f, //40.0f // 10.0f
 			};
-			if (go1.tag == "amide")
 			{
-				cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
+				// set initial target for phi and psi
+				if (go1.tag == "amide")
+				{
+					cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
+				}
+				else if (go1.tag == "calpha")
+				{
+					cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
+				}
 			}
-			else if (go1.tag == "calpha")
-			{
-				cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
-			}
+
 		}
 		else if (go1.tag == "carbonyl")
 		{
@@ -421,8 +447,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetBackboneDihedrals()
 	{
-		int phi = 0;
-		int psi = 0;
+		float phi = 0.0f;
+		float psi = 0.0f;
 
 		Debug.Log("Secondary Structure " + secondaryStructure);
 
@@ -432,18 +458,18 @@ public class PolyPepBuilder : MonoBehaviour {
 				break;
 			case 1:
 				//alpha helix
-				phi = -57;
-				psi = -47;
+				phi = -57.0f;
+				psi = -47.0f;
 				break;
 			case 2:
 				//310 helix
-				phi = -74;
-				psi = -4;
+				phi = -74.0f;
+				psi = -4.0f;
 				break;
 			case 3:
 				//beta sheet
-				phi = -139;
-				psi = 135;
+				phi = -139.0f;
+				psi = 135.0f;
 				break;
 		}
 
@@ -453,13 +479,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void SetBackBoneDihedralsResidue(int resid, int phi, int psi)
+	void SetBackBoneDihedralsResidue(int resid, float phi, float psi)
 	{
 		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
-		cjPhi_NCa.targetRotation = Quaternion.Euler(180 - phi, 0, 0);
+		cjPhi_NCa.targetRotation = Quaternion.Euler(180.0f - phi, 0, 0);
 
 		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
-		cjPsi_CaCO.targetRotation = Quaternion.Euler(180 - psi, 0, 0);
+		cjPsi_CaCO.targetRotation = Quaternion.Euler(180.0f - psi, 0, 0);
 	}
 
 
@@ -537,16 +563,18 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void ReadPhiPsi(string line)
 	{
+		//
+		// parses output from PYMOL command: phi_psi all
+		//
+		// " PHE-4:    (  -70.8,  -44.7 )"
+		//
 		string resName = line.Substring(1, 3);
 		string residRaw = line.Substring(5, 5);
 		string[] residSplit = residRaw.Split(':');
 
 		int myResid = int.Parse(residSplit[0]);
-		float myPhif = float.Parse(line.Substring(12, 7));
-		float myPsif = float.Parse(line.Substring(20, 7));
-
-		int myPhi = Mathf.RoundToInt(myPhif);
-		int myPsi = Mathf.RoundToInt(myPsif);
+		float myPhi = float.Parse(line.Substring(12, 7));
+		float myPsi = float.Parse(line.Substring(20, 7));
 
 
 		Debug.Log("  resname = " + resName);
@@ -557,10 +585,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		SetBackBoneDihedralsResidue(myResid, myPhi, myPsi);
 	}
 
-	//
-	// pymol
-	// phi_psi all
-	//
+
 
 	// Update is called once per frame
 	void Update()
