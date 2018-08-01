@@ -13,6 +13,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
 
+	public GameObject hBondPsPf;
+
 	// bond lengths used in backbone configurable joints
 	float bondLengthPeptide = 1.33f;
 	float bondLengthAmideCalpha = 1.46f;
@@ -354,6 +356,18 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.minDistance = HBondLength * scale;
 		sjHbond.maxDistance = HBondLength * scale;
 		sjHbond.tolerance = HBondLength * scale * 0.1f;
+
+		Transform tf_H = donorGO.transform.Find("tf_H");
+
+		Vector3 offset = new Vector3(0, tf_H.up.y * -1.0f, 0);
+		Instantiate(hBondPsPf, (tf_H.position + offset), tf_H.rotation * Quaternion.Euler(90,0,0), tf_H);
+		//Instantiate(hBondPsPf, tf_H.transform.position, tf_H.transform.rotation, tf_H.transform);
+		//Instantiate(hBondPsPf, donorGO.transform.position, donorGO.transform.rotation, donorGO.transform);
+		
+		//hBondPS.transform.parent = donorGO.transform;
+
+		//ParticleSystem hBondPs = hBondPsPf.GetComponent<ParticleSystem>();
+		//donorGO.AddComponent<ParticleSystem>(hBondPs);
 
 
 	}
