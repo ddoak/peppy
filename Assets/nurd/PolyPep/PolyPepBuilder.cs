@@ -339,6 +339,10 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//sjHbond.spring = 0;
 		//sjHbond.damper = 0;
+
+
+
+
 		//sjHbond.enableCollision = false;
 		SwitchOffBackboneHbondConstraint(donorGO);
 
@@ -350,6 +354,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.minDistance = HBondLength * scale;
 		sjHbond.maxDistance = HBondLength * scale;
 		sjHbond.tolerance = HBondLength * scale * 0.1f;
+
 
 	}
 
@@ -463,7 +468,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				secondaryStructure = 0;
 			}
-			SetBackboneDihedrals();
+			SetAllPhiPsi();
 		}
 		if (Input.GetKeyDown(KeyCode.O))
 		{
@@ -473,11 +478,11 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				secondaryStructure = numSecondaryStructures;
 			}
-			SetBackboneDihedrals();
+			SetAllPhiPsi();
 		}
 	}
 
-	void SetBackboneDihedrals()
+	void SetAllPhiPsi()
 	{
 		float phi = 0.0f;
 		float psi = 0.0f;
@@ -507,11 +512,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-			SetBackBoneDihedralsResidue(resid, phi, psi);
+			SetPhiPsiForResidue(resid, phi, psi);
 		}
 	}
 
-	void SetBackBoneDihedralsResidue(int resid, float phi, float psi)
+	void SetPhiPsiForResidue(int resid, float phi, float psi)
 	{
 		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
 		cjPhi_NCa.targetRotation = Quaternion.Euler(180.0f - phi, 0, 0);
@@ -520,7 +525,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		cjPsi_CaCO.targetRotation = Quaternion.Euler(180.0f - psi, 0, 0);
 	}
 
-	void UpdateDriveBackboneDihedralsResidue(int resid)
+	void UpdatePhiPsiDriveParamForResidue(int resid)
 	{
 		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
 		cjPhi_NCa.angularXDrive = chainPhiJointDrives[resid];
@@ -572,8 +577,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				chainPsiJointDrives[i].positionDamper = 1;
 				chainPsiJointDrives[i].positionSpring = 100.0f;
 
-				UpdateDriveBackboneDihedralsResidue(i);
+				UpdatePhiPsiDriveParamForResidue(i);
 			}
+			Debug.Log("PhiPsi Drive = ON ");
 		}
 
 		if (Input.GetKeyDown(KeyCode.V))
@@ -589,8 +595,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				chainPsiJointDrives[i].positionDamper = 0;
 				chainPsiJointDrives[i].positionSpring = 0.0f;
 
-				UpdateDriveBackboneDihedralsResidue(i);
+				UpdatePhiPsiDriveParamForResidue(i);
 			}
+			Debug.Log("PhiPsi Drive = OFF ");
 		}
 	}
 
@@ -622,7 +629,7 @@ public class PolyPepBuilder : MonoBehaviour {
 						// In this example, I split it into arguments based on comma
 						// deliniators, then send that array to DoStuff()
 						Debug.Log(line);
-						ReadPhiPsi(line);
+						ParsePhiPsi(line);
 						string[] entries = line.Split(',');
 						if (entries.Length > 0)
 						{
@@ -647,7 +654,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void ReadPhiPsi(string line)
+	void ParsePhiPsi(string line)
 	{
 		//
 		// parses output from PYMOL command: phi_psi all
@@ -668,7 +675,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		Debug.Log("  phi = " + myPhi);
 		Debug.Log("  psi = " + myPsi);
 
-		SetBackBoneDihedralsResidue(myResid, myPhi, myPsi);
+		SetPhiPsiForResidue(myResid, myPhi, myPsi);
 	}
 
 
