@@ -357,10 +357,24 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.maxDistance = HBondLength * scale;
 		sjHbond.tolerance = HBondLength * scale * 0.1f;
 
+
+		//GameObject H_amide = donorGO.GetComponentInChildren
+
+		var hbond_sj = donorGO.GetComponent<SpringJoint>();
+
+		var startPoint = donorGO.transform.TransformPoint(hbond_sj.anchor);
+
 		Transform tf_H = donorGO.transform.Find("tf_H");
 
-		Vector3 offset = new Vector3(0, tf_H.up.y * -1.0f, 0);
-		Instantiate(hBondPsPf, (tf_H.position + offset), tf_H.rotation * Quaternion.Euler(90,0,0), tf_H);
+		Vector3 offset = new Vector3(0, (tf_H.up.y * transform.localScale.x * -5.0f), 0);
+
+		//Instantiate(hBondPsPf, (tf_H.position + offset), tf_H.rotation * Quaternion.Euler(90,0,0), tf_H);
+
+		Instantiate(hBondPsPf, startPoint, tf_H.rotation * Quaternion.Euler(90, 0, 0), tf_H);
+
+		hBondPsPf.transform.localScale = transform.localScale;
+
+
 		//Instantiate(hBondPsPf, tf_H.transform.position, tf_H.transform.rotation, tf_H.transform);
 		//Instantiate(hBondPsPf, donorGO.transform.position, donorGO.transform.rotation, donorGO.transform);
 		
