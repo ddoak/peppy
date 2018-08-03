@@ -360,19 +360,42 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//GameObject H_amide = donorGO.GetComponentInChildren
 
+		// assumes that only SpringJoint is the hbond constraint
 		var hbond_sj = donorGO.GetComponent<SpringJoint>();
+		var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
-		var startPoint = donorGO.transform.TransformPoint(hbond_sj.anchor);
+		
+
 
 		Transform tf_H = donorGO.transform.Find("tf_H");
 
-		Vector3 offset = new Vector3(0, (tf_H.up.y * transform.localScale.x * -5.0f), 0);
 
 		//Instantiate(hBondPsPf, (tf_H.position + offset), tf_H.rotation * Quaternion.Euler(90,0,0), tf_H);
 
-		Instantiate(hBondPsPf, startPoint, tf_H.rotation * Quaternion.Euler(90, 0, 0), tf_H);
+		//Instantiate(hBondPsPf, donorHLocation, tf_H.rotation * Quaternion.Euler(90, 0, 0), tf_H);
+
+		Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
 
 		hBondPsPf.transform.localScale = transform.localScale;
+
+		int myResid = GetResidForPolyArrGO(donorGO);
+		if ( myResid > 4)
+		{
+			GameObject acceptorGO = GetCarbonylForResidue(myResid - 5);
+			SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+			Debug.Log(myResid + " " + donorGO + " " + acceptorGO);
+		}
+
+		//if (hbond_sj.connectedBody != null)
+		//{
+		//	var acceptorOLocation = hbond_sj.connectedBody.transform.TransformPoint(hbond_sj.connectedAnchor);
+		//	Vector3 origin = new Vector3(0f, 0f, 0f);
+		//	hBondPsPf.transform.LookAt(origin);
+		//}
+		
+
+
+		//Debug.Log(hBondPsPf.transform.localScale);
 
 
 		//Instantiate(hBondPsPf, tf_H.transform.position, tf_H.transform.rotation, tf_H.transform);
@@ -384,6 +407,44 @@ public class PolyPepBuilder : MonoBehaviour {
 		//donorGO.AddComponent<ParticleSystem>(hBondPs);
 
 
+	}
+
+	void TestUpdateHBondPSTransforms()
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			GameObject donorGO =  GetAmideForResidue(resid);
+			var hbond_sj = donorGO.GetComponent<SpringJoint>();
+			if (hbond_sj.connectedBody != null)
+			{
+				Vector3 origin = new Vector3(0f, 0f, 0f);
+				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+				var acceptorOLocation = hbond_sj.connectedBody.transform.TransformPoint(hbond_sj.connectedAnchor);
+				//hBondPsPf.transform.LookAt(acceptorOLocation);
+
+				
+				//hBondPsPf.transform.LookAt(origin);
+				if (resid == 10)
+				{
+					Vector3 relativePosition = acceptorOLocation - donorHLocation;
+					Quaternion lookAt = Quaternion.LookRotation(relativePosition, Vector3.up);
+					Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAt);
+
+
+					DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
+
+					// doh! to fix
+					hBondPsPf.transform.rotation = hBondPsPf.transform.rotation * Quaternion.Euler(1,1,1);
+				}
+
+				//Quaternion lookAt = Quaternion.LookRotation();
+
+
+				//transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, Time.smoothDeltaTime * m_turnSpeed);
+
+			}
+
+		}
 	}
 
 	void SwitchOffBackboneHbondConstraint(GameObject donorGO)
@@ -438,6 +499,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		return (polyArr[(residue * 3) + 2]);
 	}
 
+	int GetResidForPolyArrGO(GameObject go)
+	{
+		string[] nameSplit = go.name.Split('_');
+		int Resid = int.Parse(nameSplit[0]);
+		return Resid;
+	}
+
 	void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
 	{
 		GameObject myLine = new GameObject();
@@ -454,10 +522,12 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void UpdateDistanceConstraintGfx()
 	{
-		// iterates through poly chain - could just pull out springJoints with GO tags
+		// iterates through poly chain 
 		for (int i = 0; i < polyLength; i++)
 		{
 			var springs = polyArr[i].GetComponents<SpringJoint>();
+			if (GetResidForPolyArrGO(polyArr[i]) > 4) // hack - testing alpha helical hbonds
+			{
 			foreach (var s in springs)
 			{
 				//Debug.Log("spring " + s + " " + s.tag);
@@ -480,6 +550,8 @@ public class PolyPepBuilder : MonoBehaviour {
 					DrawLine(startPoint, endPoint, constraintColor, 0.05f);
 				}
 			}
+			}
+
 		}
 	}
 
@@ -562,6 +634,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		cjPsi_CaCO.angularXDrive = chainPsiJointDrives[resid];
 
 		// wake rbs
+		// (sleeping rbs apparently don't respond to changes in joint params)
 		var RbAmide = GetAmideForResidue(resid).GetComponent<Rigidbody>();
 		var RbCalpha  = GetCalphaForResidue(resid).GetComponent<Rigidbody>();
 		var RbCarbonyl = GetCarbonylForResidue(resid).GetComponent<Rigidbody>();
@@ -715,5 +788,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		UpdateColliderSwitch();
 		UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
+		TestUpdateHBondPSTransforms();
 	}
 }
