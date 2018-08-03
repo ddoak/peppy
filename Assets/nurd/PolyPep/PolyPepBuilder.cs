@@ -8,6 +8,7 @@ using UnityEngine.Assertions;
 
 public class PolyPepBuilder : MonoBehaviour {
 
+	public GameObject residuePf;
 
 	public GameObject amidePf;
 	public GameObject calphaPf;
@@ -29,6 +30,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject[] polyArr;
 	private int polyLength;
 
+	public GameObject[] hbondBackbonePsPf;
+
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
 
@@ -39,7 +42,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
-
+		hbondBackbonePsPf = new GameObject[numResidues];
 
 		{
 			// init
@@ -95,7 +98,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// prefab backbone bonds are aligned to Z axis, Y rotations of prefabs create correct backbone bond angles
 			//
 			// prefabs for 2,3 and 4 positions are flipped 180 X to make alternating extended chain
-			
+
 			switch (id)
 			{
 				case 0:
@@ -162,7 +165,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 
-			polyArr[i].name = ((i / 3) + 1).ToString() + "_" + polyArr[i].name;
+			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
+
+			
 
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
@@ -190,6 +195,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
+
 	}
 
 	void SetRbDrag(GameObject go)
@@ -374,14 +380,16 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//Instantiate(hBondPsPf, donorHLocation, tf_H.rotation * Quaternion.Euler(90, 0, 0), tf_H);
 
-		Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
-
-		hBondPsPf.transform.localScale = transform.localScale;
+		int resid = GetResidForPolyArrGO(donorGO);
+		hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
+		hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
+		hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
+		//hBondPsPf.transform.localScale = transform.localScale;
 
 		int myResid = GetResidForPolyArrGO(donorGO);
 		if ( myResid > 4)
 		{
-			GameObject acceptorGO = GetCarbonylForResidue(myResid - 5);
+			GameObject acceptorGO = GetCarbonylForResidue(myResid - 4);
 			SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
 			Debug.Log(myResid + " " + donorGO + " " + acceptorGO);
 		}
@@ -424,17 +432,16 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				
 				//hBondPsPf.transform.LookAt(origin);
-				if (resid == 10)
+				if (resid > 4)
 				{
 					Vector3 relativePosition = acceptorOLocation - donorHLocation;
-					Quaternion lookAt = Quaternion.LookRotation(relativePosition, Vector3.up);
-					Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAt);
+					Quaternion lookAtAcceptor = Quaternion.LookRotation(relativePosition);
+					Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAtAcceptor);
 
 
-					DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
+					//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 
-					// doh! to fix
-					hBondPsPf.transform.rotation = hBondPsPf.transform.rotation * Quaternion.Euler(1,1,1);
+					hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 				}
 
 				//Quaternion lookAt = Quaternion.LookRotation();

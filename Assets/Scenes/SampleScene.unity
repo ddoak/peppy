@@ -3687,7 +3687,13 @@ Prefab:
         type: 2}
       propertyPath: hBondPsPf
       value: 
-      objectReference: {fileID: 1096617684503158, guid: 84b1e31f06ce0384783966d1b31f0a75,
+      objectReference: {fileID: 1013763304498548, guid: e3ee753fcb9055e4d83b3dc736c5d1fe,
+        type: 2}
+    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
+        type: 2}
+      propertyPath: residuePf
+      value: 
+      objectReference: {fileID: 1750933493913806, guid: 236479e08b7bd4648be998ccf4f22e78,
         type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
