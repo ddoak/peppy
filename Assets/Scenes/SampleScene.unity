@@ -3349,11 +3349,6 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 198928075040768966, guid: e3ee753fcb9055e4d83b3dc736c5d1fe,
-        type: 2}
-      propertyPath: useRigidbodyForVelocity
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e3ee753fcb9055e4d83b3dc736c5d1fe, type: 2}
   m_IsPrefabParent: 0

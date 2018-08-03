@@ -434,18 +434,10 @@ public class PolyPepBuilder : MonoBehaviour {
 					Vector3 relativePosition = acceptorOLocation - donorHLocation;
 					Quaternion lookAtAcceptor = Quaternion.LookRotation(relativePosition);
 					//Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAtAcceptor);
-
-
 					//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 
 					hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 				}
-
-				//Quaternion lookAt = Quaternion.LookRotation();
-
-
-				//transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, Time.smoothDeltaTime * m_turnSpeed);
-
 			}
 
 		}
