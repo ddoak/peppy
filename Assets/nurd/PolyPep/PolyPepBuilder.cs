@@ -344,14 +344,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		//float COBondLength = 1.24f;
 		//sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
 
-
-		//sjHbond.spring = 0;
-		//sjHbond.damper = 0;
-
-
-
-
-		//sjHbond.enableCollision = false;
 		SwitchOffBackboneHbondConstraint(donorGO);
 
 		// scaled to PolyPepBuilder and Amide_pf
@@ -386,13 +378,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
 		//hBondPsPf.transform.localScale = transform.localScale;
 
-		int myResid = GetResidForPolyArrGO(donorGO);
-		if ( myResid > 4)
-		{
-			GameObject acceptorGO = GetCarbonylForResidue(myResid - 4);
-			SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-			Debug.Log(myResid + " " + donorGO + " " + acceptorGO);
-		}
+		//int myResid = GetResidForPolyArrGO(donorGO);
+		//if ( myResid > 3)
+		//{
+		//	GameObject acceptorGO = GetCarbonylForResidue(myResid - 4);
+		//	SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+		//	Debug.Log(myResid + " " + donorGO + " " + acceptorGO);
+		//}
 
 		//if (hbond_sj.connectedBody != null)
 		//{
@@ -423,21 +415,26 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			GameObject donorGO =  GetAmideForResidue(resid);
 			var hbond_sj = donorGO.GetComponent<SpringJoint>();
+			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+
 			if (hbond_sj.connectedBody != null)
 			{
-				Vector3 origin = new Vector3(0f, 0f, 0f);
-				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+				// orient particle system toward acceptor atom
 				var acceptorOLocation = hbond_sj.connectedBody.transform.TransformPoint(hbond_sj.connectedAnchor);
+				Vector3 relativePosition = acceptorOLocation - donorHLocation;
+				Quaternion lookAtAcceptor = Quaternion.LookRotation(relativePosition);
+				//Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAtAcceptor);
+				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
+				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
-				if (resid > 4)
-				{
-					Vector3 relativePosition = acceptorOLocation - donorHLocation;
-					Quaternion lookAtAcceptor = Quaternion.LookRotation(relativePosition);
-					//Debug.Log(hBondPsPf.transform.localRotation + " " + hBondPsPf.transform.rotation + " " + lookAtAcceptor);
-					//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
-
-					hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
-				}
+			}
+			else
+			{
+				// orient particle system with NH bond
+				Transform donorN_amide = donorGO.transform.Find("N_amide");
+				Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
+				Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
+				hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
 			}
 
 		}
@@ -479,6 +476,48 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	}
 
+	void ClearAcceptorForBackboneHbondConstraint(GameObject donorGO)
+	{
+		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
+		sjHbond.connectedBody = null;
+	}
+
+	void SetChainAlphaHelicalHBonds()
+	{
+		for (int i = 0; i < numResidues; i++)
+		{
+			var donorGO = GetAmideForResidue(i);
+			if (i > 3)
+			{
+				GameObject acceptorGO = GetCarbonylForResidue(i - 4);
+				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+				Debug.Log(i + " " + donorGO + " " + acceptorGO);
+			}
+		}
+	}
+
+	void SetChain310HelicalHBonds()
+	{
+		for (int i = 0; i < numResidues; i++)
+		{
+			var donorGO = GetAmideForResidue(i);
+			if (i > 2)
+			{
+				GameObject acceptorGO = GetCarbonylForResidue(i - 3);
+				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+				Debug.Log(i + " " + donorGO + " " + acceptorGO);
+			}
+		}
+	}
+
+	void ClearChainHBonds()
+	{
+		for (int i = 0; i < numResidues; i++)
+		{
+			var donorGO = GetAmideForResidue(i);
+			ClearAcceptorForBackboneHbondConstraint(donorGO);
+		}
+	}
 
 	GameObject GetAmideForResidue(int residue)
 	{
@@ -588,21 +627,25 @@ public class PolyPepBuilder : MonoBehaviour {
 		switch (secondaryStructure)
 		{
 			case 0:
+				ClearChainHBonds();
 				break;
 			case 1:
 				//alpha helix
 				phi = -57.0f;
 				psi = -47.0f;
+				SetChainAlphaHelicalHBonds();
 				break;
 			case 2:
 				//310 helix
 				phi = -74.0f;
 				psi = -4.0f;
+				SetChain310HelicalHBonds();
 				break;
 			case 3:
 				//beta sheet
 				phi = -139.0f;
 				psi = 135.0f;
+				ClearChainHBonds();
 				break;
 		}
 
