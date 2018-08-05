@@ -40,6 +40,24 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 
+		buildPolypeptideChain();
+
+		// test: add arbitrary distance constraints
+		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);
+		//AddDistanceConstraint(polyArr[15], polyArr[30], 0.8f, 20);
+		//AddDistanceConstraint(polyArr[0], polyArr[36], 0.8f, 20);
+
+		// placeholder: should be created and updated on tick
+		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
+
+		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
+
+	}
+
+	void buildPolypeptideChain()
+	{
+
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
 		hbondBackbonePsPf = new GameObject[numResidues];
@@ -65,8 +83,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		// offset from handling cube
 		var offsetPositionBase = new Vector3(0.5f, 0f, 0f);
 		// periodic offsets for polymer
-		float xOffset = 0.2f; // empirical - enough to keep colliders separated
-		var offsetPositionUnit = new Vector3( xOffset * transform.localScale.x, 0f, 0f);
+		float xOffset = 0.2f; // empirical - enough to avoid collider overlap
+		var offsetPositionUnit = new Vector3(xOffset * transform.localScale.x, 0f, 0f);
 
 
 		for (int i = 0; i < polyLength; i++)
@@ -81,8 +99,6 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				lastUnitTransform = polyArr[i - 1].transform;
 			}
-
-
 
 
 			int id = i % 6;
@@ -167,39 +183,23 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
 
-			
-
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
 
 			if (i > 0)
 			{
 				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
-				AddBackboneConstraint(i);
+				AddBackboneTopologyConstraint(i);
 			}
 
 		}
 
-		//test: alpha helical hbonds
-		//AddAlphaHelicalHbondConstraints();
-
 		InitBackboneHbondConstraints();
-
-		// test: add arbitrary distance constraints
-		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);
-		//AddDistanceConstraint(polyArr[15], polyArr[30], 0.8f, 20);
-		//AddDistanceConstraint(polyArr[0], polyArr[36], 0.8f, 20);
-
-		// placeholder: should be created and updated on tick
-		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
-
-		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
-		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
-
 	}
 
 	void SetRbDrag(GameObject go)
 	{
+		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 1;
 	}
@@ -213,26 +213,11 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void AddChainConstraint(int pos)
-	{
-		float offsetPolyChain = 0.09f;
-		SpringJoint sjChain = polyArr[pos].AddComponent(typeof(SpringJoint)) as SpringJoint;
-		sjChain.connectedBody = polyArr[pos - 1].GetComponent<Rigidbody>();
-		sjChain.anchor = new Vector3(0f, offsetPolyChain, 0f);
-		sjChain.autoConfigureConnectedAnchor = false;
-		sjChain.connectedAnchor = new Vector3(0f, -offsetPolyChain, 0f);
-		sjChain.spring = 1000;
-		sjChain.enableCollision = true;
-		sjChain.damper = 50;
-		sjChain.minDistance = 0.01f;
-		sjChain.tolerance = 0.01f;
-		sjChain.tag = "chain";
-	}
 
-	void AddBackboneConstraint(int index)
+	void AddBackboneTopologyConstraint(int index)
 	{
 		// 
-		// adds a configurable joint between
+		// adds a configurable joint between backbone prefabs
 		//
 
 		Assert.IsTrue((index > 0), "Assertion failed");
