@@ -8,8 +8,6 @@ using UnityEngine.Assertions;
 
 public class PolyPepBuilder : MonoBehaviour {
 
-	public GameObject residuePf;
-
 	public GameObject amidePf;
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
@@ -38,7 +36,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
+		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/253l_phi_psi.txt"));
 
 		buildPolypeptideChain();
 
@@ -319,19 +317,28 @@ public class PolyPepBuilder : MonoBehaviour {
 		SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
 		sjHbond.connectedBody = null;
 		sjHbond.autoConfigureConnectedAnchor = false;
-		float axisRotOffset = -90f;
-		float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
-		float NHBondLength = 1.0f;
-		sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
 
-
-		//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
-		//float COBondLength = 1.24f;
-		//sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+		{
+			// calculate anchor position from molecular geometry
+			//
+			//
+			//                       Z axis
+			//                       ^
+			//        \  122         |
+			//  119.5  N----         o---> X axis
+			//        /          
+			//       H          
+			//               
+			//
+			float axisRotOffset = -90f;
+			float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
+			float NHBondLength = 1.0f;
+			sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
+		}
 
 		SwitchOffBackboneHbondConstraint(donorGO);
 
-		// scaled to PolyPepBuilder and Amide_pf
+		// scale joint parameters to PolyPepBuilder and Amide_pf
 
 		float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
 		float HBondLength = 2.0f;
@@ -340,62 +347,27 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.maxDistance = HBondLength * scale;
 		sjHbond.tolerance = HBondLength * scale * 0.1f;
 
-
-		//GameObject H_amide = donorGO.GetComponentInChildren
-
-		// assumes that only SpringJoint is the hbond constraint
-		var hbond_sj = donorGO.GetComponent<SpringJoint>();
-		var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+		{
+			// create particle system for hbond
+			// assumes that only SpringJoint is the hbond constraint
+			var hbond_sj = donorGO.GetComponent<SpringJoint>();
+			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
 		
+			Transform tf_H = donorGO.transform.Find("tf_H");
 
-
-		Transform tf_H = donorGO.transform.Find("tf_H");
-
-
-		//Instantiate(hBondPsPf, (tf_H.position + offset), tf_H.rotation * Quaternion.Euler(90,0,0), tf_H);
-
-		//Instantiate(hBondPsPf, donorHLocation, tf_H.rotation * Quaternion.Euler(90, 0, 0), tf_H);
-
-		int resid = GetResidForPolyArrGO(donorGO);
-		hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
-		hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
-		hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
-		//hBondPsPf.transform.localScale = transform.localScale;
-
-		//int myResid = GetResidForPolyArrGO(donorGO);
-		//if ( myResid > 3)
-		//{
-		//	GameObject acceptorGO = GetCarbonylForResidue(myResid - 4);
-		//	SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-		//	Debug.Log(myResid + " " + donorGO + " " + acceptorGO);
-		//}
-
-		//if (hbond_sj.connectedBody != null)
-		//{
-		//	var acceptorOLocation = hbond_sj.connectedBody.transform.TransformPoint(hbond_sj.connectedAnchor);
-		//	Vector3 origin = new Vector3(0f, 0f, 0f);
-		//	hBondPsPf.transform.LookAt(origin);
-		//}
-		
-
-
-		//Debug.Log(hBondPsPf.transform.localScale);
-
-
-		//Instantiate(hBondPsPf, tf_H.transform.position, tf_H.transform.rotation, tf_H.transform);
-		//Instantiate(hBondPsPf, donorGO.transform.position, donorGO.transform.rotation, donorGO.transform);
-		
-		//hBondPS.transform.parent = donorGO.transform;
-
-		//ParticleSystem hBondPs = hBondPsPf.GetComponent<ParticleSystem>();
-		//donorGO.AddComponent<ParticleSystem>(hBondPs);
-
+			int resid = GetResidForPolyArrGO(donorGO);
+			hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
+			hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
+			hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
+			//hBondPsPf.transform.localScale = transform.localScale;
+		}
 
 	}
 
-	void TestUpdateHBondPSTransforms()
+	void UpdateHBondPSTransforms()
 	{
+		// aligns hbond particle systems to acceptor (if set)
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			GameObject donorGO =  GetAmideForResidue(resid);
@@ -436,7 +408,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	void SwitchOnBackboneHbondConstraint(GameObject donorGO)
 	{
 		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
-		sjHbond.spring = 100;
+		sjHbond.spring = 1000;
 		sjHbond.damper = 5;
 		sjHbond.enableCollision = true;
 	}
@@ -448,12 +420,18 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
 
-		//sjHbond.autoConfigureConnectedAnchor = false;
 
-		//float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
-		//float NHBondLength = 1.0f;
-		//sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide)* NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
-
+		// calculate connected anchor position from molecular geometry
+		//
+		//
+		//                          Z axis
+		//       O                  ^
+		//        \  123.5          |
+		//         C----            o---> X axis
+		//        /          
+		//                 
+		//               
+		//
 		float axisRotOffset = -90f;
 		float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
 		float COBondLength = 1.24f;
@@ -476,7 +454,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				GameObject acceptorGO = GetCarbonylForResidue(i - 4);
 				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-				Debug.Log(i + " " + donorGO + " " + acceptorGO);
+				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
 			}
 		}
 	}
@@ -490,7 +468,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				GameObject acceptorGO = GetCarbonylForResidue(i - 3);
 				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-				Debug.Log(i + " " + donorGO + " " + acceptorGO);
+				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
 			}
 		}
 	}
@@ -500,6 +478,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		for (int i = 0; i < numResidues; i++)
 		{
 			var donorGO = GetAmideForResidue(i);
+			SwitchOffBackboneHbondConstraint(donorGO);
 			ClearAcceptorForBackboneHbondConstraint(donorGO);
 		}
 	}
@@ -658,7 +637,12 @@ public class PolyPepBuilder : MonoBehaviour {
 		cjPsi_CaCO.angularXDrive = chainPsiJointDrives[resid];
 
 		// wake rbs
-		// (sleeping rbs apparently don't respond to changes in joint params)
+		// (sleeping rbs don't respond to changes in joint params)
+		WakeResidRbs(resid);
+	}
+
+	void WakeResidRbs(int resid)
+	{
 		var RbAmide = GetAmideForResidue(resid).GetComponent<Rigidbody>();
 		var RbCalpha  = GetCalphaForResidue(resid).GetComponent<Rigidbody>();
 		var RbCarbonyl = GetCarbonylForResidue(resid).GetComponent<Rigidbody>();
@@ -667,7 +651,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCalpha.WakeUp();
 		RbCarbonyl.WakeUp();
 	}
-
 	void SetColliders()
 	{
 		for (int i = 0; i < polyLength; i++)
@@ -726,7 +709,38 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	private bool Load(string fileName)
+
+	void UpdateHBondSprings()
+	{
+		if (Input.GetKeyDown(KeyCode.L))
+		{
+			for (int resid = 0; resid < numResidues; resid++)
+			{
+				GameObject donorGO = GetAmideForResidue(resid);
+				var hbond_sj = donorGO.GetComponent<SpringJoint>();
+				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+
+				if (hbond_sj.connectedBody != null)
+				{
+					SwitchOnBackboneHbondConstraint(donorGO);
+					WakeResidRbs(resid);
+				}
+			}
+			Debug.Log("HBond Springs = ON ");
+		}
+
+		if (Input.GetKeyDown(KeyCode.K))
+		{
+			for (int resid = 0; resid < numResidues; resid++)
+			{
+				GameObject donorGO = GetAmideForResidue(resid);
+				SwitchOffBackboneHbondConstraint(donorGO);
+			}
+			Debug.Log("HBond Springs = OFF ");
+		}
+	}
+
+	private bool LoadPhiPsiData(string fileName)
 	{
 		// https://answers.unity.com/questions/279750/loading-data-from-a-txt-file-c.html
 		// Handle any problems that might arise when reading the text
@@ -812,6 +826,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		UpdateColliderSwitch();
 		UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
-		TestUpdateHBondPSTransforms();
+		UpdateHBondPSTransforms();
+		UpdateHBondSprings();
 	}
 }
