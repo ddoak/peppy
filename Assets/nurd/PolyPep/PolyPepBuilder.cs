@@ -19,8 +19,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	float bondLengthAmideCalpha = 1.46f;
 	float bondLengthCalphaCarbonyl = 1.51f;
 
-	public bool useColliders = true;
-
 	public int secondaryStructure = 0;
 
 	public int numResidues = 30;
@@ -36,6 +34,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public float phiAll { get; set; } //-139.0f;
 	public float psiAll { get; set; } //135.0f;
 	public bool useUICanvasPhiPsi { get; set; } //false;
+	public bool useColliders { get; set; } //= true;
+	public bool drivePhiPsi { get; set; }
 
 
 	// Use this for initialization
@@ -661,7 +661,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCalpha.WakeUp();
 		RbCarbonyl.WakeUp();
 	}
-	void SetColliders()
+	public void SetColliders()
 	{
 		for (int i = 0; i < polyLength; i++)
 		{
@@ -680,11 +680,10 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void UpdatePhiPsiDrives()
+	public void UpdatePhiPsiDrives()
 	{
-		if (Input.GetKeyDown(KeyCode.B))
+		if (drivePhiPsi == true)
 		{
-
 			for (int i = 0; i < numResidues; i++)
 			{
 				chainPhiJointDrives[i].maximumForce = 100.0f;
@@ -699,10 +698,8 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 			Debug.Log("PhiPsi Drive = ON ");
 		}
-
-		if (Input.GetKeyDown(KeyCode.V))
+		else
 		{
-
 			for (int i = 0; i < numResidues; i++)
 			{
 				chainPhiJointDrives[i].maximumForce = 0.0f;
@@ -717,6 +714,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 			Debug.Log("PhiPsi Drive = OFF ");
 		}
+
 	}
 
 
@@ -842,7 +840,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		UpdateSecondaryStructureSwitch();
 		UpdateColliderSwitch();
-		UpdatePhiPsiDrives();
+		//UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
 		UpdateHBondPSTransforms();
 		UpdateHBondSprings();
