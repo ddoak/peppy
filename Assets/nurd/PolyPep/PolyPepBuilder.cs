@@ -33,6 +33,11 @@ public class PolyPepBuilder : MonoBehaviour {
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
 
+	public float phiAll { get; set; } //-139.0f;
+	public float psiAll { get; set; } //135.0f;
+	public bool useUICanvasPhiPsi { get; set; } //false;
+
+
 	// Use this for initialization
 	void Start()
 	{
@@ -50,6 +55,9 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
+
+		phiAll = 0f;
+		psiAll = 0f;
 
 	}
 
@@ -592,6 +600,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			case 0:
 				ClearChainHBonds();
+				phi = phiAll;
+				psi = psiAll;
 				break;
 			case 1:
 				//alpha helix
@@ -817,7 +827,15 @@ public class PolyPepBuilder : MonoBehaviour {
 		SetPhiPsiForResidue(myResid, myPhi, myPsi);
 	}
 
+	public void UpdatePsiPhiCanvas()
+	{
+		if (useUICanvasPhiPsi)
+		{
+			SetAllPhiPsi();
+			Debug.Log(phiAll + " " + psiAll);
+		}
 
+	}
 
 	// Update is called once per frame
 	void Update()
