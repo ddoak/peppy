@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 public class PolyPepBuilder : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	float bondLengthAmideCalpha = 1.46f;
 	float bondLengthCalphaCarbonyl = 1.51f;
 
-	public int secondaryStructure = 0;
+	public int secondaryStructure { get; set; } // = 0;
 
 	public int numResidues = 30;
 
@@ -37,6 +38,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public bool useColliders { get; set; } //= true;
 	public bool drivePhiPsi { get; set; }
 
+	private Slider phiSliderUI;
+	private Slider psiSliderUI;
 
 	// Use this for initialization
 	void Start()
@@ -56,8 +59,23 @@ public class PolyPepBuilder : MonoBehaviour {
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
 
+		secondaryStructure = 0;
 		phiAll = 0f;
 		psiAll = 0f;
+
+		{
+			GameObject temp = GameObject.Find("Slider_Phi");
+
+
+			phiSliderUI = temp.GetComponent<Slider>();
+			phiSliderUI.value = 0;
+
+			temp = GameObject.Find("Slider_Psi");
+
+			psiSliderUI = temp.GetComponent<Slider>();
+			psiSliderUI.value = 0;
+		}
+
 
 	}
 
@@ -589,7 +607,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void SetAllPhiPsi()
+	public void SetAllPhiPsi()
 	{
 		float phi = 0.0f;
 		float psi = 0.0f;
@@ -600,8 +618,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			case 0:
 				ClearChainHBonds();
-				phi = phiAll;
-				psi = psiAll;
+				phi = phiSliderUI.value; // phiAll;
+				psi = psiSliderUI.value; // psiAll;
 				break;
 			case 1:
 				//alpha helix
@@ -622,6 +640,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				ClearChainHBonds();
 				break;
 		}
+
+		phiSliderUI.value = Mathf.RoundToInt(phi);
+		psiSliderUI.value = Mathf.RoundToInt(psi);
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
