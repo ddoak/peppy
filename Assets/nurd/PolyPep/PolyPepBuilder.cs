@@ -32,9 +32,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
 
-	public float phiAll { get; set; } //-139.0f;
-	public float psiAll { get; set; } //135.0f;
-	public bool useUICanvasPhiPsi { get; set; } //false;
 	public bool useColliders { get; set; } //= true;
 	public bool drivePhiPsi { get; set; }
 
@@ -60,10 +57,10 @@ public class PolyPepBuilder : MonoBehaviour {
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
 
 		secondaryStructure = 0;
-		phiAll = 0f;
-		psiAll = 0f;
 
 		{
+			// initialise slider values (hacky)
+
 			GameObject temp = GameObject.Find("Slider_Phi");
 
 
@@ -580,33 +577,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-
-	void UpdateSecondaryStructureSwitch()
-	{
-		int numSecondaryStructures = 3;
-
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			secondaryStructure++;
-
-			if (secondaryStructure > numSecondaryStructures)
-			{
-				secondaryStructure = 0;
-			}
-			SetAllPhiPsi();
-		}
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			secondaryStructure--;
-
-			if (secondaryStructure < 0)
-			{
-				secondaryStructure = numSecondaryStructures;
-			}
-			SetAllPhiPsi();
-		}
-	}
-
 	public void SetAllPhiPsi()
 	{
 		float phi = 0.0f;
@@ -616,25 +586,29 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		switch (secondaryStructure)
 		{
-			case 0:
+			case 0:		// not defined
+
+				phi = phiSliderUI.value; 
+				psi = psiSliderUI.value; 
 				ClearChainHBonds();
-				phi = phiSliderUI.value; // phiAll;
-				psi = psiSliderUI.value; // psiAll;
 				break;
-			case 1:
-				//alpha helix
+
+			case 1:		//alpha helix
+
 				phi = -57.0f;
 				psi = -47.0f;
 				SetChainAlphaHelicalHBonds();
 				break;
-			case 2:
-				//310 helix
+
+			case 2:		//310 helix
+				
 				phi = -74.0f;
 				psi = -4.0f;
 				SetChain310HelicalHBonds();
 				break;
-			case 3:
-				//beta sheet
+
+			case 3:		//beta sheet
+				
 				phi = -139.0f;
 				psi = 135.0f;
 				ClearChainHBonds();
@@ -682,22 +656,12 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCalpha.WakeUp();
 		RbCarbonyl.WakeUp();
 	}
+
 	public void SetColliders()
 	{
 		for (int i = 0; i < polyLength; i++)
 		{
 			SetCollidersGameObject(polyArr[i]);
-		}
-	}
-
-
-	void UpdateColliderSwitch()
-	{
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			useColliders = !useColliders;
-			SetColliders();
-			Debug.Log("Colliders " + useColliders);
 		}
 	}
 
@@ -846,12 +810,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		SetPhiPsiForResidue(myResid, myPhi, myPsi);
 	}
 
-	public void UpdatePsiPhiCanvas()
+	public void UpdatePsiPhiFromUI()
 	{
-		if (useUICanvasPhiPsi)
+		//if (useUICanvasPhiPsi)
+		if ((phiSliderUI != null) && (psiSliderUI != null))
 		{
 			SetAllPhiPsi();
-			Debug.Log(phiAll + " " + psiAll);
+			//Debug.Log(phiAll + " " + psiAll);
 		}
 
 	}
@@ -859,8 +824,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		UpdateSecondaryStructureSwitch();
-		UpdateColliderSwitch();
 		//UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
 		UpdateHBondPSTransforms();
