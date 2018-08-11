@@ -17,10 +17,11 @@ public class SliderText : MonoBehaviour {
 		textComponent.text = Mathf.Round(sliderValue/1).ToString();
 	}
 
-	public void Dummy()
+	public void SetSliderValue10(float sliderValue)
 	{
-
+		textComponent.text = System.Math.Round((sliderValue/10),1).ToString();
 	}
+
 
 // Update is called once per frame
 void Update () {

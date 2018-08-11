@@ -38,6 +38,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	private Slider phiSliderUI;
 	private Slider psiSliderUI;
 
+	private Slider vdwSliderUI;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -59,7 +61,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		secondaryStructure = 0;
 
 		{
-			// initialise slider values (hacky)
+			// initialise phi psi slider values (hacky?)
 
 			GameObject temp = GameObject.Find("Slider_Phi");
 
@@ -71,6 +73,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			psiSliderUI = temp.GetComponent<Slider>();
 			psiSliderUI.value = 0;
+
+			temp = GameObject.Find("Slider_Vdw");
+
+			vdwSliderUI = temp.GetComponent<Slider>();
+			vdwSliderUI.value = 10;
 		}
 
 
@@ -164,7 +171,30 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			}
 
-			float scaleVDW = 1.0f;
+
+
+
+			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
+
+			ScaleVDW(1.0f);
+			SetRbDrag(polyArr[i]);
+			SetCollidersGameObject(polyArr[i]);
+
+			if (i > 0)
+			{
+				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
+				AddBackboneTopologyConstraint(i);
+			}
+
+		}
+
+		InitBackboneHbondConstraints();
+	}
+
+	void ScaleVDW(float scale)
+	{
+		{
+			float scaleVDW = scale;
 			float radiusN = 1.0f;
 			float radiusC = 1.0f;
 			float radiusO = 1.0f;
@@ -200,24 +230,14 @@ public class PolyPepBuilder : MonoBehaviour {
 				}
 
 			}
-
-
-			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
-
-			SetRbDrag(polyArr[i]);
-			SetCollidersGameObject(polyArr[i]);
-
-			if (i > 0)
-			{
-				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
-				AddBackboneTopologyConstraint(i);
-			}
-
 		}
-
-		InitBackboneHbondConstraints();
 	}
 
+	public void ScaleVDWFromUI()
+	{
+		// slider value is 10x
+		ScaleVDW(vdwSliderUI.value / 10.0f);
+	}
 	void SetRbDrag(GameObject go)
 	{
 		// empirical values which seem to behave well
