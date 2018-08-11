@@ -516,6 +516,42 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	void SetChainPiHelicalHBonds()
+	{
+		for (int i = 0; i < numResidues; i++)
+		{
+			var donorGO = GetAmideForResidue(i);
+			if (i > 4)
+			{
+				GameObject acceptorGO = GetCarbonylForResidue(i - 5);
+				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+			}
+		}
+	}
+
+	void SetChainPeriodicHBonds(int offset)
+	{
+		if (offset < 0)
+		{
+			for (int i = 0; i < numResidues; i++)
+			{
+				var donorGO = GetAmideForResidue(i);
+				if (i > ((-offset) - 1))
+				{
+					GameObject acceptorGO = GetCarbonylForResidue(i + offset);
+					SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+					//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+				}
+			}
+		}
+		else
+		{
+			Debug.Log("ERROR: Can't set forward periodic HBonds");
+		}
+	}
+
+
 	void ClearChainHBonds()
 	{
 		for (int i = 0; i < numResidues; i++)
@@ -610,21 +646,23 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				phi = phiSliderUI.value; 
 				psi = psiSliderUI.value; 
-				ClearChainHBonds();
+				//ClearChainHBonds();
 				break;
 
-			case 1:		//alpha helix (right handed)
+			case 1:     //alpha helix (right handed) (phi + ps ~ -105)
 
 				phi = -57.0f;
 				psi = -47.0f;
-				SetChainAlphaHelicalHBonds();
+				SetChainPeriodicHBonds(-4);
+				//SetChainAlphaHelicalHBonds();
 				break;
 
-			case 2:     //310 helix
+			case 2:     //310 helix (phi + psi ~ -75)
 
 				phi = -49.0f;// -74.0f;
 				psi = -26.0f;// -4.0f;
-				SetChain310HelicalHBonds();
+				SetChainPeriodicHBonds(-3);
+				//SetChain310HelicalHBonds();
 				break;
 
 			case 3:		//anti beta sheet
@@ -641,18 +679,18 @@ public class PolyPepBuilder : MonoBehaviour {
 				ClearChainHBonds();
 				break;
 
-			case 5:     //pi helix
+			case 5:     //pi helix (phi + ps ~ -125)
 
-				phi = -57.0f;
+				phi = -55.0f;
 				psi = -70.0f;
-				ClearChainHBonds();
+				SetChainPiHelicalHBonds();
 				break;
 
 			case 6:     //alpha helix (left handed)
 
 				phi = 47.0f;
 				psi = 57.0f;
-				ClearChainHBonds();
+				SetChainAlphaHelicalHBonds();
 				break;
 		}
 
