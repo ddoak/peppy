@@ -613,24 +613,45 @@ public class PolyPepBuilder : MonoBehaviour {
 				ClearChainHBonds();
 				break;
 
-			case 1:		//alpha helix
+			case 1:		//alpha helix (right handed)
 
 				phi = -57.0f;
 				psi = -47.0f;
 				SetChainAlphaHelicalHBonds();
 				break;
 
-			case 2:		//310 helix
-				
-				phi = -74.0f;
-				psi = -4.0f;
+			case 2:     //310 helix
+
+				phi = -49.0f;// -74.0f;
+				psi = -26.0f;// -4.0f;
 				SetChain310HelicalHBonds();
 				break;
 
-			case 3:		//beta sheet
+			case 3:		//anti beta sheet
 				
 				phi = -139.0f;
 				psi = 135.0f;
+				ClearChainHBonds();
+				break;
+
+			case 4:     //parallel beta sheet
+
+				phi = -119.0f;
+				psi = 113.0f;
+				ClearChainHBonds();
+				break;
+
+			case 5:     //pi helix
+
+				phi = -57.0f;
+				psi = -70.0f;
+				ClearChainHBonds();
+				break;
+
+			case 6:     //alpha helix (left handed)
+
+				phi = 47.0f;
+				psi = 57.0f;
 				ClearChainHBonds();
 				break;
 		}
