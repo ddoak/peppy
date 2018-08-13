@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PolyPepBuilder : MonoBehaviour {
 
@@ -912,6 +913,11 @@ public class PolyPepBuilder : MonoBehaviour {
 			//Debug.Log(phiAll + " " + psiAll);
 		}
 
+	}
+
+	public void ResetLevel()
+	{
+		SceneManager.LoadScene("SampleScene");
 	}
 
 	// Update is called once per frame
