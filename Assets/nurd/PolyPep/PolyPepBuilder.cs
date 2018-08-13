@@ -34,6 +34,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public bool useColliders { get; set; } //= true;
 	public bool drivePhiPsi { get; set; }
+	public bool useHbondConstraints { get; set; }
 
 	private Slider phiSliderUI;
 	private Slider psiSliderUI;
@@ -490,44 +491,47 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetChainAlphaHelicalHBonds()
 	{
-		for (int i = 0; i < numResidues; i++)
-		{
-			var donorGO = GetAmideForResidue(i);
-			if (i > 3)
-			{
-				GameObject acceptorGO = GetCarbonylForResidue(i - 4);
-				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-			}
-		}
+		SetChainPeriodicHBonds(-4);
+		//for (int i = 0; i < numResidues; i++)
+		//{
+		//	var donorGO = GetAmideForResidue(i);
+		//	if (i > 3)
+		//	{
+		//		GameObject acceptorGO = GetCarbonylForResidue(i - 4);
+		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+		//	}
+		//}
 	}
 
 	void SetChain310HelicalHBonds()
 	{
-		for (int i = 0; i < numResidues; i++)
-		{
-			var donorGO = GetAmideForResidue(i);
-			if (i > 2)
-			{
-				GameObject acceptorGO = GetCarbonylForResidue(i - 3);
-				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-			}
-		}
+		SetChainPeriodicHBonds(-3);
+		//for (int i = 0; i < numResidues; i++)
+		//{
+		//	var donorGO = GetAmideForResidue(i);
+		//	if (i > 2)
+		//	{
+		//		GameObject acceptorGO = GetCarbonylForResidue(i - 3);
+		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+		//	}
+		//}
 	}
 
 	void SetChainPiHelicalHBonds()
 	{
-		for (int i = 0; i < numResidues; i++)
-		{
-			var donorGO = GetAmideForResidue(i);
-			if (i > 4)
-			{
-				GameObject acceptorGO = GetCarbonylForResidue(i - 5);
-				SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-				//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-			}
-		}
+		SetChainPeriodicHBonds(-5);
+		//for (int i = 0; i < numResidues; i++)
+		//{
+		//	var donorGO = GetAmideForResidue(i);
+		//	if (i > 4)
+		//	{
+		//		GameObject acceptorGO = GetCarbonylForResidue(i - 5);
+		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+		//	}
+		//}
 	}
 
 	void SetChainPeriodicHBonds(int offset)
@@ -542,6 +546,11 @@ public class PolyPepBuilder : MonoBehaviour {
 					GameObject acceptorGO = GetCarbonylForResidue(i + offset);
 					SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
 					//Debug.Log(i + " " + donorGO + " " + acceptorGO);
+				}
+				else
+				{
+					SwitchOffBackboneHbondConstraint(donorGO);
+					ClearAcceptorForBackboneHbondConstraint(donorGO);
 				}
 			}
 		}
@@ -653,16 +662,16 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				phi = -57.0f;
 				psi = -47.0f;
-				SetChainPeriodicHBonds(-4);
-				//SetChainAlphaHelicalHBonds();
+				//SetChainPeriodicHBonds(-4);
+				SetChainAlphaHelicalHBonds();
 				break;
 
 			case 2:     //310 helix (phi + psi ~ -75)
 
 				phi = -49.0f;// -74.0f;
 				psi = -26.0f;// -4.0f;
-				SetChainPeriodicHBonds(-3);
-				//SetChain310HelicalHBonds();
+				//SetChainPeriodicHBonds(-3);
+				SetChain310HelicalHBonds();
 				break;
 
 			case 3:		//anti beta sheet
@@ -683,6 +692,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				phi = -55.0f;
 				psi = -70.0f;
+				//SetChainPeriodicHBonds(-5);
 				SetChainPiHelicalHBonds();
 				break;
 
@@ -690,7 +700,10 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				phi = 47.0f;
 				psi = 57.0f;
+				//SetChainPeriodicHBonds(-4);
 				SetChainAlphaHelicalHBonds();
+
+
 				break;
 		}
 
@@ -777,14 +790,15 @@ public class PolyPepBuilder : MonoBehaviour {
 				UpdatePhiPsiDriveParamForResidue(i);
 			}
 			Debug.Log("PhiPsi Drive = OFF ");
+
 		}
 
 	}
 
 
-	void UpdateHBondSprings()
+	public void UpdateHBondSprings()
 	{
-		if (Input.GetKeyDown(KeyCode.L))
+		if (useHbondConstraints)
 		{
 			for (int resid = 0; resid < numResidues; resid++)
 			{
@@ -800,8 +814,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 			Debug.Log("HBond Springs = ON ");
 		}
-
-		if (Input.GetKeyDown(KeyCode.K))
+		else
 		{
 			for (int resid = 0; resid < numResidues; resid++)
 			{
@@ -907,6 +920,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
 		UpdateHBondPSTransforms();
-		UpdateHBondSprings();
+		//UpdateHBondSprings();
 	}
 }
+
