@@ -4,9 +4,7 @@ VR molecular modelling pathfinding project
 
 goals:
 
-visualisation
-teaching 
-multiscale molecular modelling 'sketch' tool
+visualisation, teaching, multiscale molecular modelling 'sketch' tool
 
 
 features:
