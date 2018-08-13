@@ -2,12 +2,12 @@
 
 VR molecular modelling pathfinding project
 
-goals:
+<b>goals:</b>
 
-visualisation / teaching / multiscale molecular modelling 'sketch' tool
+visualisation / teaching / molecular modelling 'sketch' tool
 
 
-features:
+<b>features:</b>
 
 interactive polypeptide backbone built from simple primitives
 
