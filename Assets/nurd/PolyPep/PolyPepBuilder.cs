@@ -182,6 +182,15 @@ public class PolyPepBuilder : MonoBehaviour {
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
 
+			{
+				//shadows / renderer
+				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
+				foreach (Renderer child in allChildren)
+				{
+					child.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+				}
+			}
+
 			if (i > 0)
 			{
 				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
@@ -201,6 +210,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			float radiusC = 1.0f;
 			float radiusO = 1.0f;
 			float radiusH = 0.75f;
+
 			float radiusR = 1.25f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
