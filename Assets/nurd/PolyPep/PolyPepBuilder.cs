@@ -183,7 +183,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			SetCollidersGameObject(polyArr[i]);
 
 			{
-				//shadows / renderer
+				// turn off shadows / renderer
 				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
 				foreach (Renderer child in allChildren)
 				{
@@ -401,6 +401,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		sjHbond.minDistance = HBondLength * scale;
 		sjHbond.maxDistance = HBondLength * scale;
 		sjHbond.tolerance = HBondLength * scale * 0.1f;
+		sjHbond.enableCollision = true;
 
 		{
 			// create particle system for hbond
@@ -457,7 +458,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
 		sjHbond.spring = 0;
 		sjHbond.damper = 0;
-		sjHbond.enableCollision = false;
+		//sjHbond.enableCollision = false;
 	}
 
 	void SwitchOnBackboneHbondConstraint(GameObject donorGO)
@@ -465,7 +466,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
 		sjHbond.spring = 1000;
 		sjHbond.damper = 5;
-		sjHbond.enableCollision = true;
+		//sjHbond.enableCollision = true;
 	}
 
 
