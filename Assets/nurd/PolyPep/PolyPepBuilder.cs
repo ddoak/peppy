@@ -32,7 +32,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public SpringJoint[] hbondBackboneSj_HO;
 	public SpringJoint[] hbondBackboneSj_HC;
-	//public SpringJoint[] hbondBackboneSj_NO;
+	public SpringJoint[] hbondBackboneSj_NO;
 
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
@@ -94,8 +94,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
+
 		hbondBackbonePsPf = new GameObject[numResidues];
 		hbondBackboneSj_HO = new SpringJoint[numResidues];
+		hbondBackboneSj_HC = new SpringJoint[numResidues];
+		hbondBackboneSj_NO = new SpringJoint[numResidues];
 
 		{
 			// init
@@ -374,8 +377,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void InitBackboneHbondConstraint(int resid)
 	{
-
-
 		{
 			GameObject donorGO = GetAmideForResidue(resid);
 			SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
@@ -397,22 +398,90 @@ public class PolyPepBuilder : MonoBehaviour {
 			float axisRotOffset = -90f;
 			float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
 			float NHBondLength = 1.0f;
+
+
 			sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
-		
-			SwitchOffBackboneHbondConstraint(donorGO);
 
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 2.0f;
+			float HBondLength = 1.0f;
 
 			sjHbond.minDistance = HBondLength * scale;
 			sjHbond.maxDistance = HBondLength * scale;
 			sjHbond.tolerance = HBondLength * scale * 0.1f;
 			sjHbond.enableCollision = true;
-
 		}
 
+		{
+			GameObject donorGO = GetAmideForResidue(resid);
+			SpringJoint sjHbond2 = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
+			hbondBackboneSj_HC[resid] = sjHbond2;
+			sjHbond2.connectedBody = null;
+			sjHbond2.autoConfigureConnectedAnchor = false;
+
+			// calculate anchor position from molecular geometry
+			//
+			//
+			//                       Z axis
+			//                       ^
+			//        \  122         |
+			//  119.5  N----         o---> X axis
+			//        /          
+			//       H          
+			//               
+			//
+			float axisRotOffset = -90f;
+			float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
+			float NHBondLength = 1.0f;
+			sjHbond2.anchor = new Vector3(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
+
+			// scale joint parameters to PolyPepBuilder and Amide_pf
+
+			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
+			float HBondLength = 3.5f;
+
+			sjHbond2.minDistance = HBondLength * scale;
+			sjHbond2.maxDistance = HBondLength * scale;
+			sjHbond2.tolerance = HBondLength * scale * 0.1f;
+			sjHbond2.enableCollision = true;
+		}
+
+		{
+			GameObject donorGO = GetAmideForResidue(resid);
+			SpringJoint sjHbond3 = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
+			hbondBackboneSj_NO[resid] = sjHbond3;
+			sjHbond3.connectedBody = null;
+			sjHbond3.autoConfigureConnectedAnchor = false;
+
+			// calculate anchor position from molecular geometry
+			//
+			//
+			//                       Z axis
+			//                       ^
+			//        \  122         |
+			//  119.5  N----         o---> X axis
+			//        /          
+			//       H          
+			//               
+			//
+			float axisRotOffset = -90f;
+			float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
+			float NHBondLength = 1.0f;
+			sjHbond3.anchor = new Vector3(0f, 0f, 0f); //(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
+
+			// scale joint parameters to PolyPepBuilder and Amide_pf
+
+			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
+			float HBondLength = 3.5f;
+
+			sjHbond3.minDistance = HBondLength * scale;
+			sjHbond3.maxDistance = HBondLength * scale;
+			sjHbond3.tolerance = HBondLength * scale * 0.1f;
+			sjHbond3.enableCollision = true;
+		}
+
+		SwitchOffBackboneHbondConstraint(resid);
 		InitParticleSystemForHbond(resid);
 
 	}
@@ -438,7 +507,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			GameObject donorGO =  GetAmideForResidue(resid);
-			var hbond_sj = donorGO.GetComponent<SpringJoint>();
+			var hbond_sj = hbondBackboneSj_HO[resid];
 			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
 			if (hbond_sj.connectedBody != null)
@@ -451,9 +520,26 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
+
+				//if (resid == 8)
+				//{
+				//	SpringJoint hbond_sj2 = hbondBackboneSj_NO[resid];
+				//	Vector3 donorPos = donorGO.transform.TransformPoint(hbond_sj2.anchor);
+				//	Vector3 acceptorPos = hbond_sj2.connectedBody.transform.TransformPoint(hbond_sj2.connectedAnchor);
+
+				//	DrawLine(donorPos, acceptorPos, Color.yellow, 0.02f);
+
+				//	hbond_sj2 = hbondBackboneSj_HC[resid];
+				//	donorPos = donorGO.transform.TransformPoint(hbond_sj2.anchor);
+				//	acceptorPos = hbond_sj2.connectedBody.transform.TransformPoint(hbond_sj2.connectedAnchor);
+
+				//	DrawLine(donorPos, acceptorPos, Color.red, 0.02f);
+				//}
+
 			}
 			else
 			{
+				// default if connectedBody is not set
 				// orient particle system with NH bond
 				Transform donorN_amide = donorGO.transform.Find("N_amide");
 				Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
@@ -464,26 +550,43 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void SwitchOffBackboneHbondConstraint(GameObject donorGO)
+	void SwitchOffBackboneHbondConstraint(int resid)
 	{
-		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
-		sjHbond.spring = 0;
-		sjHbond.damper = 0;
-		//sjHbond.enableCollision = false;
+		SetSpringJointValuesForBackboneHbondConstraint(resid, 0, 0);
 	}
 
-	void SwitchOnBackboneHbondConstraint(GameObject donorGO)
+	void SwitchOnBackboneHbondConstraint(int resid)
 	{
-		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
-		sjHbond.spring = 1000;
-		sjHbond.damper = 5;
-		//sjHbond.enableCollision = true;
+		//if (resid == 8)
+		//{
+			SetSpringJointValuesForBackboneHbondConstraint(resid, 2000, 5); // empirical values
+		//}
+		//else
+		//{
+		//	SetSpringJointValuesForBackboneHbondConstraint(resid, 0, 0);
+		//}
 	}
 
-
-	void SetAcceptorForBackboneHbondConstraint(GameObject donorGO, GameObject acceptorGO)
+	void SetSpringJointValuesForBackboneHbondConstraint(int resid, int springStrength, int springDamper)
 	{
-		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
+		hbondBackboneSj_HO[resid].spring = springStrength;
+		hbondBackboneSj_HC[resid].spring = springStrength;
+		hbondBackboneSj_NO[resid].spring = springStrength;
+
+		hbondBackboneSj_HO[resid].damper = springDamper;
+		hbondBackboneSj_HC[resid].damper = springDamper;
+		hbondBackboneSj_NO[resid].damper = springDamper;
+	}
+
+	void SetAcceptorForBackboneHbondConstraint(int donorResid, int acceptorResid)
+	{
+
+		GameObject donorGO = GetAmideForResidue(donorResid);
+		GameObject acceptorGO = GetCarbonylForResidue(acceptorResid);
+
+
+		//SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
+		SpringJoint sjHbond = hbondBackboneSj_HO[donorResid];
 
 		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
 
@@ -504,12 +607,62 @@ public class PolyPepBuilder : MonoBehaviour {
 		float COBondLength = 1.24f;
 		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
 
+
+
+		sjHbond = hbondBackboneSj_HC[donorResid];
+		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+
+
+		// calculate connected anchor position from molecular geometry
+		//
+		//
+		//                          Z axis
+		//       O                  ^
+		//        \  123.5          |
+		//         C----            o---> X axis
+		//        /          
+		//                 
+		//               
+		//
+		//float axisRotOffset = -90f;
+		//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+		//float COBondLength = 1.24f;
+		sjHbond.connectedAnchor = new Vector3(0f, 0f, 0f); // acceptorGO.transform.localPosition;
+
+
+		//new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+
+
+		sjHbond = hbondBackboneSj_NO[donorResid];
+		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+
+
+		// calculate connected anchor position from molecular geometry
+		//
+		//
+		//                          Z axis
+		//       O                  ^
+		//        \  123.5          |
+		//         C----            o---> X axis
+		//        /          
+		//                 
+		//               
+		//
+		//float axisRotOffset = -90f;
+		//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+		//float COBondLength = 1.24f;
+		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+
 	}
 
-	void ClearAcceptorForBackboneHbondConstraint(GameObject donorGO)
+	void ClearAcceptorForBackboneHbondConstraint(int resid)
 	{
-		SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
-		sjHbond.connectedBody = null;
+		//SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
+		//sjHbond.connectedBody = null;
+		hbondBackboneSj_HO[resid].connectedBody = null;
+		hbondBackboneSj_HC[resid].connectedBody = null;
+		hbondBackboneSj_NO[resid].connectedBody = null;
+
 	}
 
 	void SetChainAlphaHelicalHBonds()
@@ -561,19 +714,20 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		if (offset < 0)
 		{
-			for (int i = 0; i < numResidues; i++)
+			for (int resid = 0; resid < numResidues; resid++)
 			{
-				var donorGO = GetAmideForResidue(i);
-				if (i > ((-offset) - 1))
+				var donorGO = GetAmideForResidue(resid);
+				if (resid > ((-offset) - 1))
 				{
-					GameObject acceptorGO = GetCarbonylForResidue(i + offset);
-					SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
+					//GameObject acceptorGO = GetCarbonylForResidue(resid + offset);
+					SetAcceptorForBackboneHbondConstraint(resid, (resid + offset));
 					//Debug.Log(i + " " + donorGO + " " + acceptorGO);
 				}
 				else
 				{
-					SwitchOffBackboneHbondConstraint(donorGO);
-					ClearAcceptorForBackboneHbondConstraint(donorGO);
+					SwitchOffBackboneHbondConstraint(resid);
+
+					ClearAcceptorForBackboneHbondConstraint(resid);
 				}
 			}
 		}
@@ -586,11 +740,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void ClearChainHBonds()
 	{
-		for (int i = 0; i < numResidues; i++)
+		for (int resid = 0; resid < numResidues; resid++)
 		{
-			var donorGO = GetAmideForResidue(i);
-			SwitchOffBackboneHbondConstraint(donorGO);
-			ClearAcceptorForBackboneHbondConstraint(donorGO);
+			var donorGO = GetAmideForResidue(resid);
+			SwitchOffBackboneHbondConstraint(resid);
+			ClearAcceptorForBackboneHbondConstraint(resid);
 		}
 	}
 
@@ -624,7 +778,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		LineRenderer lr = myLine.GetComponent<LineRenderer>();
 		lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
 		lr.SetColors(color, color);
-		lr.SetWidth(0.02f, 0.02f);
+		lr.SetWidth(0.02f, 0.01f);
 		lr.SetPosition(0, start);
 		lr.SetPosition(1, end);
 		GameObject.Destroy(myLine, duration);
@@ -831,7 +985,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				if (hbond_sj.connectedBody != null)
 				{
-					SwitchOnBackboneHbondConstraint(donorGO);
+					SwitchOnBackboneHbondConstraint(resid);
 					WakeResidRbs(resid);
 				}
 			}
@@ -842,7 +996,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			for (int resid = 0; resid < numResidues; resid++)
 			{
 				GameObject donorGO = GetAmideForResidue(resid);
-				SwitchOffBackboneHbondConstraint(donorGO);
+				SwitchOffBackboneHbondConstraint(resid);
 			}
 			Debug.Log("HBond Springs = OFF ");
 		}
