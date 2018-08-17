@@ -30,6 +30,10 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public GameObject[] hbondBackbonePsPf;
 
+	public SpringJoint[] hbondBackboneSj_HO;
+	public SpringJoint[] hbondBackboneSj_HC;
+	//public SpringJoint[] hbondBackboneSj_NO;
+
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
 
@@ -91,6 +95,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
 		hbondBackbonePsPf = new GameObject[numResidues];
+		hbondBackboneSj_HO = new SpringJoint[numResidues];
 
 		{
 			// init
@@ -363,17 +368,21 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-			InitBackboneHbondConstraint(GetAmideForResidue(resid));
+			InitBackboneHbondConstraint(resid);
 		}
 	}
 
-	void InitBackboneHbondConstraint(GameObject donorGO)
+	void InitBackboneHbondConstraint(int resid)
 	{
-		SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
-		sjHbond.connectedBody = null;
-		sjHbond.autoConfigureConnectedAnchor = false;
+
 
 		{
+			GameObject donorGO = GetAmideForResidue(resid);
+			SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
+			hbondBackboneSj_HO[resid] = sjHbond;
+			sjHbond.connectedBody = null;
+			sjHbond.autoConfigureConnectedAnchor = false;
+			
 			// calculate anchor position from molecular geometry
 			//
 			//
@@ -389,37 +398,39 @@ public class PolyPepBuilder : MonoBehaviour {
 			float thetaAmide = (float)((Mathf.Deg2Rad * ((122 + 119.5) + axisRotOffset)) * -1);
 			float NHBondLength = 1.0f;
 			sjHbond.anchor = new Vector3(Mathf.Sin(thetaAmide) * NHBondLength, 0f, Mathf.Cos(thetaAmide) * NHBondLength);
-		}
-
-		SwitchOffBackboneHbondConstraint(donorGO);
-
-		// scale joint parameters to PolyPepBuilder and Amide_pf
-
-		float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-		float HBondLength = 2.0f;
-
-		sjHbond.minDistance = HBondLength * scale;
-		sjHbond.maxDistance = HBondLength * scale;
-		sjHbond.tolerance = HBondLength * scale * 0.1f;
-		sjHbond.enableCollision = true;
-
-		{
-			// create particle system for hbond
-			// assumes that only SpringJoint is the hbond constraint
-			var hbond_sj = donorGO.GetComponent<SpringJoint>();
-			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
-
 		
-			Transform tf_H = donorGO.transform.Find("tf_H");
+			SwitchOffBackboneHbondConstraint(donorGO);
 
-			int resid = GetResidForPolyArrGO(donorGO);
-			hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
-			hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
-			hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
-			//hBondPsPf.transform.localScale = transform.localScale;
+			// scale joint parameters to PolyPepBuilder and Amide_pf
+
+			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
+			float HBondLength = 2.0f;
+
+			sjHbond.minDistance = HBondLength * scale;
+			sjHbond.maxDistance = HBondLength * scale;
+			sjHbond.tolerance = HBondLength * scale * 0.1f;
+			sjHbond.enableCollision = true;
+
 		}
+
+		InitParticleSystemForHbond(resid);
 
 	}
+
+	void InitParticleSystemForHbond(int resid)
+	{
+		// create particle system for hbond
+		GameObject donorGO = GetAmideForResidue(resid);
+		var hbond_sj = hbondBackboneSj_HO[resid];
+		var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+
+		Transform tf_H = donorGO.transform.Find("tf_H");
+
+		hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
+		hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
+		hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
+	}
+
 
 	void UpdateHBondPSTransforms()
 	{
