@@ -185,10 +185,12 @@ public class PolyPepBuilder : MonoBehaviour {
 
 
 			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
+			polyArr[i].GetComponent<BackboneUnit>().residue = i / 3;
 
 			ScaleVDW(1.0f);
 			SetRbDrag(polyArr[i]);
 			SetCollidersGameObject(polyArr[i]);
+
 
 			{
 				// turn off shadows / renderer
@@ -560,15 +562,59 @@ public class PolyPepBuilder : MonoBehaviour {
 			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
 			Transform donorN_amide = donorGO.transform.Find("N_amide");
+			Transform tf_H = donorGO.transform.Find("tf_H");
 
 			Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
 
 			Vector3 NHBondUnit = relativeNHBond.normalized;
 
+			Vector3 endLocation = (donorHLocation + (4.0f * relativeNHBond));
+
 			Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
 			hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
 
-			DrawLine(donorHLocation, (donorHLocation + (4.0f * relativeNHBond)), Color.cyan, 0.02f);
+			{
+				RaycastHit hit;
+				Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
+
+				//if (Physics.SphereCast(donorHLocation, 0.1f, relativeNHBond.normalized, out hit, (4.0f * relativeNHBond.magnitude)))
+				if (Physics.SphereCast(donorRay, 0.02f, out hit, (4.0f * relativeNHBond.magnitude)))
+				{
+					
+					if (hit.collider.gameObject.name == "O_carbonyl")
+					{
+						
+						Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
+						GameObject go =  GameObject.Find(hit.collider.transform.parent.parent.name);
+
+						if (go.GetComponent<BackboneUnit>() != null)
+						{
+							int targetAcceptorResid = go.GetComponent<BackboneUnit>().residue;
+							Debug.Log(resid + "---> " + targetAcceptorResid);
+							int offset = 3;
+							if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
+							{
+								DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
+								//SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
+							}
+							else
+							{
+								DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
+							}
+						}
+					}
+					else
+					{
+						DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+					}
+					
+				}
+				else
+				{
+					DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
+				}
+			}
+			
 		}
 	}
 

@@ -1357,7 +1357,7 @@ Prefab:
     - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
         type: 2}
       propertyPath: numResidues
-      value: 30
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
         type: 2}

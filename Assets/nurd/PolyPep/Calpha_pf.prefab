@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 4496047190489048}
   - component: {fileID: 114903749518982374}
   - component: {fileID: 54479795725515146}
+  - component: {fileID: 114632011887693594}
   m_Layer: 0
   m_Name: Calpha_pf
   m_TagString: calpha
@@ -915,6 +916,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114632011887693594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1106350776754678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2144f53972c9b8f4db5e9c024ea4370b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  residue: 0
 --- !u!114 &114903749518982374
 MonoBehaviour:
   m_ObjectHideFlags: 1
