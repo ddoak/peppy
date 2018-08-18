@@ -550,6 +550,30 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	void HbondLineTrace()
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		//int resid = 7;
+		{
+			GameObject donorGO = GetAmideForResidue(resid);
+			var hbond_sj = hbondBackboneSj_HO[resid];
+			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+
+			Transform donorN_amide = donorGO.transform.Find("N_amide");
+
+			Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
+
+			Vector3 NHBondUnit = relativeNHBond.normalized;
+
+			Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
+			hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+
+			DrawLine(donorHLocation, (donorHLocation + (4.0f * relativeNHBond)), Color.cyan, 0.02f);
+		}
+	}
+
+
+
 	void SwitchOffBackboneHbondConstraint(int resid)
 	{
 		SetSpringJointValuesForBackboneHbondConstraint(resid, 0, 0);
@@ -1103,6 +1127,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//UpdateDistanceConstraintGfx();
 		UpdateHBondPSTransforms();
 		//UpdateHBondSprings();
+		HbondLineTrace();
 	}
 }
 
