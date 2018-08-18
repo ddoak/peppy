@@ -522,6 +522,10 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
+				//ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
+				//ParticleSystem.EmissionModule em = ps.GetComponent<ParticleSystem.EmissionModule>();
+				//em.rateOverTime = 500.0f;
+
 
 				//if (resid == 8)
 				//{
@@ -547,6 +551,10 @@ public class PolyPepBuilder : MonoBehaviour {
 				Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
 				Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
 				hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+
+				//ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
+				//ParticleSystem.EmissionModule em = ps.GetComponent<ParticleSystem.EmissionModule>();
+				//em.rateOverTime = 0.0f;
 			}
 
 		}
@@ -570,32 +578,34 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			Vector3 endLocation = (donorHLocation + (4.0f * relativeNHBond));
 
-			Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
-			hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+			//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
+			//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
 
 			{
 				RaycastHit hit;
 				Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
+				float castLength = (4.0f * relativeNHBond.magnitude);
+				float castRadius = 0.02f;
 
-				//if (Physics.SphereCast(donorHLocation, 0.1f, relativeNHBond.normalized, out hit, (4.0f * relativeNHBond.magnitude)))
-				if (Physics.SphereCast(donorRay, 0.02f, out hit, (4.0f * relativeNHBond.magnitude)))
+				//if (Physics.SphereCast(donorHLocation, castRadius, relativeNHBond.normalized, out hit, castLength))
+				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength))
 				{
 					
 					if (hit.collider.gameObject.name == "O_carbonyl")
 					{
 						
-						Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
+						//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
 						GameObject go =  GameObject.Find(hit.collider.transform.parent.parent.name);
 
 						if (go.GetComponent<BackboneUnit>() != null)
 						{
 							int targetAcceptorResid = go.GetComponent<BackboneUnit>().residue;
-							Debug.Log(resid + "---> " + targetAcceptorResid);
+							//Debug.Log(resid + "---> " + targetAcceptorResid);
 							int offset = 3;
 							if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
 							{
 								DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
-								//SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
+								SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
 							}
 							else
 							{
@@ -1171,9 +1181,9 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		//UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
+		HbondLineTrace();
 		UpdateHBondPSTransforms();
 		//UpdateHBondSprings();
-		HbondLineTrace();
 	}
 }
 
