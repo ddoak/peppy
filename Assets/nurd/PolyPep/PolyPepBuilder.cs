@@ -562,6 +562,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void HbondLineTrace()
 	{
+		float hbondCastScale = 3.0f; // length of cast in NH bond lengths ;)
+
 		for (int resid = 0; resid < numResidues; resid++)
 		//int resid = 7;
 		{
@@ -576,23 +578,25 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			Vector3 NHBondUnit = relativeNHBond.normalized;
 
-			Vector3 endLocation = (donorHLocation + (4.0f * relativeNHBond));
+			Vector3 endLocation = (donorHLocation + (hbondCastScale * relativeNHBond));
 
 			//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
 			//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
 
+			if (true)
 			{
 				RaycastHit hit;
 				Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
-				float castLength = (4.0f * relativeNHBond.magnitude);
+				float castLength = (hbondCastScale * relativeNHBond.magnitude);
 				float castRadius = 0.05f;
 				bool foundAcceptor = false;
+				int layerMask = 1 << 9;
 
 				//if (Physics.SphereCast(donorHLocation, castRadius, relativeNHBond.normalized, out hit, castLength))
-				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength))
+				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength, layerMask))
 				{
 					
-					if (hit.collider.gameObject.name == "O_carbonyl")
+					if (hit.collider.gameObject.name == "hbond_acceptor")
 					{
 						
 						//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
@@ -606,28 +610,28 @@ public class PolyPepBuilder : MonoBehaviour {
 							if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
 							{
 								foundAcceptor = true;
-								//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
+								DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
 								SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
 								SwitchOnBackboneHbondConstraint(resid);
 							}
 							else
 							{
 								//found CO but too close in chain
-								//DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
+								DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
 							}
 						}
 					}
 					else
 					{
 						// hit something - not CO
-						//DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+						DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
 					}
 					
 				}
 				else
 				{
 					// no hit
-					//DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
+					DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
 				}
 				if (!foundAcceptor)
 				{
@@ -672,83 +676,94 @@ public class PolyPepBuilder : MonoBehaviour {
 		GameObject acceptorGO = GetCarbonylForResidue(acceptorResid);
 
 
-		//SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
 		SpringJoint sjHbond = hbondBackboneSj_HO[donorResid];
-
-		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
-
-
-		// calculate connected anchor position from molecular geometry
-		//
-		//
-		//                          Z axis
-		//       O                  ^
-		//        \  123.5          |
-		//         C----            o---> X axis
-		//        /          
-		//                 
-		//               
-		//
-		float axisRotOffset = -90f;
-		float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
-		float COBondLength = 1.24f;
-		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
+		{
+			sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
 
 
+			// calculate connected anchor position from molecular geometry
+			//
+			//
+			//                          Z axis
+			//       O                  ^
+			//        \  123.5          |
+			//         C----            o---> X axis
+			//        /          
+			//                 
+			//               
+			//
+			float axisRotOffset = -90f;
+			float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+			float COBondLength = 1.24f;
+			sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+
+
+		}
 
 		sjHbond = hbondBackboneSj_HC[donorResid];
-		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
+		{
+			sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+			// calculate connected anchor position from molecular geometry
+			//
+			//
+			//                          Z axis
+			//       O                  ^
+			//        \  123.5          |
+			//         C----            o---> X axis
+			//        /          
+			//                 
+			//               
+			//
+			//float axisRotOffset = -90f;
+			//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+			//float COBondLength = 1.24f;
+			sjHbond.connectedAnchor = new Vector3(0f, 0f, 0f); // acceptorGO.transform.localPosition;
+		}
 
-
-		// calculate connected anchor position from molecular geometry
-		//
-		//
-		//                          Z axis
-		//       O                  ^
-		//        \  123.5          |
-		//         C----            o---> X axis
-		//        /          
-		//                 
-		//               
-		//
-		//float axisRotOffset = -90f;
-		//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
-		//float COBondLength = 1.24f;
-		sjHbond.connectedAnchor = new Vector3(0f, 0f, 0f); // acceptorGO.transform.localPosition;
 
 
 		//new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
 
 
 		sjHbond = hbondBackboneSj_NO[donorResid];
-		sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
-
-
-		// calculate connected anchor position from molecular geometry
-		//
-		//
-		//                          Z axis
-		//       O                  ^
-		//        \  123.5          |
-		//         C----            o---> X axis
-		//        /          
-		//                 
-		//               
-		//
-		//float axisRotOffset = -90f;
-		//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
-		//float COBondLength = 1.24f;
-		sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
-
+		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
+		{
+			sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
+			// calculate connected anchor position from molecular geometry
+			//
+			//
+			//                          Z axis
+			//       O                  ^
+			//        \  123.5          |
+			//         C----            o---> X axis
+			//        /          
+			//                 
+			//               
+			//
+			float axisRotOffset = -90f;
+			float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
+			float COBondLength = 1.24f;
+			sjHbond.connectedAnchor = new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
+		}
 	}
 
 	void ClearAcceptorForBackboneHbondConstraint(int resid)
 	{
-		//SpringJoint sjHbond = donorGO.GetComponent<SpringJoint>();
-		//sjHbond.connectedBody = null;
-		hbondBackboneSj_HO[resid].connectedBody = null;
-		hbondBackboneSj_HC[resid].connectedBody = null;
-		hbondBackboneSj_NO[resid].connectedBody = null;
+		if (hbondBackboneSj_HO[resid].connectedBody)
+		{
+			hbondBackboneSj_HO[resid].connectedBody = null;
+		}
+		if (hbondBackboneSj_HC[resid].connectedBody)
+		{
+			hbondBackboneSj_HC[resid].connectedBody = null;
+		}
+		if (hbondBackboneSj_NO[resid].connectedBody)
+		{
+			hbondBackboneSj_NO[resid].connectedBody = null;
+		}
+
 	}
 
 	void SetChainAlphaHelicalHBonds()

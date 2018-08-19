@@ -11,6 +11,11 @@ TagManager:
   - carbonyl
   - phi
   - psi
+  - H
+  - N
+  - R
+  - C
+  - O
   layers:
   - Default
   - TransparentFX
@@ -21,7 +26,7 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
+  - Hbond
   - 
   - 
   - 
