@@ -515,7 +515,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	}
 
 
-	void UpdateHBondPSTransforms()
+	void UpdateHbondParticleSystems()
 	{
 		// aligns hbond particle systems to acceptor (if set)
 		for (int resid = 0; resid < numResidues; resid++)
@@ -541,7 +541,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
 				ParticleSystem.EmissionModule em = ps.emission;
-				em.rateOverTime = 2.0f;
+				em.rateOverTime = 4.0f;
 
 			}
 			else
@@ -1219,7 +1219,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//UpdatePhiPsiDrives();
 		//UpdateDistanceConstraintGfx();
 		HbondLineTrace();
-		UpdateHBondPSTransforms();
+		UpdateHbondParticleSystems();
 		//UpdateHBondSprings();
 	}
 }
