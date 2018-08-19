@@ -22,9 +22,13 @@ public class SliderText : MonoBehaviour {
 		textComponent.text = System.Math.Round((sliderValue/10),1).ToString();
 	}
 
+	public void SetSliderValue100(float sliderValue)
+	{
+		textComponent.text = System.Math.Round((sliderValue / 100), 1).ToString();
+	}
 
-// Update is called once per frame
-void Update () {
+	// Update is called once per frame
+	void Update () {
 		
 	}
 }

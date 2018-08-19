@@ -39,12 +39,16 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public bool useColliders { get; set; } //= true;
 	public bool drivePhiPsi { get; set; }
-	public bool useHbondConstraints { get; set; }
+	public bool ActiveHbondSpringConstraints { get; set; }
 
 	private Slider phiSliderUI;
 	private Slider psiSliderUI;
 
 	private Slider vdwSliderUI;
+
+	private Slider hbondSliderUI;
+
+	private bool disablePhiPsiUIInput = false;
 
 	// Use this for initialization
 	void Start()
@@ -62,7 +66,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
 
 		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
-		//Debug.Log("LOAD FILE = " + Load("Assets/Data/1xda_phi_psi.txt")); 
+		//disablePhiPsiUIInput = true;
+		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/1xda_phi_psi.txt")); 
 
 		secondaryStructure = 0;
 
@@ -84,6 +89,12 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			vdwSliderUI = temp.GetComponent<Slider>();
 			vdwSliderUI.value = 10;
+
+			temp = GameObject.Find("Slider_HbondStrength");
+
+			hbondSliderUI = temp.GetComponent<Slider>();
+			hbondSliderUI.value = 2000;
+
 		}
 
 
@@ -260,6 +271,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		// slider value is 10x
 		ScaleVDW(vdwSliderUI.value / 10.0f);
 	}
+
 	void SetRbDrag(GameObject go)
 	{
 		// empirical values which seem to behave well
@@ -522,35 +534,31 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
+				//if (hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().isStopped)
+				//{
+				//	hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().Play();
+				//}
+
 				ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
 				ParticleSystem.EmissionModule em = ps.emission;
 				em.rateOverTime = 2.0f;
-
-
-				//if (resid == 8)
-				//{
-				//	SpringJoint hbond_sj2 = hbondBackboneSj_NO[resid];
-				//	Vector3 donorPos = donorGO.transform.TransformPoint(hbond_sj2.anchor);
-				//	Vector3 acceptorPos = hbond_sj2.connectedBody.transform.TransformPoint(hbond_sj2.connectedAnchor);
-
-				//	DrawLine(donorPos, acceptorPos, Color.yellow, 0.02f);
-
-				//	hbond_sj2 = hbondBackboneSj_HC[resid];
-				//	donorPos = donorGO.transform.TransformPoint(hbond_sj2.anchor);
-				//	acceptorPos = hbond_sj2.connectedBody.transform.TransformPoint(hbond_sj2.connectedAnchor);
-
-				//	DrawLine(donorPos, acceptorPos, Color.red, 0.02f);
-				//}
 
 			}
 			else
 			{
 				// default if connectedBody is not set
 				// orient particle system with NH bond
-				Transform donorN_amide = donorGO.transform.Find("N_amide");
-				Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
-				Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
-				hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+
+				//Transform donorN_amide = donorGO.transform.Find("N_amide");
+				//Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
+				//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
+				//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+
+				//if (hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().isPlaying)
+				//{
+				//	hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().Stop();
+				//}
+
 
 				ParticleSystem.EmissionModule em = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().emission;
 				em.rateOverTime = 0.0f;
@@ -590,13 +598,15 @@ public class PolyPepBuilder : MonoBehaviour {
 				float castLength = (hbondCastScale * relativeNHBond.magnitude);
 				float castRadius = 0.05f;
 				bool foundAcceptor = false;
-				int layerMask = 1 << 9;
+				//set layerMask for hbond and default layers (? may help reduce snappy hbonding through other atoms)
+				int layerMask = (1 << 9) + 1;
+				
 
 				//if (Physics.SphereCast(donorHLocation, castRadius, relativeNHBond.normalized, out hit, castLength))
 				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength, layerMask))
 				{
 					
-					if (hit.collider.gameObject.name == "hbond_acceptor")
+					if ((hit.collider.gameObject.name == "hbond_acceptor") || (hit.collider.gameObject.name == "O_carbonyl"))
 					{
 						
 						//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
@@ -652,9 +662,9 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SwitchOnBackboneHbondConstraint(int resid)
 	{
-		if (useHbondConstraints)
+		if (ActiveHbondSpringConstraints)
 		{
-			SetSpringJointValuesForBackboneHbondConstraint(resid, 2000, 5); // empirical values
+			SetSpringJointValuesForBackboneHbondConstraint(resid, (int)hbondSliderUI.value, 5); // empirical values
 		}
 	}
 
@@ -675,7 +685,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		GameObject donorGO = GetAmideForResidue(donorResid);
 		GameObject acceptorGO = GetCarbonylForResidue(acceptorResid);
 
-
+		// HO spring
 		SpringJoint sjHbond = hbondBackboneSj_HO[donorResid];
 		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
 		{
@@ -701,32 +711,20 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		}
 
+		//HC spring
 		sjHbond = hbondBackboneSj_HC[donorResid];
 		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
 		{
 			sjHbond.connectedBody = acceptorGO.GetComponent<Rigidbody>();
 			// calculate connected anchor position from molecular geometry
-			//
-			//
-			//                          Z axis
-			//       O                  ^
-			//        \  123.5          |
-			//         C----            o---> X axis
-			//        /          
-			//                 
-			//               
-			//
-			//float axisRotOffset = -90f;
-			//float thetaCarbonyl = (float)((Mathf.Deg2Rad * (123.5 + axisRotOffset)) * -1);
-			//float COBondLength = 1.24f;
-			sjHbond.connectedAnchor = new Vector3(0f, 0f, 0f); // acceptorGO.transform.localPosition;
+			sjHbond.connectedAnchor = new Vector3(0f, 0f, 0f); // No offset as the connected anchor is C atom
 		}
 
 
 
 		//new Vector3(Mathf.Sin(thetaCarbonyl) * COBondLength, 0f, Mathf.Cos(thetaCarbonyl) * COBondLength);
 
-
+		//NO spring
 		sjHbond = hbondBackboneSj_NO[donorResid];
 		if (sjHbond.connectedBody != acceptorGO.GetComponent<Rigidbody>())
 		{
@@ -1037,19 +1035,27 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdatePhiPsiDrives()
 	{
-		float drivePhiPsiMaxForce = 300.0f;	// 100.0f
-		float drivePhiPsiPosSpring = 300.0f; // 100.0f
+		// 'Position' is actually a rotation?
+		//
+		// values are empirical
+		//
+		float drivePhiPsiMaxForce = 200.0f;	// 100.0f
+		float drivePhiPsiPosSpring = 200.0f; // 100.0f
+		int drivePhiPsiPosDamper = 1;
+		int drivePhiPsiPosDamperPassive = 1;
+
+
 
 		if (drivePhiPsi == true)
 		{
 			for (int i = 0; i < numResidues; i++)
 			{
 				chainPhiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-				chainPhiJointDrives[i].positionDamper = 1;
+				chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
 				chainPhiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
 
 				chainPsiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-				chainPsiJointDrives[i].positionDamper = 1;
+				chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
 				chainPsiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
 
 				UpdatePhiPsiDriveParamForResidue(i);
@@ -1061,11 +1067,11 @@ public class PolyPepBuilder : MonoBehaviour {
 			for (int i = 0; i < numResidues; i++)
 			{
 				chainPhiJointDrives[i].maximumForce = 0.0f;
-				chainPhiJointDrives[i].positionDamper = 0;
+				chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
 				chainPhiJointDrives[i].positionSpring = 0.0f;
 
 				chainPsiJointDrives[i].maximumForce = 0.0f;
-				chainPsiJointDrives[i].positionDamper = 0;
+				chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
 				chainPsiJointDrives[i].positionSpring = 0.0f;
 
 				UpdatePhiPsiDriveParamForResidue(i);
@@ -1079,7 +1085,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdateHBondSprings()
 	{
-		if (useHbondConstraints)
+		if (ActiveHbondSpringConstraints)
 		{
 			for (int resid = 0; resid < numResidues; resid++)
 			{
@@ -1186,13 +1192,20 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdatePsiPhiFromUI()
 	{
-		//if (useUICanvasPhiPsi)
-		if ((phiSliderUI != null) && (psiSliderUI != null))
+		if (!disablePhiPsiUIInput)
 		{
-			SetAllPhiPsi();
-			//Debug.Log(phiAll + " " + psiAll);
+			if ((phiSliderUI != null) && (psiSliderUI != null))
+			{
+				SetAllPhiPsi();
+				//Debug.Log(phiAll + " " + psiAll);
+			}
 		}
+	}
 
+	public void UpdateHbondStrengthFromUI()
+	{
+		//TODO  Update Hbonds with new strength!
+		UpdateHBondSprings();
 	}
 
 	public void ResetLevel()
