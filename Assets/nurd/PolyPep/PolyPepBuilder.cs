@@ -534,14 +534,18 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
-				//if (hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().isStopped)
-				//{
-				//	hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().Play();
-				//}
+				if (ActiveHbondSpringConstraints)
+				{
+					ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
+					ParticleSystem.EmissionModule em = ps.emission;
+					em.rateOverTime = 4.0f; // magic number
+				}
+				else
+				{
+					ParticleSystem.EmissionModule em = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().emission;
+					em.rateOverTime = 0.0f;
+				}
 
-				ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
-				ParticleSystem.EmissionModule em = ps.emission;
-				em.rateOverTime = 4.0f;
 
 			}
 			else
@@ -553,13 +557,6 @@ public class PolyPepBuilder : MonoBehaviour {
 				//Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
 				//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
 				//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
-
-				//if (hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().isPlaying)
-				//{
-				//	hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().Stop();
-				//}
-
-
 				ParticleSystem.EmissionModule em = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().emission;
 				em.rateOverTime = 0.0f;
 
