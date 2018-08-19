@@ -585,7 +585,8 @@ public class PolyPepBuilder : MonoBehaviour {
 				RaycastHit hit;
 				Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
 				float castLength = (4.0f * relativeNHBond.magnitude);
-				float castRadius = 0.02f;
+				float castRadius = 0.05f;
+				bool foundAcceptor = false;
 
 				//if (Physics.SphereCast(donorHLocation, castRadius, relativeNHBond.normalized, out hit, castLength))
 				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength))
@@ -604,24 +605,34 @@ public class PolyPepBuilder : MonoBehaviour {
 							int offset = 3;
 							if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
 							{
-								DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
+								foundAcceptor = true;
+								//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
 								SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
+								SwitchOnBackboneHbondConstraint(resid);
 							}
 							else
 							{
-								DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
+								//found CO but too close in chain
+								//DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
 							}
 						}
 					}
 					else
 					{
-						DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+						// hit something - not CO
+						//DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
 					}
 					
 				}
 				else
 				{
-					DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
+					// no hit
+					//DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
+				}
+				if (!foundAcceptor)
+				{
+					SwitchOffBackboneHbondConstraint(resid);
+					ClearAcceptorForBackboneHbondConstraint(resid);
 				}
 			}
 			
@@ -637,14 +648,10 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SwitchOnBackboneHbondConstraint(int resid)
 	{
-		//if (resid == 8)
-		//{
+		if (useHbondConstraints)
+		{
 			SetSpringJointValuesForBackboneHbondConstraint(resid, 2000, 5); // empirical values
-		//}
-		//else
-		//{
-		//	SetSpringJointValuesForBackboneHbondConstraint(resid, 0, 0);
-		//}
+		}
 	}
 
 	void SetSpringJointValuesForBackboneHbondConstraint(int resid, int springStrength, int springDamper)
@@ -742,7 +749,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		hbondBackboneSj_HO[resid].connectedBody = null;
 		hbondBackboneSj_HC[resid].connectedBody = null;
 		hbondBackboneSj_NO[resid].connectedBody = null;
-
 	}
 
 	void SetChainAlphaHelicalHBonds()
