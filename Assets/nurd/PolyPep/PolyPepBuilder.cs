@@ -522,9 +522,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
-				//ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
-				//ParticleSystem.EmissionModule em = ps.GetComponent<ParticleSystem.EmissionModule>();
-				//em.rateOverTime = 500.0f;
+				ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
+				ParticleSystem.EmissionModule em = ps.emission;
+				em.rateOverTime = 2.0f;
 
 
 				//if (resid == 8)
@@ -552,9 +552,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
 				hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
 
-				//ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
-				//ParticleSystem.EmissionModule em = ps.GetComponent<ParticleSystem.EmissionModule>();
-				//em.rateOverTime = 0.0f;
+				ParticleSystem.EmissionModule em = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>().emission;
+				em.rateOverTime = 0.0f;
+
 			}
 
 		}
@@ -610,28 +610,28 @@ public class PolyPepBuilder : MonoBehaviour {
 							if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
 							{
 								foundAcceptor = true;
-								DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
+								//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
 								SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
 								SwitchOnBackboneHbondConstraint(resid);
 							}
 							else
 							{
 								//found CO but too close in chain
-								DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
+								//DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
 							}
 						}
 					}
 					else
 					{
 						// hit something - not CO
-						DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+						//DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
 					}
 					
 				}
 				else
 				{
 					// no hit
-					DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
+					//DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
 				}
 				if (!foundAcceptor)
 				{
@@ -1037,17 +1037,20 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdatePhiPsiDrives()
 	{
+		float drivePhiPsiMaxForce = 300.0f;	// 100.0f
+		float drivePhiPsiPosSpring = 300.0f; // 100.0f
+
 		if (drivePhiPsi == true)
 		{
 			for (int i = 0; i < numResidues; i++)
 			{
-				chainPhiJointDrives[i].maximumForce = 100.0f;
+				chainPhiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
 				chainPhiJointDrives[i].positionDamper = 1;
-				chainPhiJointDrives[i].positionSpring = 100.0f;
+				chainPhiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
 
-				chainPsiJointDrives[i].maximumForce = 100.0f;
+				chainPsiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
 				chainPsiJointDrives[i].positionDamper = 1;
-				chainPsiJointDrives[i].positionSpring = 100.0f;
+				chainPsiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
 
 				UpdatePhiPsiDriveParamForResidue(i);
 			}
