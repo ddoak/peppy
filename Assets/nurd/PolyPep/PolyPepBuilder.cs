@@ -45,10 +45,18 @@ public class PolyPepBuilder : MonoBehaviour {
 	private Slider phiSliderUI;
 	private Slider psiSliderUI;
 
+
 	private Slider vdwSliderUI;
 	private Slider scaleSliderUI;
 
 	private Slider hbondSliderUI;
+
+	private Slider resStartSliderUI;
+	private Slider resEndSliderUI;
+
+	private int residSelectStart;
+	private int residSelectEnd;
+
 
 	private bool disablePhiPsiUIInput = false;
 
@@ -98,6 +106,19 @@ public class PolyPepBuilder : MonoBehaviour {
 			hbondSliderUI = temp.GetComponent<Slider>();
 			hbondSliderUI.value = 2000;
 
+			temp = GameObject.Find("Slider_ResStart");
+
+			resStartSliderUI = temp.GetComponent<Slider>();
+			resStartSliderUI.maxValue = numResidues;
+			resStartSliderUI.value = 1;
+
+			temp = GameObject.Find("Slider_ResEnd");
+
+			Assert.IsNotNull(temp);
+
+			resEndSliderUI = temp.GetComponent<Slider>();
+			resEndSliderUI.maxValue = numResidues;
+			resEndSliderUI.value = numResidues;
 
 			//temp = GameObject.Find("Slider_Scale");
 
@@ -281,36 +302,36 @@ public class PolyPepBuilder : MonoBehaviour {
 		ScaleVDW(vdwSliderUI.value / 10.0f);
 	}
 
-	public void UpdateScaleFromUI()
-	{
-		// slider value is 10x
-		float scale = scaleSliderUI.value / 10.0f;
-		gameObject.transform.localScale = new Vector3(scale, scale, scale);
+	//public void UpdateScaleFromUI()
+	//{
+	//	// slider value is 10x
+	//	float scale = scaleSliderUI.value / 10.0f;
+	//	gameObject.transform.localScale = new Vector3(scale, scale, scale);
 
-		for (int resid = 0; resid < numResidues; resid++)
-		{
-			var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
+	//	for (int resid = 0; resid < numResidues; resid++)
+	//	{
+	//		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
 
-			cjPhi_NCa.anchor = new Vector3(bondLengthAmideCalpha, 0f, 0f) * scale;
-			//cjPhi_NCa.connectedAnchor = cjPhi_NCa.connectedAnchor * scale;
+	//		cjPhi_NCa.anchor = new Vector3(bondLengthAmideCalpha, 0f, 0f) * scale;
+	//		//cjPhi_NCa.connectedAnchor = cjPhi_NCa.connectedAnchor * scale;
 
-			var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
+	//		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
 
-			cjPsi_CaCO.anchor = new Vector3(bondLengthCalphaCarbonyl, 0f, 0f) * scale;
-			//cjPsi_CaCO.connectedAnchor = cjPsi_CaCO.connectedAnchor * scale;
+	//		cjPsi_CaCO.anchor = new Vector3(bondLengthCalphaCarbonyl, 0f, 0f) * scale;
+	//		//cjPsi_CaCO.connectedAnchor = cjPsi_CaCO.connectedAnchor * scale;
 
 
-			var cjPeptide_CON = GetCarbonylForResidue(resid).GetComponent<ConfigurableJoint>();
+	//		var cjPeptide_CON = GetCarbonylForResidue(resid).GetComponent<ConfigurableJoint>();
 
-			if (cjPeptide_CON != null)
-			{
-				cjPeptide_CON.anchor = new Vector3(bondLengthPeptide, 0f, 0f) * scale;
-				//cjPeptide_CON.connectedAnchor = cjPeptide_CON.connectedAnchor * scale;
-			}
+	//		if (cjPeptide_CON != null)
+	//		{
+	//			cjPeptide_CON.anchor = new Vector3(bondLengthPeptide, 0f, 0f) * scale;
+	//			//cjPeptide_CON.connectedAnchor = cjPeptide_CON.connectedAnchor * scale;
+	//		}
 
-		}
+	//	}
 
-	}
+	//}
 
 	void SetRbDrag(GameObject go)
 	{
@@ -815,46 +836,16 @@ public class PolyPepBuilder : MonoBehaviour {
 	void SetChainAlphaHelicalHBonds()
 	{
 		SetChainPeriodicHBonds(-4);
-		//for (int i = 0; i < numResidues; i++)
-		//{
-		//	var donorGO = GetAmideForResidue(i);
-		//	if (i > 3)
-		//	{
-		//		GameObject acceptorGO = GetCarbonylForResidue(i - 4);
-		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-		//	}
-		//}
 	}
 
 	void SetChain310HelicalHBonds()
 	{
 		SetChainPeriodicHBonds(-3);
-		//for (int i = 0; i < numResidues; i++)
-		//{
-		//	var donorGO = GetAmideForResidue(i);
-		//	if (i > 2)
-		//	{
-		//		GameObject acceptorGO = GetCarbonylForResidue(i - 3);
-		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-		//	}
-		//}
 	}
 
 	void SetChainPiHelicalHBonds()
 	{
 		SetChainPeriodicHBonds(-5);
-		//for (int i = 0; i < numResidues; i++)
-		//{
-		//	var donorGO = GetAmideForResidue(i);
-		//	if (i > 4)
-		//	{
-		//		GameObject acceptorGO = GetCarbonylForResidue(i - 5);
-		//		SetAcceptorForBackboneHbondConstraint(donorGO, acceptorGO);
-		//		//Debug.Log(i + " " + donorGO + " " + acceptorGO);
-		//	}
-		//}
 	}
 
 	void SetChainPeriodicHBonds(int offset)
@@ -986,46 +977,42 @@ public class PolyPepBuilder : MonoBehaviour {
 
 				phi = -57.0f;
 				psi = -47.0f;
-				//SetChainPeriodicHBonds(-4);
-				SetChainAlphaHelicalHBonds();
+				//SetChainAlphaHelicalHBonds();
 				break;
 
 			case 2:     //310 helix (phi + psi ~ -75)
 
 				phi = -49.0f;// -74.0f;
 				psi = -26.0f;// -4.0f;
-				//SetChainPeriodicHBonds(-3);
-				SetChain310HelicalHBonds();
+				//SetChain310HelicalHBonds();
 				break;
 
 			case 3:		//anti beta sheet
 				
 				phi = -139.0f;
 				psi = 135.0f;
-				ClearChainHBonds();
+				//ClearChainHBonds();
 				break;
 
 			case 4:     //parallel beta sheet
 
 				phi = -119.0f;
 				psi = 113.0f;
-				ClearChainHBonds();
+				//ClearChainHBonds();
 				break;
 
 			case 5:     //pi helix (phi + ps ~ -125)
 
 				phi = -55.0f;
 				psi = -70.0f;
-				//SetChainPeriodicHBonds(-5);
-				SetChainPiHelicalHBonds();
+				//SetChainPiHelicalHBonds();
 				break;
 
 			case 6:     //alpha helix (left handed)
 
 				phi = 47.0f;
 				psi = 57.0f;
-				//SetChainPeriodicHBonds(-4);
-				SetChainAlphaHelicalHBonds();
+				//SetChainAlphaHelicalHBonds();
 
 
 				break;
@@ -1034,7 +1021,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		phiSliderUI.value = Mathf.RoundToInt(phi);
 		psiSliderUI.value = Mathf.RoundToInt(psi);
 
-		for (int resid = 0; resid < numResidues; resid++)
+		//for (int resid = 0; resid < numResidues; resid++)
+		for (int resid = residSelectStart; resid < residSelectEnd; resid++)
 		{
 			SetPhiPsiForResidue(resid, phi, psi);
 		}
@@ -1254,6 +1242,33 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		//TODO  Update Hbonds with new strength!
 		UpdateHBondSprings();
+	}
+
+	public void UpdateResidueSelectionStartFromUI()
+	{
+		residSelectStart = (int)resStartSliderUI.value - 1;
+		Debug.Log(residSelectStart);
+		if (resEndSliderUI != null)
+		{
+			if (resStartSliderUI.value >= resEndSliderUI.value)
+			{
+				resStartSliderUI.value = resEndSliderUI.value - 1;
+			}
+		}
+
+	}
+
+	public void UpdateResidueSelectionEndFromUI()
+	{
+		residSelectEnd = (int)resEndSliderUI.value - 1;
+		Debug.Log(residSelectEnd);
+		if (resStartSliderUI != null)
+		{
+			if (resEndSliderUI.value <= resStartSliderUI.value)
+			{
+				resEndSliderUI.value = resStartSliderUI.value + 1;
+			}
+		}
 	}
 
 	public void ResetLevel()
