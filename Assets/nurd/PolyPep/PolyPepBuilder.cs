@@ -17,6 +17,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject hBondPsPf;
 
 	// bond lengths used in backbone configurable joints
+	// values are replicated in the prefabs (Carbonyl_pf, Amide_pf, Calpha_pf)
 	float bondLengthPeptide = 1.33f;
 	float bondLengthAmideCalpha = 1.46f;
 	float bondLengthCalphaCarbonyl = 1.51f;
@@ -45,6 +46,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	private Slider psiSliderUI;
 
 	private Slider vdwSliderUI;
+	private Slider scaleSliderUI;
 
 	private Slider hbondSliderUI;
 
@@ -90,10 +92,17 @@ public class PolyPepBuilder : MonoBehaviour {
 			vdwSliderUI = temp.GetComponent<Slider>();
 			vdwSliderUI.value = 10;
 
+
 			temp = GameObject.Find("Slider_HbondStrength");
 
 			hbondSliderUI = temp.GetComponent<Slider>();
 			hbondSliderUI.value = 2000;
+
+
+			//temp = GameObject.Find("Slider_Scale");
+
+			//scaleSliderUI = temp.GetComponent<Slider>();
+			//scaleSliderUI.value = 10;
 
 		}
 
@@ -272,11 +281,47 @@ public class PolyPepBuilder : MonoBehaviour {
 		ScaleVDW(vdwSliderUI.value / 10.0f);
 	}
 
+	public void UpdateScaleFromUI()
+	{
+		// slider value is 10x
+		float scale = scaleSliderUI.value / 10.0f;
+		gameObject.transform.localScale = new Vector3(scale, scale, scale);
+
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
+
+			cjPhi_NCa.anchor = new Vector3(bondLengthAmideCalpha, 0f, 0f) * scale;
+			//cjPhi_NCa.connectedAnchor = cjPhi_NCa.connectedAnchor * scale;
+
+			var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
+
+			cjPsi_CaCO.anchor = new Vector3(bondLengthCalphaCarbonyl, 0f, 0f) * scale;
+			//cjPsi_CaCO.connectedAnchor = cjPsi_CaCO.connectedAnchor * scale;
+
+
+			var cjPeptide_CON = GetCarbonylForResidue(resid).GetComponent<ConfigurableJoint>();
+
+			if (cjPeptide_CON != null)
+			{
+				cjPeptide_CON.anchor = new Vector3(bondLengthPeptide, 0f, 0f) * scale;
+				//cjPeptide_CON.connectedAnchor = cjPeptide_CON.connectedAnchor * scale;
+			}
+
+		}
+
+	}
+
 	void SetRbDrag(GameObject go)
 	{
 		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 1;
+
+		//test
+		//go.GetComponent<Rigidbody>().mass = 0.001f;
+
+
 	}
 
 	void SetCollidersGameObject(GameObject go)
@@ -301,9 +346,9 @@ public class PolyPepBuilder : MonoBehaviour {
 		GameObject go2 = polyArr[index];
 
 
-		float bondLengthPeptide = 1.33f;
-		float bondLengthAmideCalpha = 1.46f;
-		float bondLengthCalphaCarbonyl = 1.51f;
+		//float bondLengthPeptide = 1.33f;
+		//float bondLengthAmideCalpha = 1.46f;
+		//float bondLengthCalphaCarbonyl = 1.51f;
 
 		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
 		cj.connectedBody = go2.GetComponent<Rigidbody>();
@@ -391,7 +436,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void InitBackboneHbondConstraint(int resid)
 	{
+		// hbonds implemented as three spring joints
+		// http://pubs.sciepub.com/ajme/3/2/3/
+		//
 		{
+			// H -> O
 			GameObject donorGO = GetAmideForResidue(resid);
 			SpringJoint sjHbond = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
 			hbondBackboneSj_HO[resid] = sjHbond;
@@ -428,6 +477,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 
 		{
+			// H -> C
 			GameObject donorGO = GetAmideForResidue(resid);
 			SpringJoint sjHbond2 = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
 			hbondBackboneSj_HC[resid] = sjHbond2;
@@ -462,6 +512,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 
 		{
+			// N -> O
 			GameObject donorGO = GetAmideForResidue(resid);
 			SpringJoint sjHbond3 = donorGO.AddComponent(typeof(SpringJoint)) as SpringJoint;
 			hbondBackboneSj_NO[resid] = sjHbond3;
@@ -920,7 +971,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		float phi = 0.0f;
 		float psi = 0.0f;
 
-		Debug.Log("Secondary Structure " + secondaryStructure);
+		//Debug.Log("Secondary Structure " + secondaryStructure);
 
 		switch (secondaryStructure)
 		{
