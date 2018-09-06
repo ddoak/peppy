@@ -57,13 +57,22 @@ public class PolyPepBuilder : MonoBehaviour {
 	private int residSelectStart;
 	private int residSelectEnd;
 
+	private int residSelectStartLast;
+	private int residSelectEndLast;
+
 
 	private bool disablePhiPsiUIInput = false;
+
+	Shader shaderStandard;
+	Shader shaderToonOutline;
 
 	// Use this for initialization
 	void Start()
 	{
 		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/253l_phi_psi.txt"));
+
+		shaderStandard = Shader.Find("Standard");
+		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 
 		buildPolypeptideChain();
 
@@ -1255,6 +1264,12 @@ public class PolyPepBuilder : MonoBehaviour {
 				resStartSliderUI.value = resEndSliderUI.value - 1;
 			}
 		}
+		
+		if (residSelectStart != residSelectStartLast)
+		{
+			UpdateResidueSelectionRendering();
+			residSelectStartLast = residSelectStart;
+		}
 
 	}
 
@@ -1269,7 +1284,77 @@ public class PolyPepBuilder : MonoBehaviour {
 				resEndSliderUI.value = resStartSliderUI.value + 1;
 			}
 		}
+		if (residSelectEnd != residSelectEndLast)
+		{
+			UpdateResidueSelectionRendering();
+			residSelectEndLast = residSelectEnd;
+		}
 	}
+
+	private void UpdateResidueSelectionRendering()
+	{
+		for (int resid = 0; resid < residSelectStart; resid ++)
+		{
+			SetResidRendering(resid, "Standard");
+		}
+		for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
+		{
+			SetResidRendering(resid, "ToonOutline");
+		}
+		for (int resid = (residSelectEnd + 1); resid <= (numResidues - 1); resid++)
+		{
+			SetResidRendering(resid, "Standard");
+		}
+	}
+
+
+	private void SetResidRendering(int resid, string shaderName)
+	{
+		SetGoRendering(GetAmideForResidue(resid), shaderName);
+		SetGoRendering(GetCalphaForResidue(resid), shaderName);
+		SetGoRendering(GetCarbonylForResidue(resid), shaderName);
+	}
+
+	private void SetGoRendering(GameObject go, string shaderName)
+	{
+		Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
+		foreach (Renderer childRenderer in allChildRenderers)
+		{
+			//Debug.Log(child.GetType());
+
+			var _type = childRenderer.GetType();
+			if (_type.ToString() != "UnityEngine.ParticleSystemRenderer")
+			{
+				switch (shaderName)
+
+				{
+					case "ToonOutline":
+						{
+							Renderer _renderer = childRenderer.GetComponent<Renderer>();
+							_renderer.material.shader = shaderToonOutline;
+							_renderer.material.SetColor("_OutlineColor", Color.green);
+							_renderer.material.SetFloat("_Outline", 0.005f);
+						}
+						break;
+
+					case "Standard":
+						{
+							childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
+						}
+						break;
+
+				}
+			}
+			else
+			{
+				// particle system so don't change shader
+				//Debug.Log(child);
+			}
+
+		}
+	}
+
+
 
 	public void ResetLevel()
 	{
@@ -1280,6 +1365,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	void Update()
 	{
 		//UpdatePhiPsiDrives();
+
 		//UpdateDistanceConstraintGfx();
 		HbondLineTrace();
 		UpdateHbondParticleSystems();
