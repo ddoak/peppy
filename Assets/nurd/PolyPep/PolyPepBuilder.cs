@@ -14,6 +14,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
 
+	public GameObject residuePf;
+
 	public GameObject hBondPsPf;
 
 	// bond lengths used in backbone configurable joints
@@ -28,6 +30,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public GameObject[] polyArr;
 	private int polyLength;
+
+	public GameObject[] chainArr;
 
 	public GameObject[] hbondBackbonePsPf;
 
@@ -145,6 +149,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
 
+		chainArr = new GameObject[numResidues];
+
 		hbondBackbonePsPf = new GameObject[numResidues];
 		hbondBackboneSj_HO = new SpringJoint[numResidues];
 		hbondBackboneSj_HC = new SpringJoint[numResidues];
@@ -206,27 +212,30 @@ public class PolyPepBuilder : MonoBehaviour {
 			switch (id)
 			{
 				case 0:
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), transform);
+					AddResidueToChain(i / 3);
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), chainArr[i/3].transform);
 					break;
 				case 1:
 					// Yrot = +69
-					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), transform);
+					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), chainArr[i / 3].transform);
 					break;
 				case 2:
 					// Yrot = +69 -64 = 5
-					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), transform);
+					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), chainArr[i / 3].transform);
 					break;
 				case 3:
+					AddResidueToChain(i / 3);
 					// Yrot = +69 -64 +58 = 63
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), transform);
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
+					
 					break;
 				case 4:
 					// Yrot = +69 -64 +58 -69 = -6
-					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), transform);
+					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), chainArr[i / 3].transform);
 					break;
 				case 5:
 					// Yrot = +69 -64 +58 -69 +64 = 58
-					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), transform);
+					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), chainArr[i / 3].transform);
 					break;
 
 			}
@@ -259,7 +268,22 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		}
 
+		// assign references in chainArr
+		for (int resid = 0; resid < numResidues; resid ++)
+		{
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			residue.amide_pf = polyArr[resid * 3];
+			residue.calpha_pf = polyArr[(resid * 3) + 1];
+			residue.carbonyl_pf = polyArr[(resid * 3) + 2];
+		}
+
 		InitBackboneHbondConstraints();
+	}
+
+	void AddResidueToChain(int index)
+	{
+		chainArr[index] = Instantiate(residuePf, transform);
+		chainArr[index].name = "Residue_" + (index).ToString();
 	}
 
 	void ScaleVDW(float scale)
@@ -1039,6 +1063,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SetPhiPsiForResidue(int resid, float phi, float psi)
 	{
+		Residue residue = chainArr[resid].GetComponent<Residue>();
+
+		residue.phiTarget = phi;
+		residue.psiTarget = psi;
+
 		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
 		cjPhi_NCa.targetRotation = Quaternion.Euler(180.0f - phi, 0, 0);
 
