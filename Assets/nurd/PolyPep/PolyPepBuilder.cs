@@ -43,7 +43,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	private JointDrive[] chainPsiJointDrives;
 
 	public bool useColliders { get; set; } //= true;
-	public bool drivePhiPsi { get; set; }
+	public bool setTargetPhiPsi { get; set; }
+	public bool setDrivePhiPsi { get; set; }
 	public bool ActiveHbondSpringConstraints { get; set; }
 
 	private Slider phiSliderUI;
@@ -95,6 +96,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		secondaryStructure = 0;
 
 		{
+			//UI
 			// initialise phi psi slider values (hacky?)
 
 			GameObject temp = GameObject.Find("Slider_Phi");
@@ -158,6 +160,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		{
 			// init
+			// phi psi joint drives stored in array so that they can be dynamically referenced
+			//
 			chainPhiJointDrives = new JointDrive[numResidues];
 			chainPsiJointDrives = new JointDrive[numResidues];
 
@@ -433,7 +437,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			//	maximumForce = 100f,//10000.0f, //40.0f // 10.0f
 			//};
 			cj.angularXDrive = chainPhiJointDrives[index / 3];
-			cj.targetRotation = Quaternion.Euler(180 + 57, 0, 0); // alpha helix phi -57
+			cj.targetRotation = Quaternion.Euler(180 + 0, 0, 0); // default to 0 phi
 		}
 		else if (go1.tag == "calpha")
 		{
@@ -445,7 +449,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			//	maximumForce = 100f,//10000.0f, //40.0f // 10.0f
 			//};
 			cj.angularXDrive = chainPsiJointDrives[index / 3];
-			cj.targetRotation = Quaternion.Euler(180 + 47, 0, 0); // alpha helix psi -47
+			cj.targetRotation = Quaternion.Euler(180 + 0, 0, 0); // default to 0 psi
 		}
 		else if (go1.tag == "carbonyl")
 		{
@@ -990,7 +994,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void SetAllPhiPsi()
+	public void SetPhiPsiDataForSelection()
 	{
 		float phi = 0.0f;
 		float psi = 0.0f;
@@ -1055,10 +1059,21 @@ public class PolyPepBuilder : MonoBehaviour {
 		psiSliderUI.value = Mathf.RoundToInt(psi);
 
 		//for (int resid = 0; resid < numResidues; resid++)
-		for (int resid = residSelectStart; resid < residSelectEnd; resid++)
+		for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
 		{
-			SetPhiPsiForResidue(resid, phi, psi);
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			if (setTargetPhiPsi)
+			{
+				//residue.phiTarget = phi;
+				//residue.psiTarget = psi;
+				SetPhiPsiForResidue(resid, phi, psi);
+			}
+			if (setDrivePhiPsi)
+			{
+				residue.drivePhiPsiOn = true;
+			}
 		}
+		UpdatePhiPsiDrives();
 	}
 
 	void SetPhiPsiForResidue(int resid, float phi, float psi)
@@ -1109,50 +1124,90 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdatePhiPsiDrives()
 	{
-		// 'Position' is actually a rotation?
+		// Note that 'Position' is actually a rotation ;)
 		//
 		// values are empirical
 		//
 		float drivePhiPsiMaxForce = 200.0f;	// 100.0f
 		float drivePhiPsiPosSpring = 200.0f; // 100.0f
 		int drivePhiPsiPosDamper = 1;
-		int drivePhiPsiPosDamperPassive = 1;
+		int drivePhiPsiPosDamperPassive = 0;
 
 
-
-		if (drivePhiPsi == true)
+		for (int resid = 0; resid < numResidues; resid++)
 		{
-			for (int i = 0; i < numResidues; i++)
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			if (residue.drivePhiPsiOn)
+			//on
 			{
-				chainPhiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-				chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
-				chainPhiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
+				// active
+				chainPhiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+				chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
+				chainPhiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
 
-				chainPsiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-				chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
-				chainPsiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
+				chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+				chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
+				chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
 
-				UpdatePhiPsiDriveParamForResidue(i);
+				UpdatePhiPsiDriveParamForResidue(resid);
+
+				//Debug.Log("PhiPsi Drive = ON ");
 			}
-			Debug.Log("PhiPsi Drive = ON ");
-		}
-		else
-		{
-			for (int i = 0; i < numResidues; i++)
+			
+
+			else
+			//off
 			{
-				chainPhiJointDrives[i].maximumForce = 0.0f;
-				chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
-				chainPhiJointDrives[i].positionSpring = 0.0f;
+				//passive
+				chainPhiJointDrives[resid].maximumForce = 0.0f;
+				chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
+				chainPhiJointDrives[resid].positionSpring = 0.0f;
 
-				chainPsiJointDrives[i].maximumForce = 0.0f;
-				chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
-				chainPsiJointDrives[i].positionSpring = 0.0f;
+				chainPsiJointDrives[resid].maximumForce = 0.0f;
+				chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
+				chainPsiJointDrives[resid].positionSpring = 0.0f;
 
-				UpdatePhiPsiDriveParamForResidue(i);
+				UpdatePhiPsiDriveParamForResidue(resid);
+
+				//Debug.Log("PhiPsi Drive = OFF ");
 			}
-			Debug.Log("PhiPsi Drive = OFF ");
+			
 
 		}
+
+		//if (drivePhiPsi == true)
+		//{
+		//	for (int i = 0; i < numResidues; i++)
+		//	{
+		//		chainPhiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
+		//		chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
+		//		chainPhiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
+
+		//		chainPsiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
+		//		chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
+		//		chainPsiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
+
+		//		UpdatePhiPsiDriveParamForResidue(i);
+		//	}
+		//	Debug.Log("PhiPsi Drive = ON ");
+		//}
+		//else
+		//{
+		//	for (int i = 0; i < numResidues; i++)
+		//	{
+		//		chainPhiJointDrives[i].maximumForce = 0.0f;
+		//		chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
+		//		chainPhiJointDrives[i].positionSpring = 0.0f;
+
+		//		chainPsiJointDrives[i].maximumForce = 0.0f;
+		//		chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
+		//		chainPsiJointDrives[i].positionSpring = 0.0f;
+
+		//		UpdatePhiPsiDriveParamForResidue(i);
+		//	}
+		//	Debug.Log("PhiPsi Drive = OFF ");
+
+		//}
 
 	}
 
@@ -1270,7 +1325,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			if ((phiSliderUI != null) && (psiSliderUI != null))
 			{
-				SetAllPhiPsi();
+				SetPhiPsiDataForSelection();
 				//Debug.Log(phiAll + " " + psiAll);
 			}
 		}
@@ -1285,12 +1340,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	public void UpdateResidueSelectionStartFromUI()
 	{
 		residSelectStart = (int)resStartSliderUI.value - 1;
-		Debug.Log(residSelectStart);
+		//Debug.Log(residSelectStart);
 		if (resEndSliderUI != null)
 		{
-			if (resStartSliderUI.value >= resEndSliderUI.value)
+			if (resStartSliderUI.value > resEndSliderUI.value)
 			{
-				resStartSliderUI.value = resEndSliderUI.value - 1;
+				resStartSliderUI.value = resEndSliderUI.value;
 			}
 		}
 		
@@ -1305,12 +1360,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	public void UpdateResidueSelectionEndFromUI()
 	{
 		residSelectEnd = (int)resEndSliderUI.value - 1;
-		Debug.Log(residSelectEnd);
+		//Debug.Log(residSelectEnd);
 		if (resStartSliderUI != null)
 		{
-			if (resEndSliderUI.value <= resStartSliderUI.value)
+			if (resEndSliderUI.value < resStartSliderUI.value)
 			{
-				resEndSliderUI.value = resStartSliderUI.value + 1;
+				resEndSliderUI.value = resStartSliderUI.value;
 			}
 		}
 		if (residSelectEnd != residSelectEndLast)

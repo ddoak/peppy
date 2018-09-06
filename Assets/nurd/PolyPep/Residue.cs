@@ -11,8 +11,7 @@ public class Residue : MonoBehaviour {
 	public float phiTarget;
 	public float psiTarget;
 
-	public bool phiDriveOn = false;
-	public bool psiDriveOn = false;
+	public bool drivePhiPsiOn = false;
 
 	// Use this for initialization
 	void Start () {
