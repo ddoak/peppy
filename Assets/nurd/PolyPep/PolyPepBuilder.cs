@@ -13,9 +13,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject amidePf;
 	public GameObject calphaPf;
 	public GameObject carbonylPf;
-
 	public GameObject residuePf;
-
 	public GameObject hBondPsPf;
 
 	// bond lengths used in backbone configurable joints
@@ -147,7 +145,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void buildPolypeptideChain()
 	{
-
 		polyLength = numResidues * 3;
 		polyArr = new GameObject[polyLength];
 
@@ -282,6 +279,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 
 		InitBackboneHbondConstraints();
+
+		ReCentrePolyPep();
 	}
 
 	void AddResidueToChain(int index)
@@ -1438,7 +1437,59 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void ReCentrePolyPep()
+	{
+		Vector3 reCentrePos = new Vector3 (0f, 1.5f, -0f);
+		Bounds b = GetCBounds();
 
+		gameObject.transform.position += (reCentrePos - b.center);
+
+	}
+
+	private Bounds GetCBounds()
+	{
+		Bounds b = new Bounds();
+
+		float minX = Mathf.Infinity;
+		float minY = Mathf.Infinity;
+		float minZ = Mathf.Infinity;
+		float maxX = -Mathf.Infinity;
+		float maxY = -Mathf.Infinity;
+		float maxZ = -Mathf.Infinity;
+	
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag("C"))
+		{
+
+			if (go.transform.position.x < minX) minX = go.transform.position.x;
+			if (go.transform.position.y < minY) minY = go.transform.position.y;
+			if (go.transform.position.z < minZ) minZ = go.transform.position.z;
+
+			if (go.transform.position.x > maxX) maxX = go.transform.position.x;
+			if (go.transform.position.y > maxY) maxY = go.transform.position.y;
+			if (go.transform.position.z > maxZ) maxZ = go.transform.position.z;
+
+			//Debug.Log(go);
+		}
+
+	
+		Vector3 _extent = new Vector3 ((maxX - minX), (maxY - minY), (maxZ - minZ));
+		Vector3 _centre = new Vector3 ((maxX + minX)/2, (maxY + minY)/2, (maxZ + minZ)/2);
+
+		b.extents = _extent;
+		b.center = _centre;
+
+		//Debug.Log(b);
+
+
+		return b;
+	}
+
+	void OnDrawGizmos()
+	{
+		Bounds b = GetCBounds();
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireCube(b.center, b.extents);
+	}
 
 	public void ResetLevel()
 	{
