@@ -1493,7 +1493,9 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void ResetLevel()
 	{
-		SceneManager.LoadScene("SampleScene");
+		Scene m_Scene = SceneManager.GetActiveScene();
+		Debug.Log("Loading... " + m_Scene.name);
+		SceneManager.LoadScene(m_Scene.name);
 	}
 
 	// Update is called once per frame
