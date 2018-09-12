@@ -131,7 +131,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			resEndSliderUI = temp.GetComponent<Slider>();
 			resEndSliderUI.maxValue = numResidues;
-			resEndSliderUI.value = numResidues;
+			resEndSliderUI.value = 3; // numResidues; // initial value (+1)
 
 			//temp = GameObject.Find("Slider_Scale");
 
@@ -1350,7 +1350,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		
 		if (residSelectStart != residSelectStartLast)
 		{
-			UpdateResidueSelectionRendering();
+			UpdateResidueSelection();
 			residSelectStartLast = residSelectStart;
 		}
 
@@ -1369,85 +1369,58 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 		if (residSelectEnd != residSelectEndLast)
 		{
-			UpdateResidueSelectionRendering();
+			UpdateResidueSelection();
 			residSelectEndLast = residSelectEnd;
 		}
 	}
 
-	private void UpdateResidueSelectionRendering()
+	private void SetSequenceSelectionForBackboneUnit(GameObject go, bool flag)
+	{
+		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		if (bu != null)
+		{
+			//Debug.Log("      --> script");
+			//bu.SetGoRendering(go, "ToonOutlineRed");
+			bu.SetActiveSequenceSelect(flag);
+		}
+	}
+
+	private void SetSequenceSelectionForResidue(int resid, bool flag)
+	{
+		SetSequenceSelectionForBackboneUnit(GetAmideForResidue(resid), flag);
+		SetSequenceSelectionForBackboneUnit(GetCalphaForResidue(resid), flag);
+		SetSequenceSelectionForBackboneUnit(GetCarbonylForResidue(resid), flag);
+	}
+
+	private void UpdateResidueSelection()
 	{
 		for (int resid = 0; resid < residSelectStart; resid ++)
 		{
-			SetResidRendering(resid, "Standard");
+			SetSequenceSelectionForResidue(resid, false);
 		}
 		for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
 		{
-			SetResidRendering(resid, "ToonOutline");
+			SetSequenceSelectionForResidue(resid, true);
 		}
 		for (int resid = (residSelectEnd + 1); resid <= (numResidues - 1); resid++)
 		{
-			SetResidRendering(resid, "Standard");
+			SetSequenceSelectionForResidue(resid, false);
 		}
 	}
 
-
-	private void SetResidRendering(int resid, string shaderName)
-	{
-		SetGoRendering(GetAmideForResidue(resid), shaderName);
-		SetGoRendering(GetCalphaForResidue(resid), shaderName);
-		SetGoRendering(GetCarbonylForResidue(resid), shaderName);
-	}
-
-	private void SetGoRendering(GameObject go, string shaderName)
-	{
-		Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
-		foreach (Renderer childRenderer in allChildRenderers)
-		{
-			//Debug.Log(child.GetType());
-
-			var _type = childRenderer.GetType();
-			if (_type.ToString() != "UnityEngine.ParticleSystemRenderer")
-			{
-				switch (shaderName)
-
-				{
-					case "ToonOutline":
-						{
-							Renderer _renderer = childRenderer.GetComponent<Renderer>();
-							_renderer.material.shader = shaderToonOutline;
-							_renderer.material.SetColor("_OutlineColor", Color.green);
-							_renderer.material.SetFloat("_Outline", 0.005f);
-						}
-						break;
-
-					case "Standard":
-						{
-							childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
-						}
-						break;
-
-				}
-			}
-			else
-			{
-				// particle system so don't change shader
-				//Debug.Log(child);
-			}
-
-		}
-	}
 
 	public void ReCentrePolyPep()
 	{
-		Vector3 reCentrePos = new Vector3 (0f, 1.5f, -0f);
-		Bounds b = GetCBounds();
+		Vector3 reCentrePos = new Vector3 (0f, 1.5f, -0f); //arbitrary position
+		Bounds b = GetNAtomBounds();
 
 		gameObject.transform.position += (reCentrePos - b.center);
 
 	}
 
-	private Bounds GetCBounds()
+	private Bounds GetNAtomBounds()
 	{
+		// bounds for amide N atoms = approx bounds for polypeptide 
 		Bounds b = new Bounds();
 
 		float minX = Mathf.Infinity;
@@ -1457,7 +1430,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		float maxY = -Mathf.Infinity;
 		float maxZ = -Mathf.Infinity;
 	
-		foreach (GameObject go in GameObject.FindGameObjectsWithTag("C"))
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag("N"))
 		{
 
 			if (go.transform.position.x < minX) minX = go.transform.position.x;
@@ -1486,7 +1459,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void OnDrawGizmos()
 	{
-		Bounds b = GetCBounds();
+		Bounds b = GetNAtomBounds();
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireCube(b.center, b.extents);
 	}
