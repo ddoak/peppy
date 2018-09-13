@@ -73,7 +73,37 @@ public class RawInteraction : MonoBehaviour {
         }
     }
 
-    public void OnPrimarySelected(Transform t, Ray pointer)
+	public void OnHoverADown(Transform t)
+	{
+		{
+			//Debug.Log("---> " + t);
+			GameObject go = t.gameObject;
+			BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+			if (bu != null)
+			{
+				//Debug.Log("      --> script");
+				bu.SetMyResidueSelect(true);
+			}
+			//t.gameObject.GetComponent<Renderer>().material = oldHoverMat;
+		}
+	}
+
+	public void OnHoverBDown(Transform t)
+	{
+		{
+			//Debug.Log("---> " + t);
+			GameObject go = t.gameObject;
+			BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+			if (bu != null)
+			{
+				//Debug.Log("      --> script");
+				bu.SetMyResidueSelect(false);
+			}
+			//t.gameObject.GetComponent<Renderer>().material = oldHoverMat;
+		}
+	}
+
+	public void OnPrimarySelected(Transform t, Ray pointer)
 	{
         if (t.gameObject.name == "BackButton") {
             SceneManager.LoadScene("main", LoadSceneMode.Single);

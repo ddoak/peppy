@@ -40,7 +40,11 @@ namespace ControllerSelection {
         public OVRInput.Button primaryButton = OVRInput.Button.PrimaryIndexTrigger;
         [Tooltip("Secondary selection button")]
         public OVRInput.Button secondaryButton = OVRInput.Button.PrimaryTouchpad;
-        [Tooltip("Layers to exclude from raycast")]
+		[Tooltip("A selection button")]
+		public OVRInput.Button aButton = OVRInput.Button.One;
+		[Tooltip("B selection button")]
+		public OVRInput.Button bButton = OVRInput.Button.Two;
+		[Tooltip("Layers to exclude from raycast")]
         public LayerMask excludeLayers;
         [Tooltip("Maximum raycast distance")]
         public float raycastDistance = 500;
@@ -50,7 +54,10 @@ namespace ControllerSelection {
         public OVRRawRaycaster.HoverCallback onHoverExit;
         public OVRRawRaycaster.HoverCallback onHover;
 
-        [Header("Selection Callbacks")]
+		public OVRRawRaycaster.HoverCallback onHoverADown;
+		public OVRRawRaycaster.HoverCallback onHoverBDown;
+
+		[Header("Selection Callbacks")]
         public OVRRawRaycaster.SelectionCallback onPrimarySelect;
         public OVRRawRaycaster.SelectionCallback onSecondarySelect;
 
@@ -61,9 +68,11 @@ namespace ControllerSelection {
 		public Transform lastHit = null;
         public Transform primaryDown = null;
         public Transform secondaryDown = null;
+		public Transform aDown = null;
+		public Transform bDown = null;
 
-        //[HideInInspector]
-        public OVRInput.Controller activeController = OVRInput.Controller.None;
+		//[HideInInspector]
+		public OVRInput.Controller activeController = OVRInput.Controller.None;
 
         void Awake() {
             if (trackingSpace == null) {
@@ -149,7 +158,42 @@ namespace ControllerSelection {
                         primaryDown = null;
 						//Debug.Log("6");
 					}
-                }
+				}
+
+				if (lastHit)
+				{
+					///
+					if (OVRInput.Get(aButton, activeController))
+					{
+						aDown = lastHit;
+					}
+					else
+					{
+						aDown = null;
+					}
+					if (OVRInput.Get(bButton, activeController))
+					{
+						bDown = lastHit;
+					}
+					else
+					{
+						bDown = null;
+					}
+				}
+
+
+
+				if (aDown)
+				{
+					//Debug.Log("A---->" + aDown);
+					onHoverADown.Invoke(aDown);
+				}
+
+				if (bDown)
+				{
+					//Debug.Log("B---->" + bDown);
+					onHoverBDown.Invoke(bDown);
+				}
 
 				if (primaryDown)
 				{

@@ -5780,6 +5780,8 @@ MonoBehaviour:
   trackingSpace: {fileID: 1323360151}
   primaryButton: 8192
   secondaryButton: 16384
+  aButton: 1
+  bButton: 2
   excludeLayers:
     serializedVersion: 2
     m_Bits: 823
@@ -5819,6 +5821,38 @@ MonoBehaviour:
   onHover:
     m_PersistentCalls:
       m_Calls: []
+    m_TypeName: ControllerSelection.OVRRawRaycaster+HoverCallback, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onHoverADown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1919213148}
+        m_MethodName: OnHoverADown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: ControllerSelection.OVRRawRaycaster+HoverCallback, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onHoverBDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1919213148}
+        m_MethodName: OnHoverBDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: ControllerSelection.OVRRawRaycaster+HoverCallback, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPrimarySelect:
@@ -5888,6 +5922,8 @@ MonoBehaviour:
   lastHit: {fileID: 0}
   primaryDown: {fileID: 0}
   secondaryDown: {fileID: 0}
+  aDown: {fileID: 0}
+  bDown: {fileID: 0}
   activeController: 0
 --- !u!114 &1919213148
 MonoBehaviour:

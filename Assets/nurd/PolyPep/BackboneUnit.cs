@@ -15,7 +15,7 @@ public class BackboneUnit : MonoBehaviour {
 	public bool activeSequenceSelect = false;
 	private bool activeSequenceSelectLast = false;
 	public bool controllerHoverOn = false;
-
+	public bool controllerSelectOn = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,9 +26,31 @@ public class BackboneUnit : MonoBehaviour {
 
 	}
 
-	public void  SetBackboneUnitControllerHover(bool flag)
+	public void SetBackboneUnitControllerHover(bool flag)
 	{
 		controllerHoverOn = flag;
+		UpdateRenderMode();
+	}
+
+	public void SetMyResidueSelect(bool flag)
+	{
+		Residue res = (gameObject.transform.parent.gameObject.GetComponent("Residue") as Residue);
+		if (res)
+		{
+			//Debug.Log("             " + res);
+			BackboneUnit buAmide = res.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCalpha = res.calpha_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCarbonyl = res.carbonyl_pf.GetComponent("BackboneUnit") as BackboneUnit;
+
+			buAmide.SetBackboneUnitSelect(flag);
+			buCalpha.SetBackboneUnitSelect(flag);
+			buCarbonyl.SetBackboneUnitSelect(flag);
+		}
+	}
+
+	public void SetBackboneUnitSelect (bool flag)
+	{
+		controllerSelectOn = flag;
 		UpdateRenderMode();
 	}
 
@@ -91,6 +113,15 @@ public class BackboneUnit : MonoBehaviour {
 						}
 						break;
 
+					case "ToonOutlineYellow":
+						{
+							Renderer _renderer = childRenderer.GetComponent<Renderer>();
+							_renderer.material.shader = shaderToonOutline;
+							_renderer.material.SetColor("_OutlineColor", Color.yellow);
+							_renderer.material.SetFloat("_Outline", 0.005f);
+						}
+						break;
+
 					case "Standard":
 						{
 							childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
@@ -115,6 +146,10 @@ public class BackboneUnit : MonoBehaviour {
 		else if (activeSequenceSelect)
 		{
 			SetRenderingMode(gameObject, "ToonOutlineGreen");
+		}
+		else if (controllerSelectOn)
+		{
+			SetRenderingMode(gameObject, "ToonOutlineYellow");
 		}
 		else
 		{
