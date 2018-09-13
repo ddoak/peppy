@@ -28,7 +28,7 @@ namespace ControllerSelection {
         [System.Serializable]
         public class HoverCallback : UnityEvent<Transform> { }
         [System.Serializable]
-        public class SelectionCallback : UnityEvent<Transform> { }
+        public class SelectionCallback : UnityEvent<Transform, Ray> { }
 
         [Header("(Optional) Tracking space")]
         [Tooltip("Tracking space of the OVRCameraRig.\nIf tracking space is not set, the scene will be searched.\nThis search is expensive.")]
@@ -123,7 +123,7 @@ namespace ControllerSelection {
                     else if (OVRInput.GetUp(secondaryButton, activeController)) {
                         if (secondaryDown != null && secondaryDown == lastHit) {
                             if (onSecondarySelect != null) {
-                                onSecondarySelect.Invoke(secondaryDown);
+                                onSecondarySelect.Invoke(secondaryDown, pointer);
 								//Debug.Log("2");
 							}
                         }
@@ -140,7 +140,7 @@ namespace ControllerSelection {
                     else if (OVRInput.GetUp(primaryButton, activeController)) {
                         if (primaryDown != null && primaryDown == lastHit) {
                             if (onPrimarySelect != null) {
-                                onPrimarySelect.Invoke(primaryDown);
+                                onPrimarySelect.Invoke(primaryDown, pointer);
 								//Debug.Log("5");
 							}
                         }
@@ -154,12 +154,12 @@ namespace ControllerSelection {
 				if (primaryDown)
 				{
 					//Debug.Log(primaryDown);
-					onPrimarySelectDown.Invoke(primaryDown);
+					onPrimarySelectDown.Invoke(primaryDown, pointer);
 				}
 				if (secondaryDown)
 				{
 					//Debug.Log(secondaryDown);
-					onSecondarySelectDown.Invoke(secondaryDown);
+					onSecondarySelectDown.Invoke(secondaryDown, pointer);
 				}
 
 #if UNITY_ANDROID && !UNITY_EDITOR

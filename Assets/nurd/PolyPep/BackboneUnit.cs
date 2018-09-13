@@ -42,6 +42,22 @@ public class BackboneUnit : MonoBehaviour {
 		}
 	}
 
+	public void TractorBeam(Ray pointer, bool attract)
+	{
+		Debug.Log("tractor beam me!");
+
+		float tractorBeamAttractionFactor = 50.0f;
+
+		Vector3 tractorBeam = pointer.origin - gameObject.transform.position;
+		if (!attract)
+		{
+			// repel
+			tractorBeam = gameObject.transform.position - pointer.origin;
+		}
+		float tractorBeamScale = Mathf.Max(100.0f, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / 500.0f));
+		gameObject.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+
+	}
 
 	private void SetRenderingMode(GameObject go, string shaderName)
 	{

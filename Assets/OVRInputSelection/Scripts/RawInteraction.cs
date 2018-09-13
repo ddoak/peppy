@@ -73,7 +73,8 @@ public class RawInteraction : MonoBehaviour {
         }
     }
 
-    public void OnPrimarySelected(Transform t) {
+    public void OnPrimarySelected(Transform t, Ray pointer)
+	{
         if (t.gameObject.name == "BackButton") {
             SceneManager.LoadScene("main", LoadSceneMode.Single);
         }
@@ -83,7 +84,7 @@ public class RawInteraction : MonoBehaviour {
         }
     }
 
-	public void OnSecondarySelected(Transform t)
+	public void OnSecondarySelected(Transform t, Ray pointer)
 	{
 		if (t.gameObject.name == "BackButton")
 		{
@@ -96,14 +97,33 @@ public class RawInteraction : MonoBehaviour {
 		}
 	}
 
-	public void OnPrimarySelectedButtonDown(Transform t)
+	public void OnPrimarySelectedButtonDown(Transform t, Ray pointer)
 	{
 		Debug.Log("Primary Select Button Down" + t.gameObject.name);
+
+		GameObject go = t.gameObject;
+		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		if (bu != null)
+		{
+			//Debug.Log("      --> script");
+			bu.TractorBeam(pointer, true);
+		}
+
 	}
 
-	public void OnSecondarySelectedButtonDown(Transform t)
+	public void OnSecondarySelectedButtonDown(Transform t, Ray pointer)
 	{
 		Debug.Log("Secondary Select Button Down" + t.gameObject.name);
+
+
+		GameObject go = t.gameObject;
+		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		if (bu != null)
+		{
+			//Debug.Log("      --> script");
+			bu.TractorBeam(pointer, false);
+		}
+
 	}
 
 }
