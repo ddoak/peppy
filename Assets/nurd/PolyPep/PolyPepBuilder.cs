@@ -1057,19 +1057,34 @@ public class PolyPepBuilder : MonoBehaviour {
 		phiSliderUI.value = Mathf.RoundToInt(phi);
 		psiSliderUI.value = Mathf.RoundToInt(psi);
 
-		//for (int resid = 0; resid < numResidues; resid++)
-		for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
+		////for (int resid = 0; resid < numResidues; resid++)
+		//for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
+		//{
+		//	Residue residue = chainArr[resid].GetComponent<Residue>();
+		//	if (setTargetPhiPsi)
+		//	{
+		//		//residue.phiTarget = phi;
+		//		//residue.psiTarget = psi;
+		//		SetPhiPsiForResidue(resid, phi, psi);
+		//	}
+		//	if (setDrivePhiPsi)
+		//	{
+		//		residue.drivePhiPsiOn = true;
+		//	}
+		//}
+		//UpdatePhiPsiDrives();
+
+		//Test
+		// use 'painted' selection from controller i.e. controllerSelectOn
+		for (int resid = 0; resid < numResidues; resid++)
 		{
 			Residue residue = chainArr[resid].GetComponent<Residue>();
-			if (setTargetPhiPsi)
+			BackboneUnit buAmide = residue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			if (buAmide.controllerSelectOn)
 			{
-				//residue.phiTarget = phi;
-				//residue.psiTarget = psi;
 				SetPhiPsiForResidue(resid, phi, psi);
-			}
-			if (setDrivePhiPsi)
-			{
 				residue.drivePhiPsiOn = true;
+				Debug.Log("hello");
 			}
 		}
 		UpdatePhiPsiDrives();
