@@ -54,12 +54,15 @@ namespace ControllerSelection {
         public OVRRawRaycaster.SelectionCallback onPrimarySelect;
         public OVRRawRaycaster.SelectionCallback onSecondarySelect;
 
-        //protected Ray pointer;
-        protected Transform lastHit = null;
-        protected Transform triggerDown = null;
-        protected Transform padDown = null;
+		public OVRRawRaycaster.SelectionCallback onPrimarySelectDown;
+		public OVRRawRaycaster.SelectionCallback onSecondarySelectDown;
 
-        [HideInInspector]
+		//protected Ray pointer;
+		public Transform lastHit = null;
+        public Transform primaryDown = null;
+        public Transform secondaryDown = null;
+
+        //[HideInInspector]
         public OVRInput.Controller activeController = OVRInput.Controller.None;
 
         void Awake() {
@@ -111,35 +114,54 @@ namespace ControllerSelection {
 
                 // Handle selection callbacks. An object is selected if the button selecting it was
                 // pressed AND released while hovering over the object.
+
                 if (activeController != OVRInput.Controller.None) {
                     if (OVRInput.GetDown(secondaryButton, activeController)) {
-                        padDown = lastHit;
+                        secondaryDown = lastHit;
+						//Debug.Log("1");
                     }
                     else if (OVRInput.GetUp(secondaryButton, activeController)) {
-                        if (padDown != null && padDown == lastHit) {
+                        if (secondaryDown != null && secondaryDown == lastHit) {
                             if (onSecondarySelect != null) {
-                                onSecondarySelect.Invoke(padDown);
-                            }
+                                onSecondarySelect.Invoke(secondaryDown);
+								//Debug.Log("2");
+							}
                         }
                     }
                     if (!OVRInput.Get(secondaryButton, activeController)) {
-                        padDown = null;
-                    }
+                        secondaryDown = null;
+						//Debug.Log("3");
+					}
 
                     if (OVRInput.GetDown(primaryButton, activeController)) {
-                        triggerDown = lastHit;
-                    }
+                        primaryDown = lastHit;
+						//Debug.Log("4");
+					}
                     else if (OVRInput.GetUp(primaryButton, activeController)) {
-                        if (triggerDown != null && triggerDown == lastHit) {
+                        if (primaryDown != null && primaryDown == lastHit) {
                             if (onPrimarySelect != null) {
-                                onPrimarySelect.Invoke(triggerDown);
-                            }
+                                onPrimarySelect.Invoke(primaryDown);
+								//Debug.Log("5");
+							}
                         }
                     }
                     if (!OVRInput.Get(primaryButton, activeController)) {
-                        triggerDown = null;
-                    }
+                        primaryDown = null;
+						//Debug.Log("6");
+					}
                 }
+
+				if (primaryDown)
+				{
+					//Debug.Log(primaryDown);
+					onPrimarySelectDown.Invoke(primaryDown);
+				}
+				if (secondaryDown)
+				{
+					//Debug.Log(secondaryDown);
+					onSecondarySelectDown.Invoke(secondaryDown);
+				}
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             // Gaze pointer fallback
             else {
@@ -158,7 +180,7 @@ namespace ControllerSelection {
                 }
             }
 #endif
-            }
+			}
             // Nothing was hit, handle exit callback
             else if (lastHit != null) {
                 if (onHoverExit != null) {

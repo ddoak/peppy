@@ -3923,7 +3923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1209463035
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5779,7 +5779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackingSpace: {fileID: 1323360151}
   primaryButton: 8192
-  secondaryButton: 1024
+  secondaryButton: 16384
   excludeLayers:
     serializedVersion: 2
     m_Bits: 823
@@ -5825,7 +5825,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1919213148}
-        m_MethodName: OnSelected
+        m_MethodName: OnPrimarySelected
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5841,7 +5841,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1919213148}
-        m_MethodName: OnSelected
+        m_MethodName: OnSecondarySelected
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5853,6 +5853,41 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onPrimarySelectDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1919213148}
+        m_MethodName: OnPrimarySelectedButtonDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onSecondarySelectDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1919213148}
+        m_MethodName: OnSecondarySelectedButtonDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  lastHit: {fileID: 0}
+  primaryDown: {fileID: 0}
+  secondaryDown: {fileID: 0}
   activeController: 0
 --- !u!114 &1919213148
 MonoBehaviour:

@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +14,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	public bool activeSequenceSelect = false;
 	private bool activeSequenceSelectLast = false;
-	public bool activeBackboneUnitSelect = false;
+	public bool controllerHoverOn = false;
 
 
 	// Use this for initialization
@@ -19,12 +22,13 @@ public class BackboneUnit : MonoBehaviour {
 
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
+		UpdateRenderMode();
 
 	}
 
-	public void  SetActiveBackboneUnitSelect(bool flag)
+	public void  SetBackboneUnitControllerHover(bool flag)
 	{
-		activeBackboneUnitSelect = flag;
+		controllerHoverOn = flag;
 		UpdateRenderMode();
 	}
 
@@ -88,7 +92,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	public void UpdateRenderMode()
 	{
-		if (activeBackboneUnitSelect)
+		if (controllerHoverOn)
 		{
 			SetRenderingMode(gameObject, "ToonOutlineRed");
 		}

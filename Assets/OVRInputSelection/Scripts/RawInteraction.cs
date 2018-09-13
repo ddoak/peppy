@@ -41,7 +41,7 @@ public class RawInteraction : MonoBehaviour {
 			if (bu != null)
 			{
 				//Debug.Log("      --> script");
-				bu.SetActiveBackboneUnitSelect(true);
+				bu.SetBackboneUnitControllerHover(true);
 			}
 
 			//oldHoverMat = t.gameObject.GetComponent<Renderer>().material;
@@ -64,7 +64,7 @@ public class RawInteraction : MonoBehaviour {
 			if (bu != null)
 			{
 				//Debug.Log("      --> script");
-				bu.SetActiveBackboneUnitSelect(false);
+				bu.SetBackboneUnitControllerHover(false);
 			}
 			//t.gameObject.GetComponent<Renderer>().material = oldHoverMat;
 		}
@@ -73,13 +73,37 @@ public class RawInteraction : MonoBehaviour {
         }
     }
 
-    public void OnSelected(Transform t) {
+    public void OnPrimarySelected(Transform t) {
         if (t.gameObject.name == "BackButton") {
             SceneManager.LoadScene("main", LoadSceneMode.Single);
         }
-        Debug.Log("Clicked on " + t.gameObject.name);
+        //Debug.Log("Clicked on " + t.gameObject.name);
         if (outText != null) {
             outText.text = "<b>Last Interaction:</b>\nClicked On:" + t.gameObject.name;
         }
     }
+
+	public void OnSecondarySelected(Transform t)
+	{
+		if (t.gameObject.name == "BackButton")
+		{
+			SceneManager.LoadScene("main", LoadSceneMode.Single);
+		}
+		//Debug.Log("Secondary Clicked on " + t.gameObject.name);
+		if (outText != null)
+		{
+			outText.text = "<b>Last Interaction:</b>\nClicked On:" + t.gameObject.name;
+		}
+	}
+
+	public void OnPrimarySelectedButtonDown(Transform t)
+	{
+		Debug.Log("Primary Select Button Down" + t.gameObject.name);
+	}
+
+	public void OnSecondarySelectedButtonDown(Transform t)
+	{
+		Debug.Log("Secondary Select Button Down" + t.gameObject.name);
+	}
+
 }
