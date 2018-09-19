@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 23537790638112296}
   - component: {fileID: 136308795077527184}
   m_Layer: 0
-  m_Name: bond_CO_NH
+  m_Name: bond_CO_N
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -526,6 +526,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   residue: 0
+  activeSequenceSelect: 0
+  controllerHoverOn: 0
+  controllerSelectOn: 0
+  myResidue: {fileID: 0}
 --- !u!114 &114903749518982374
 MonoBehaviour:
   m_ObjectHideFlags: 1

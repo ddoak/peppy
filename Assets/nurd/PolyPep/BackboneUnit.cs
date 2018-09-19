@@ -20,40 +20,52 @@ public class BackboneUnit : MonoBehaviour {
 	public Residue myResidue;
 
 	// 
-	Renderer rendererPhi;	// amide only
-	Renderer rendererPsi;   // calpha only
-	Renderer rendererPeptide; // carbonyl only
+	private Renderer rendererPhi;	// amide only
+	private Renderer rendererPsi;   // calpha only
+	private Renderer rendererPeptide; // carbonyl only
+
+	//private Renderer[] rendererAtoms;
+	private List<Renderer> renderersAtoms = new List<Renderer>();
 
 	// Use this for initialization
 	void Start () {
+
+		// init references to renderers
+		{
+			Renderer[] allChildRenderers = gameObject.GetComponentsInChildren<Renderer>();
+			foreach (Renderer childRenderer in allChildRenderers)
+			{
+				//Debug.Log(childRenderer.transform.gameObject.name);
+				//Debug.Log(childRenderer.transform.gameObject.layer);
+
+				//bonds
+				if (childRenderer.transform.gameObject.name == "bond_N_CA")
+				{
+					rendererPhi = childRenderer;
+				}
+				if (childRenderer.transform.gameObject.name == "bond_CA_CO")
+				{
+					rendererPsi = childRenderer;
+				}
+				if (childRenderer.transform.gameObject.name == "bond_CO_N")
+				{
+					rendererPeptide = childRenderer;
+				}
+
+				//atoms
+				if (childRenderer.transform.gameObject.layer == LayerMask.NameToLayer("Atom"))
+				{
+					//Debug.Log("got one!");
+					renderersAtoms.Add(childRenderer);
+				}
+			}
+
+		}
 
 		myResidue = (gameObject.transform.parent.gameObject.GetComponent("Residue") as Residue);
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 		UpdateRenderMode();
-
-		// 
-		//if (tag == "amide" || tag == "calpha")
-		{
-			Renderer[] allChildRenderers =gameObject.GetComponentsInChildren<Renderer>();
-			foreach (Renderer childRenderer in allChildRenderers)
-			{
-				Debug.Log(childRenderer.transform.parent.name);
-
-				if (childRenderer.transform.parent.name == "tf_bond_N_CA")
-				{
-					rendererPhi = childRenderer;
-				}
-				if (childRenderer.transform.parent.name == "tf_bond_CA_CO")
-				{
-					rendererPsi = childRenderer;
-				}
-				if (childRenderer.transform.parent.name == "tf_bond_C_N")
-				{
-					rendererPeptide = childRenderer;
-				}
-			}
-		}
 	}
 
 	public void SetBackboneUnitControllerHover(bool flag)
@@ -111,7 +123,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	}
 
-	private void SetRenderingMode(GameObject go, string shaderName)
+	private void SetRenderingModeOld(GameObject go, string shaderName)
 	{
 		Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
 		foreach (Renderer childRenderer in allChildRenderers)
@@ -165,7 +177,7 @@ public class BackboneUnit : MonoBehaviour {
 
 				if (childRenderer == rendererPhi)
 				{
-					if (myResidue.drivePhiPsiOn)
+					if (true)//myResidue.drivePhiPsiOn)
 					{
 						Renderer _renderer = childRenderer.GetComponent<Renderer>();
 						_renderer.material.shader = shaderToonOutline;
@@ -179,12 +191,17 @@ public class BackboneUnit : MonoBehaviour {
 				}
 				if (childRenderer == rendererPsi)
 				{
-					if (myResidue.drivePhiPsiOn)
+					if (true)//myResidue.drivePhiPsiOn)
 					{
-						Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						_renderer.material.shader = shaderToonOutline;
-						_renderer.material.SetColor("_OutlineColor", Color.magenta);
-						_renderer.material.SetFloat("_Outline", 0.005f);
+						//Renderer _renderer = childRenderer.GetComponent<Renderer>();
+						//_renderer.material.shader = shaderToonOutline;
+						//_renderer.material.SetColor("_OutlineColor", Color.magenta);
+						//_renderer.material.SetFloat("_Outline", 0.005f);
+
+						//Renderer _renderer = childRenderer.GetComponent<Renderer>();
+						rendererPsi.material.shader = shaderToonOutline;
+						rendererPsi.material.SetColor("_OutlineColor", Color.yellow);
+						rendererPsi.material.SetFloat("_Outline", 0.005f);
 					}
 					else
 					{
@@ -212,6 +229,100 @@ public class BackboneUnit : MonoBehaviour {
 			}
 		}
 	}
+
+	private void SetRenderingMode(GameObject go, string shaderName)
+	{
+
+		//Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
+		//if (_type.ToString() != "UnityEngine.ParticleSystemRenderer")
+
+		foreach (Renderer _rendererAtom in renderersAtoms)
+		{
+			{
+				switch (shaderName)
+
+				{
+					case "ToonOutlineGreen":
+						{
+							_rendererAtom.material.shader = shaderStandard;
+						}
+						{
+							_rendererAtom.material.shader = shaderToonOutline;
+							_rendererAtom.material.SetColor("_OutlineColor", Color.green);
+							_rendererAtom.material.SetFloat("_Outline", 0.005f);
+						}
+						break;
+
+					case "ToonOutlineRed":
+						{
+							_rendererAtom.material.shader = shaderToonOutline;
+							_rendererAtom.material.SetColor("_OutlineColor", Color.red);
+							_rendererAtom.material.SetFloat("_Outline", 0.005f);
+						}
+						break;
+
+					case "ToonOutlineYellow":
+						{
+							_rendererAtom.material.shader = shaderToonOutline;
+							_rendererAtom.material.SetColor("_OutlineColor", Color.yellow);
+							_rendererAtom.material.SetFloat("_Outline", 0.005f);
+						}
+						break;
+
+					case "Standard":
+						{
+							_rendererAtom.material.shader = shaderStandard;
+						}
+						break;
+				}
+			}
+		}
+
+
+		if (rendererPhi)
+		{
+			if (true)//myResidue.drivePhiPsiOn)
+			{
+				rendererPhi.material.shader = shaderToonOutline;
+				rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
+				rendererPhi.material.SetFloat("_Outline", 0.005f);
+			}
+			else
+			{
+				rendererPhi.material.shader = shaderStandard;
+			}
+		}
+
+		if (rendererPsi)
+		{
+			if (true)//myResidue.drivePhiPsiOn)
+			{
+				rendererPsi.material.shader = shaderToonOutline;
+				rendererPsi.material.SetColor("_OutlineColor", Color.magenta);
+				rendererPsi.material.SetFloat("_Outline", 0.005f);
+			}
+			else
+			{
+				rendererPsi.material.shader = shaderStandard;
+			}
+		}
+
+		if (rendererPeptide)
+		{
+			if (true)
+			{
+				rendererPeptide.material.shader = shaderToonOutline;
+				rendererPeptide.material.SetColor("_OutlineColor", Color.black);
+				rendererPeptide.material.SetFloat("_Outline", 0.005f);
+			}
+			else
+			{
+				rendererPeptide.material.shader = shaderStandard;
+			}
+		}
+
+	}
+
 
 	public void UpdateRenderMode()
 	{
