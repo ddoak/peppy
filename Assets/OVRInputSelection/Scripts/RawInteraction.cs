@@ -136,7 +136,7 @@ public class RawInteraction : MonoBehaviour {
 		if (bu != null)
 		{
 			//Debug.Log("      --> script");
-			bu.TractorBeam(pointer, true);
+			bu.TractorBeam(pointer, false);
 		}
 
 	}
@@ -151,7 +151,7 @@ public class RawInteraction : MonoBehaviour {
 		if (bu != null)
 		{
 			//Debug.Log("      --> script");
-			bu.TractorBeam(pointer, false);
+			bu.TractorBeam(pointer, true);
 		}
 
 	}

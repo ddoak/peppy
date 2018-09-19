@@ -45,13 +45,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	public bool setDrivePhiPsi { get; set; }
 	public bool ActiveHbondSpringConstraints { get; set; }
 
-	private Slider phiSliderUI;
-	private Slider psiSliderUI;
-
-
-	private Slider vdwSliderUI;
-	private Slider scaleSliderUI;
-
 	private Slider hbondSliderUI;
 
 	private Slider resStartSliderUI;
@@ -93,52 +86,52 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		secondaryStructure = 0;
 
-		{
-			//UI
-			// initialise phi psi slider values (hacky?)
+		//{
+		//	//UI
+		//	// initialise phi psi slider values (hacky?)
 
-			GameObject temp = GameObject.Find("Slider_Phi");
-
-
-			phiSliderUI = temp.GetComponent<Slider>();
-			phiSliderUI.value = 0;
-
-			temp = GameObject.Find("Slider_Psi");
-
-			psiSliderUI = temp.GetComponent<Slider>();
-			psiSliderUI.value = 0;
-
-			temp = GameObject.Find("Slider_Vdw");
-
-			vdwSliderUI = temp.GetComponent<Slider>();
-			vdwSliderUI.value = 10;
+		//	GameObject temp = GameObject.Find("Slider_Phi");
 
 
-			temp = GameObject.Find("Slider_HbondStrength");
+		//	phiSliderUI = temp.GetComponent<Slider>();
+		//	phiSliderUI.value = 0;
 
-			hbondSliderUI = temp.GetComponent<Slider>();
-			hbondSliderUI.value = 2000;
+		//	temp = GameObject.Find("Slider_Psi");
 
-			temp = GameObject.Find("Slider_ResStart");
+		//	psiSliderUI = temp.GetComponent<Slider>();
+		//	psiSliderUI.value = 0;
 
-			resStartSliderUI = temp.GetComponent<Slider>();
-			resStartSliderUI.maxValue = numResidues;
-			resStartSliderUI.value = 1;
+		//	temp = GameObject.Find("Slider_Vdw");
 
-			temp = GameObject.Find("Slider_ResEnd");
+		//	vdwSliderUI = temp.GetComponent<Slider>();
+		//	vdwSliderUI.value = 10;
 
-			Assert.IsNotNull(temp);
 
-			resEndSliderUI = temp.GetComponent<Slider>();
-			resEndSliderUI.maxValue = numResidues;
-			resEndSliderUI.value = 3; // numResidues; // initial value (+1)
+		//	temp = GameObject.Find("Slider_HbondStrength");
 
-			//temp = GameObject.Find("Slider_Scale");
+		//	hbondSliderUI = temp.GetComponent<Slider>();
+		//	hbondSliderUI.value = 2000;
 
-			//scaleSliderUI = temp.GetComponent<Slider>();
-			//scaleSliderUI.value = 10;
+		//	temp = GameObject.Find("Slider_ResStart");
 
-		}
+		//	resStartSliderUI = temp.GetComponent<Slider>();
+		//	resStartSliderUI.maxValue = numResidues;
+		//	resStartSliderUI.value = 1;
+
+		//	temp = GameObject.Find("Slider_ResEnd");
+
+		//	Assert.IsNotNull(temp);
+
+		//	resEndSliderUI = temp.GetComponent<Slider>();
+		//	resEndSliderUI.maxValue = numResidues;
+		//	resEndSliderUI.value = 3; // numResidues; // initial value (+1)
+
+		//	//temp = GameObject.Find("Slider_Scale");
+
+		//	//scaleSliderUI = temp.GetComponent<Slider>();
+		//	//scaleSliderUI.value = 10;
+
+		//}
 
 
 	}
@@ -961,88 +954,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void SetPhiPsiDataForSelection()
+	public void SetPhiPsiForSelection(float phi, float psi)
 	{
-		float phi = 0.0f;
-		float psi = 0.0f;
-
-		//Debug.Log("Secondary Structure " + secondaryStructure);
-
-		switch (secondaryStructure)
-		{
-			case 0:		// not defined
-
-				phi = phiSliderUI.value; 
-				psi = psiSliderUI.value; 
-				//ClearChainHBonds();
-				break;
-
-			case 1:     //alpha helix (right handed) (phi + ps ~ -105)
-
-				phi = -57.0f;
-				psi = -47.0f;
-				//SetChainAlphaHelicalHBonds();
-				break;
-
-			case 2:     //310 helix (phi + psi ~ -75)
-
-				phi = -49.0f;// -74.0f;
-				psi = -26.0f;// -4.0f;
-				//SetChain310HelicalHBonds();
-				break;
-
-			case 3:		//anti beta sheet
-				
-				phi = -139.0f;
-				psi = 135.0f;
-				//ClearChainHBonds();
-				break;
-
-			case 4:     //parallel beta sheet
-
-				phi = -119.0f;
-				psi = 113.0f;
-				//ClearChainHBonds();
-				break;
-
-			case 5:     //pi helix (phi + ps ~ -125)
-
-				phi = -55.0f;
-				psi = -70.0f;
-				//SetChainPiHelicalHBonds();
-				break;
-
-			case 6:     //alpha helix (left handed)
-
-				phi = 47.0f;
-				psi = 57.0f;
-				//SetChainAlphaHelicalHBonds();
-
-
-				break;
-		}
-
-		phiSliderUI.value = Mathf.RoundToInt(phi);
-		psiSliderUI.value = Mathf.RoundToInt(psi);
-
-		////for (int resid = 0; resid < numResidues; resid++)
-		//for (int resid = residSelectStart; resid <= residSelectEnd; resid++)
-		//{
-		//	Residue residue = chainArr[resid].GetComponent<Residue>();
-		//	if (setTargetPhiPsi)
-		//	{
-		//		//residue.phiTarget = phi;
-		//		//residue.psiTarget = psi;
-		//		SetPhiPsiForResidue(resid, phi, psi);
-		//	}
-		//	if (setDrivePhiPsi)
-		//	{
-		//		residue.drivePhiPsiOn = true;
-		//	}
-		//}
-		//UpdatePhiPsiDrives();
-
-		//Test
 		// use 'painted' selection from controller i.e. controllerSelectOn
 		for (int resid = 0; resid < numResidues; resid++)
 		{
@@ -1052,7 +965,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				SetPhiPsiForResidue(resid, phi, psi);
 				residue.drivePhiPsiOn = true;
-				Debug.Log("hello");
+				//Debug.Log("hello");
 			}
 		}
 		UpdatePhiPsiDrives();
@@ -1291,18 +1204,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		Debug.Log("  psi = " + myPsi);
 
 		SetPhiPsiForResidue(myResid, myPhi, myPsi);
-	}
-
-	public void UpdatePsiPhiFromUI()
-	{
-		if (!disablePhiPsiUIInput)
-		{
-			if ((phiSliderUI != null) && (psiSliderUI != null))
-			{
-				SetPhiPsiDataForSelection();
-				//Debug.Log(phiAll + " " + psiAll);
-			}
-		}
 	}
 
 	public void UpdateHbondStrengthFromUI()
