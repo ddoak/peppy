@@ -129,7 +129,7 @@ public class RawInteraction : MonoBehaviour {
 
 	public void OnPrimarySelectedButtonDown(Transform t, Ray pointer)
 	{
-		Debug.Log("Primary Select Button Down" + t.gameObject.name);
+		//Debug.Log("Primary Select Button Down" + t.gameObject.name);
 
 		GameObject go = t.gameObject;
 		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
@@ -143,7 +143,7 @@ public class RawInteraction : MonoBehaviour {
 
 	public void OnSecondarySelectedButtonDown(Transform t, Ray pointer)
 	{
-		Debug.Log("Secondary Select Button Down" + t.gameObject.name);
+		//Debug.Log("Secondary Select Button Down" + t.gameObject.name);
 
 
 		GameObject go = t.gameObject;

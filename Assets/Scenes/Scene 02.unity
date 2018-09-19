@@ -1565,6 +1565,50 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &382481193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382481195}
+  - component: {fileID: 382481194}
+  m_Layer: 0
+  m_Name: PolyPepManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &382481194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 382481193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc5bd53fce43b64c9a46d644d2dc832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  polyPepBuilder_pf: {fileID: 1140521256564886, guid: 9c474393345b8134f866f1e3fa7e3db3,
+    type: 2}
+  allPolyPepBuilders: []
+  collidersOn: 0
+--- !u!4 &382481195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 382481193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.28741938, y: 1.3604429, z: -0.38515833}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &384968771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3414,6 +3458,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1722166617}
     m_Modifications:
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224040546657296448, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -3548,7 +3597,7 @@ Prefab:
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1996332199}
+      objectReference: {fileID: 382481194}
     - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -3583,7 +3632,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1996332199}
+      objectReference: {fileID: 382481194}
     - target: {fileID: 114872349210967844, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3820,6 +3869,46 @@ Prefab:
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: set_setDrivePhiPsi
+      objectReference: {fileID: 0}
+    - target: {fileID: 114757620254929624, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: UpdateVDWScalesFromUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 114757620254929624, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateCollidersFromUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetColliders
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114743228777070180, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114558057784823064, guid: b2f62954f4171a14090b64838b6d5ec0, type: 2}
@@ -6025,68 +6114,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: amidePf
-      value: 
-      objectReference: {fileID: 1106350776754678, guid: 4936e546446ffae4385076fe2eaded75,
-        type: 2}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: calphaPf
-      value: 
-      objectReference: {fileID: 1106350776754678, guid: 98047eb084056d04d9c000b3606e91e9,
-        type: 2}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: carbonylPf
-      value: 
-      objectReference: {fileID: 1106350776754678, guid: be5cfe1926cf4d24bb8c219702f2b5be,
-        type: 2}
-    - target: {fileID: 4687871562131518, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+    - target: {fileID: 1140521256564886, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
+      propertyPath: m_Name
+      value: PolyPepBuilder_pf
       objectReference: {fileID: 0}
-    - target: {fileID: 4687871562131518, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4687871562131518, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4687871562131518, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4687871562131518, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: numResidues
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: hBondPS
-      value: 
-      objectReference: {fileID: 1013763304498548, guid: e3ee753fcb9055e4d83b3dc736c5d1fe,
-        type: 2}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: hBondPsPf
-      value: 
-      objectReference: {fileID: 1013763304498548, guid: e3ee753fcb9055e4d83b3dc736c5d1fe,
-        type: 2}
-    - target: {fileID: 114036493147797732, guid: 9c474393345b8134f866f1e3fa7e3db3,
-        type: 2}
-      propertyPath: residuePf
-      value: 
-      objectReference: {fileID: 1903836867372088, guid: 97b0f9eb19d5deb4e893480dc6a04b42,
-        type: 2}
-    - target: {fileID: 1941025279344682, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
+    - target: {fileID: 1140521256564886, guid: 9c474393345b8134f866f1e3fa7e3db3, type: 2}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

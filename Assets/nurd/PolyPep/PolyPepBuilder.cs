@@ -40,7 +40,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
 
-	public bool useColliders { get; set; } //= true;
+	//public bool UseColliders { get; set; } //= true;
 	public bool setTargetPhiPsi { get; set; }
 	public bool setDrivePhiPsi { get; set; }
 	public bool ActiveHbondSpringConstraints { get; set; }
@@ -249,7 +249,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			ScaleVDW(1.0f);
 			SetRbDrag(polyArr[i]);
-			SetCollidersGameObject(polyArr[i]);
+			//SetCollidersGameObject(polyArr[i]);
 
 
 			{
@@ -268,6 +268,8 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 
 		}
+
+		SetAllCollidersIsTrigger (true);
 
 		// assign references in chainArr
 		for (int resid = 0; resid < numResidues; resid ++)
@@ -289,7 +291,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		chainArr[index].name = "Residue_" + (index).ToString();
 	}
 
-	void ScaleVDW(float scale)
+	public void ScaleVDW(float scale)
 	{
 		{
 			float scaleVDW = scale;
@@ -332,42 +334,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void ScaleVDWFromUI()
-	{
-		// slider value is 10x
-		ScaleVDW(vdwSliderUI.value / 10.0f);
-	}
-
-	//public void UpdateScaleFromUI()
-	//{
-	//	// slider value is 10x
-	//	float scale = scaleSliderUI.value / 10.0f;
-	//	gameObject.transform.localScale = new Vector3(scale, scale, scale);
-
-	//	for (int resid = 0; resid < numResidues; resid++)
-	//	{
-	//		var cjPhi_NCa = GetAmideForResidue(resid).GetComponent<ConfigurableJoint>();
-
-	//		cjPhi_NCa.anchor = new Vector3(bondLengthAmideCalpha, 0f, 0f) * scale;
-	//		//cjPhi_NCa.connectedAnchor = cjPhi_NCa.connectedAnchor * scale;
-
-	//		var cjPsi_CaCO = GetCalphaForResidue(resid).GetComponent<ConfigurableJoint>();
-
-	//		cjPsi_CaCO.anchor = new Vector3(bondLengthCalphaCarbonyl, 0f, 0f) * scale;
-	//		//cjPsi_CaCO.connectedAnchor = cjPsi_CaCO.connectedAnchor * scale;
-
-
-	//		var cjPeptide_CON = GetCarbonylForResidue(resid).GetComponent<ConfigurableJoint>();
-
-	//		if (cjPeptide_CON != null)
-	//		{
-	//			cjPeptide_CON.anchor = new Vector3(bondLengthPeptide, 0f, 0f) * scale;
-	//			//cjPeptide_CON.connectedAnchor = cjPeptide_CON.connectedAnchor * scale;
-	//		}
-
-	//	}
-
-	//}
 
 	void SetRbDrag(GameObject go)
 	{
@@ -381,15 +347,17 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	}
 
-	void SetCollidersGameObject(GameObject go)
+	public void SetAllCollidersIsTrigger(bool value)
 	{
-		var colliders = go.GetComponentsInChildren<Collider>();
-		foreach (var col in colliders)
+		for (int i = 0; i < polyLength; i++)
 		{
-			col.isTrigger = !useColliders;
+			var colliders = polyArr[i].GetComponentsInChildren<Collider>();
+			foreach (var col in colliders)
+			{
+				col.isTrigger = value;
+			}
 		}
 	}
-
 
 	void AddBackboneTopologyConstraint(int index)
 	{
@@ -1128,14 +1096,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCarbonyl.WakeUp();
 	}
 
-	public void SetColliders()
-	{
-		for (int i = 0; i < polyLength; i++)
-		{
-			SetCollidersGameObject(polyArr[i]);
-		}
-	}
-
 	public void UpdatePhiPsiDrives()
 	{
 		// Note that 'Position' is actually a rotation ;)
@@ -1492,7 +1452,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//UpdatePhiPsiDrives();
 
 		//UpdateDistanceConstraintGfx();
-		HbondLineTrace();
+		//HbondLineTrace(); dgd
 		UpdateHbondParticleSystems();
 		//UpdateHBondSprings();
 	}

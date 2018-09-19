@@ -30,7 +30,7 @@ public class BackboneUnit : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		// init references to renderers
+		// init my references to renderers
 		{
 			Renderer[] allChildRenderers = gameObject.GetComponentsInChildren<Renderer>();
 			foreach (Renderer childRenderer in allChildRenderers)
@@ -108,7 +108,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	public void TractorBeam(Ray pointer, bool attract)
 	{
-		Debug.Log("tractor beam me!");
+		//Debug.Log("tractor beam me!");
 
 		float tractorBeamAttractionFactor = 50.0f;
 
@@ -123,112 +123,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	}
 
-	private void SetRenderingModeOld(GameObject go, string shaderName)
-	{
-		Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
-		foreach (Renderer childRenderer in allChildRenderers)
-		{
-			//Debug.Log(child.GetType());
 
-			var _type = childRenderer.GetType();
-			if (_type.ToString() != "UnityEngine.ParticleSystemRenderer")
-
-			{
-				switch (shaderName)
-
-				{
-					case "ToonOutlineGreen":
-						{
-							childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
-						}
-						//{
-						//	Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						//	_renderer.material.shader = shaderToonOutline;
-						//	_renderer.material.SetColor("_OutlineColor", Color.green);
-						//	_renderer.material.SetFloat("_Outline", 0.005f);
-						//}
-						break;
-
-					case "ToonOutlineRed":
-						{
-							Renderer _renderer = childRenderer.GetComponent<Renderer>();
-							_renderer.material.shader = shaderToonOutline;
-							_renderer.material.SetColor("_OutlineColor", Color.red);
-							_renderer.material.SetFloat("_Outline", 0.005f);
-						}
-						break;
-
-					case "ToonOutlineYellow":
-						{
-							Renderer _renderer = childRenderer.GetComponent<Renderer>();
-							_renderer.material.shader = shaderToonOutline;
-							_renderer.material.SetColor("_OutlineColor", Color.yellow);
-							_renderer.material.SetFloat("_Outline", 0.005f);
-						}
-						break;
-
-					case "Standard":
-						{
-							childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
-						}
-						break;
-
-				}
-
-				if (childRenderer == rendererPhi)
-				{
-					if (true)//myResidue.drivePhiPsiOn)
-					{
-						Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						_renderer.material.shader = shaderToonOutline;
-						_renderer.material.SetColor("_OutlineColor", Color.cyan);
-						_renderer.material.SetFloat("_Outline", 0.005f);
-					}
-					else
-					{
-						childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
-					}
-				}
-				if (childRenderer == rendererPsi)
-				{
-					if (true)//myResidue.drivePhiPsiOn)
-					{
-						//Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						//_renderer.material.shader = shaderToonOutline;
-						//_renderer.material.SetColor("_OutlineColor", Color.magenta);
-						//_renderer.material.SetFloat("_Outline", 0.005f);
-
-						//Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						rendererPsi.material.shader = shaderToonOutline;
-						rendererPsi.material.SetColor("_OutlineColor", Color.yellow);
-						rendererPsi.material.SetFloat("_Outline", 0.005f);
-					}
-					else
-					{
-						childRenderer.GetComponent<Renderer>().material.shader = shaderStandard;
-					}
-				}
-				if (childRenderer == rendererPeptide)
-				{
-					if (true)
-					{
-						Renderer _renderer = childRenderer.GetComponent<Renderer>();
-						_renderer.material.shader = shaderToonOutline;
-						_renderer.material.SetColor("_OutlineColor", Color.black);
-						_renderer.material.SetFloat("_Outline", 0.005f);
-					}
-					else
-					{
-
-					}
-				}
-			}
-			else
-			{
-				// particle system
-			}
-		}
-	}
 
 	private void SetRenderingMode(GameObject go, string shaderName)
 	{
