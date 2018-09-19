@@ -1476,7 +1476,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 346370945}
   m_LocalRotation: {x: 0.30070576, y: 0, z: 0, w: 0.953717}
-  m_LocalPosition: {x: 1.691, y: 0.75, z: -1.5}
+  m_LocalPosition: {x: 2.01, y: 0.75, z: -1.5}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children:
   - {fileID: 167329017}
@@ -2605,7 +2605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &899231052
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3842,7 +3842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1193510833
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4680,7 +4680,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: VR Interactive Polypeptide (2018/09/05)
+  m_Text: VR Interactive Polypeptide (2018/09/18)
 --- !u!222 &1593852895
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4961,7 +4961,7 @@ Transform:
   m_GameObject: {fileID: 1722166613}
   m_LocalRotation: {x: 0.30070576, y: 0, z: 0, w: 0.953717}
   m_LocalPosition: {x: 0.5, y: 0.75, z: -1.5}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 577288333}
   - {fileID: 1518476871}
