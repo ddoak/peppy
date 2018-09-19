@@ -28,15 +28,15 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f,1f,0f), Quaternion.identity);
 		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-		pp_cs.numResidues = 6;
+		pp_cs.numResidues = 10;
 
 		GameObject pp2 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 2f, 0f), Quaternion.identity);
 		PolyPepBuilder pp2_cs = pp2.GetComponent<PolyPepBuilder>();
-		pp2_cs.numResidues = 6;
+		pp2_cs.numResidues = 10;
 
 		GameObject pp3 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 3f, 0f), Quaternion.identity);
 		PolyPepBuilder pp3_cs = pp3.GetComponent<PolyPepBuilder>();
-		pp3_cs.numResidues = 6;
+		pp3_cs.numResidues = 10;
 
 		foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
 		{
@@ -110,7 +110,26 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.SetAllCollidersIsTrigger(!value);
+			_ppb.SetAllColliderIsTrigger(!value);
+		}
+	}
+
+	public void UpdateHbondOnFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.ActiveHbondSpringConstraints = value;
+		}
+	}
+
+	public void UpdateHbondStrengthFromUI(float hbondStrength)
+	{
+
+		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.hbondStrength = hbondStrength;
 		}
 	}
 

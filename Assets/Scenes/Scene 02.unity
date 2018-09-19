@@ -2563,9 +2563,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1996332199}
+      - m_Target: {fileID: 382481194}
         m_MethodName: UpdateHbondStrengthFromUI
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3470,6 +3470,11 @@ Prefab:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224040546657296448, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -3679,7 +3684,7 @@ Prefab:
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1996332199}
+      objectReference: {fileID: 382481194}
     - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -3748,7 +3753,7 @@ Prefab:
     - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_ActiveHbondSpringConstraints
+      value: UpdateHbondOnFromUI
       objectReference: {fileID: 0}
     - target: {fileID: 114583118851730542, guid: b2f62954f4171a14090b64838b6d5ec0,
         type: 2}
@@ -4020,6 +4025,26 @@ Prefab:
     - target: {fileID: 1275021426443894, guid: b2f62954f4171a14090b64838b6d5ec0, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: UpdateHBondSprings
+      objectReference: {fileID: 0}
+    - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114858678343483548, guid: b2f62954f4171a14090b64838b6d5ec0,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114558057784823064, guid: b2f62954f4171a14090b64838b6d5ec0, type: 2}
