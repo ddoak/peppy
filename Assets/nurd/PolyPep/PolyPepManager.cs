@@ -53,6 +53,11 @@ public class PolyPepManager : MonoBehaviour {
 			hbondSliderUI = temp.GetComponent<Slider>();
 			hbondSliderUI.value = 2000;
 
+			temp = GameObject.Find("Slider_PhiPsiDrive");
+
+			hbondSliderUI = temp.GetComponent<Slider>();
+			hbondSliderUI.value = 200;
+
 			//temp = GameObject.Find("Slider_ResStart");
 
 			//resStartSliderUI = temp.GetComponent<Slider>();
@@ -142,6 +147,20 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.hbondStrength = hbondStrength;
 			_ppb.UpdateHBondSprings();
+		}
+	}
+
+	public void UpdatePhiPsiDriveFromUI(float phiPsiDrive)
+	{
+
+		//Debug.Log("hello PhiPsi Drive from the manager! ---> " + phiPsiDrive);
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
+			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
+			_ppb.UpdatePhiPsiDrives();
+
+			// drivePhiPsiPosDamper ?
 		}
 	}
 

@@ -45,7 +45,11 @@ public class PolyPepBuilder : MonoBehaviour {
 	public bool setDrivePhiPsi { get; set; }
 	public bool ActiveHbondSpringConstraints { get; set; }
 
-	public float hbondStrength = 0f;
+	public float hbondStrength = 0f; // updated by PolyPepManager
+
+	public float drivePhiPsiMaxForce = 200.0f; // 100.0f
+	public float drivePhiPsiPosSpring = 200.0f; // 100.0f
+	public int drivePhiPsiPosDamper = 1;
 
 	private Slider hbondSliderUI;
 
@@ -968,9 +972,11 @@ public class PolyPepBuilder : MonoBehaviour {
 		//
 		// values are empirical
 		//
-		float drivePhiPsiMaxForce = 200.0f;	// 100.0f
-		float drivePhiPsiPosSpring = 200.0f; // 100.0f
-		int drivePhiPsiPosDamper = 1;
+
+		//float drivePhiPsiMaxForce = 200.0f;	// 100.0f
+		//float drivePhiPsiPosSpring = 200.0f; // 100.0f
+
+		//int drivePhiPsiPosDamper = 1;
 		int drivePhiPsiPosDamperPassive = 0;
 
 
