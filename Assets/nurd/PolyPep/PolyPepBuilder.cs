@@ -1293,6 +1293,16 @@ public class PolyPepBuilder : MonoBehaviour {
 		Gizmos.DrawWireCube(b.center, b.extents);
 	}
 
+	public void SetGlobalSelect(bool value)
+	{
+		for (int i = 0; i < polyLength; i++)
+		{
+			BackboneUnit _bbu = (polyArr[i].GetComponent("BackboneUnit") as BackboneUnit);
+			Assert.IsTrue(_bbu);
+			_bbu.SetBackboneUnitSelect(value);
+		}
+	}
+
 	public void ResetLevel()
 	{
 		Scene m_Scene = SceneManager.GetActiveScene();

@@ -18,6 +18,7 @@ public class BackboneUnit : MonoBehaviour {
 	public bool controllerSelectOn = false;
 
 	public Residue myResidue;
+	public PolyPepBuilder myPolyPepBuilder;
 
 	// 
 	private Renderer rendererPhi;	// amide only
@@ -59,10 +60,16 @@ public class BackboneUnit : MonoBehaviour {
 					renderersAtoms.Add(childRenderer);
 				}
 			}
+			//Debug.Log("bu " + gameObject + " --> " + gameObject.transform.parent.parent.gameObject);
 
 		}
 
+		// init parent script references
+
+
 		myResidue = (gameObject.transform.parent.gameObject.GetComponent("Residue") as Residue);
+		myPolyPepBuilder = (gameObject.transform.parent.parent.gameObject.GetComponent("PolyPepBuilder") as PolyPepBuilder);
+
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 		UpdateRenderMode();
@@ -110,7 +117,10 @@ public class BackboneUnit : MonoBehaviour {
 	{
 		//Debug.Log("tractor beam me!");
 
-		float tractorBeamAttractionFactor = 50.0f;
+		float tractorBeamAttractionFactor = 100.0f;
+		float tractorBeamMax = 200.0f;
+		float tractorBeamDistanceRatio = 250f; // larger = weaker
+
 
 		Vector3 tractorBeam = pointer.origin - gameObject.transform.position;
 		if (!attract)
@@ -118,8 +128,9 @@ public class BackboneUnit : MonoBehaviour {
 			// repel
 			tractorBeam = gameObject.transform.position - pointer.origin;
 		}
-		float tractorBeamScale = Mathf.Max(100.0f, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / 500.0f));
+		float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
 		gameObject.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+		// add scaling for 'size' of target?
 
 	}
 

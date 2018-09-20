@@ -17,33 +17,15 @@ public class PolyPepManager : MonoBehaviour {
 	public float phiTarget = 0f;
 	public float psiTarget = 0f;
 
-	private Slider phiSliderUI;
-	private Slider psiSliderUI;
-	private Slider vdwSliderUI;
-	private Slider scaleSliderUI;
-	private Slider hbondSliderUI;
+	public Slider phiSliderUI;
+	public Slider psiSliderUI;
+	public Slider vdwSliderUI;
+	public Slider scaleSliderUI;
+	public Slider hbondSliderUI;
 
 	// Use this for initialization
 	void Start()
 	{
-		GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f,1f,0f), Quaternion.identity);
-		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-		pp_cs.numResidues = 10;
-
-		GameObject pp2 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 2f, 0f), Quaternion.identity);
-		PolyPepBuilder pp2_cs = pp2.GetComponent<PolyPepBuilder>();
-		pp2_cs.numResidues = 10;
-
-		GameObject pp3 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 3f, 0f), Quaternion.identity);
-		PolyPepBuilder pp3_cs = pp3.GetComponent<PolyPepBuilder>();
-		pp3_cs.numResidues = 10;
-
-		foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
-		{
-			Debug.Log("------------------->" + polyPep);
-			allPolyPepBuilders.Add(polyPep);
-
-		}
 
 		{
 			//UI
@@ -92,6 +74,34 @@ public class PolyPepManager : MonoBehaviour {
 
 		}
 
+		{ 
+			// create chains - hard coded for the moment
+			GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 1f, 0f), Quaternion.identity);
+			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+			pp_cs.numResidues = 10;
+
+			GameObject pp2 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 2f, 0f), Quaternion.identity);
+			PolyPepBuilder pp2_cs = pp2.GetComponent<PolyPepBuilder>();
+			pp2_cs.numResidues = 10;
+
+			GameObject pp3 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 3f, 0f), Quaternion.identity);
+			PolyPepBuilder pp3_cs = pp3.GetComponent<PolyPepBuilder>();
+			pp3_cs.numResidues = 10;
+
+			GameObject pp4 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 4f, 0f), Quaternion.identity);
+			PolyPepBuilder pp4_cs = pp4.GetComponent<PolyPepBuilder>();
+			pp4_cs.numResidues = 10;
+		}
+
+		foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
+		{
+			//Debug.Log("------------------->" + polyPep);
+			allPolyPepBuilders.Add(polyPep);
+
+		}
+
+
+
 	}
 	
 
@@ -120,6 +130,7 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.ActiveHbondSpringConstraints = value;
+			_ppb.UpdateHBondSprings();
 		}
 	}
 
@@ -130,6 +141,16 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.hbondStrength = hbondStrength;
+			_ppb.UpdateHBondSprings();
+		}
+	}
+
+	public void SelectAllFromUI(bool value)
+	{
+		Debug.Log("Select All from the manager! ---> " +  value);
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.SetGlobalSelect(value);
 		}
 	}
 
@@ -181,21 +202,26 @@ public class PolyPepManager : MonoBehaviour {
 				psi = 57.0f;
 				break;
 		}
-		psiTarget = psi;
+
 		phiTarget = phi;
+		psiTarget = psi;
+		
+		phiSliderUI.value = phi;
+		psiSliderUI.value = psi;
+
 		UpdatePhiPsiForPolyPeptides();
 	}
 
 	public void UpdatePhiFromUI(float phi)
 	{
-		Debug.Log("hello from the manager! ---> " + phi);
+		//Debug.Log("hello from the manager! ---> " + phi);
 		phiTarget = phi;
 		UpdatePhiPsiForPolyPeptides();
 	}
 
 	public void UpdatePsiFromUI(float psi)
 	{
-		Debug.Log("hello from the manager! ---> " + psi);
+		//Debug.Log("hello from the manager! ---> " + psi);
 		psiTarget = psi;
 		UpdatePhiPsiForPolyPeptides();
 	}
