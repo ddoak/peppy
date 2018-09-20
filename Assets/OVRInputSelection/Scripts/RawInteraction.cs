@@ -82,7 +82,7 @@ public class RawInteraction : MonoBehaviour {
 			if (bu != null)
 			{
 				//Debug.Log("      --> script");
-				bu.SetMyResidueSelect(true);
+				bu.SetMyResidueSelect(false);
 			}
 			//t.gameObject.GetComponent<Renderer>().material = oldHoverMat;
 		}
@@ -97,7 +97,7 @@ public class RawInteraction : MonoBehaviour {
 			if (bu != null)
 			{
 				//Debug.Log("      --> script");
-				bu.SetMyResidueSelect(false);
+				bu.SetMyResidueSelect(true);
 			}
 			//t.gameObject.GetComponent<Renderer>().material = oldHoverMat;
 		}

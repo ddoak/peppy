@@ -627,10 +627,9 @@ public class PolyPepBuilder : MonoBehaviour {
 					if ((hit.collider.gameObject.name == "hbond_acceptor") || (hit.collider.gameObject.name == "O_carbonyl"))
 					{
 						
-						Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
-						GameObject acceptorGO =  GameObject.Find(hit.collider.transform.parent.parent.name);
-
-						Debug.Log(acceptorGO);
+						//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
+						GameObject acceptorGO = hit.collider.transform.parent.parent.gameObject;
+						//Debug.Log(acceptorGO);
 
 						if (acceptorGO.GetComponent<BackboneUnit>() != null)
 						{
@@ -641,7 +640,6 @@ public class PolyPepBuilder : MonoBehaviour {
 							{
 								foundAcceptor = true;
 								//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
-								//SetAcceptorForBackboneHbondConstraint(resid, targetAcceptorResid);
 								SetAcceptorForBackboneHbondConstraint(resid, acceptorGO);
 								SwitchOnBackboneHbondConstraint(resid);
 							}
