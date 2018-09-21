@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,8 +21,26 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider vdwSliderUI;
 	public Slider scaleSliderUI;
 	public Slider hbondSliderUI;
+	public Slider phiPsiDriveSliderUI;
 
-	// Use this for initialization
+	void Awake()
+	{
+			GameObject temp = GameObject.Find("Slider_Phi");
+			phiSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("Slider_Psi");
+			psiSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("Slider_Vdw");
+			vdwSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("Slider_HbondStrength");
+			hbondSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("Slider_PhiPsiDrive");
+			phiPsiDriveSliderUI = temp.GetComponent<Slider>();
+	}
+
 	void Start()
 	{
 
@@ -31,32 +48,11 @@ public class PolyPepManager : MonoBehaviour {
 			//UI
 			// initialise phi psi slider values (hacky?)
 
-			GameObject temp = GameObject.Find("Slider_Phi");
-
-
-			phiSliderUI = temp.GetComponent<Slider>();
-			phiSliderUI.value = 0;
-
-			temp = GameObject.Find("Slider_Psi");
-
-			psiSliderUI = temp.GetComponent<Slider>();
-			psiSliderUI.value = 0;
-
-			temp = GameObject.Find("Slider_Vdw");
-
-			vdwSliderUI = temp.GetComponent<Slider>();
-			vdwSliderUI.value = 10;
-
-
-			temp = GameObject.Find("Slider_HbondStrength");
-
-			hbondSliderUI = temp.GetComponent<Slider>();
-			hbondSliderUI.value = 2000;
-
-			temp = GameObject.Find("Slider_PhiPsiDrive");
-
-			hbondSliderUI = temp.GetComponent<Slider>();
-			hbondSliderUI.value = 200;
+			phiSliderUI.GetComponent<Slider>().value = 0;
+			psiSliderUI.GetComponent<Slider>().value = 0;
+			vdwSliderUI.GetComponent<Slider>().value = 10;
+			hbondSliderUI.GetComponent<Slider>().value = 2000;
+			phiPsiDriveSliderUI.GetComponent<Slider>().value = 200;
 
 			//temp = GameObject.Find("Slider_ResStart");
 
