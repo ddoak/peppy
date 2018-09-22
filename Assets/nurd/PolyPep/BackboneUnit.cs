@@ -134,7 +134,26 @@ public class BackboneUnit : MonoBehaviour {
 
 	}
 
+	public void RemoteGrabInteraction(Vector3 destination)
+	{
+		//Debug.Log("push beam me!");
 
+		float tractorBeamAttractionFactor = 200.0f;
+		float tractorBeamMax = 400.0f;
+		float tractorBeamDistanceRatio = 100f; // larger = weaker
+
+
+		Vector3 tractorBeam = destination - gameObject.transform.position;
+		//if (!attract)
+		//{
+		//	// repel
+		//	tractorBeam = gameObject.transform.position - pointer.origin;
+		//}
+		float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
+		gameObject.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+		// add scaling for 'size' of target?
+
+	}
 
 	private void SetRenderingMode(GameObject go, string shaderName)
 	{

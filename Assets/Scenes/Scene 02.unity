@@ -7117,6 +7117,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 823
   raycastDistance: 500
+  myRawInteraction: {fileID: 1919213148}
   onHoverEnter:
     m_PersistentCalls:
       m_Calls:
@@ -7255,6 +7256,8 @@ MonoBehaviour:
   secondaryDown: {fileID: 0}
   aDown: {fileID: 0}
   bDown: {fileID: 0}
+  remoteGrab: {fileID: 0}
+  remoteGrabDistance: 0
   activeController: 0
 --- !u!114 &1919213148
 MonoBehaviour:

@@ -49,6 +49,8 @@ namespace ControllerSelection {
         [Tooltip("Maximum raycast distance")]
         public float raycastDistance = 500;
 
+		public RawInteraction myRawInteraction;
+
         [Header("Hover Callbacks")]
         public OVRRawRaycaster.HoverCallback onHoverEnter;
         public OVRRawRaycaster.HoverCallback onHoverExit;
@@ -70,6 +72,12 @@ namespace ControllerSelection {
         public Transform secondaryDown = null;
 		public Transform aDown = null;
 		public Transform bDown = null;
+
+		public Transform remoteGrab = null;
+		public float remoteGrabDistance;
+
+		private Vector3 gizmoPos1 = new Vector3(0f, 0f, 0f);
+		private Vector3 gizmoPos2 = new Vector3(0f, 0f, 0f);
 
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
@@ -96,7 +104,15 @@ namespace ControllerSelection {
             }
         }
 
-        void Update() {
+		void OnDrawGizmos()
+		{
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawWireSphere(gizmoPos1, 0.04f);
+			Gizmos.color = Color.green;
+			Gizmos.DrawWireSphere(gizmoPos2, 0.04f);
+		}
+
+		void Update() {
             activeController = OVRInputHelpers.GetControllerForButton(OVRInput.Button.PrimaryIndexTrigger, activeController);
             Ray pointer = OVRInputHelpers.GetSelectionRay(activeController, trackingSpace);
 
@@ -224,6 +240,31 @@ namespace ControllerSelection {
                 }
             }
 #endif
+
+				//REMOTE GRAB
+				if (!remoteGrab)
+				{
+					// remoteGrab not set - looking for candidate
+					if (lastHit)
+					{
+						if (primaryDown && secondaryDown)
+						{
+							if (lastHit == primaryDown && lastHit == secondaryDown)
+							{
+								// START remote grabbing
+								Debug.Log(lastHit + " is candidate for remoteGrab");
+								remoteGrab = lastHit;
+								remoteGrabDistance = hit.distance;
+								Debug.Log("   --->" + hit.distance);
+								gizmoPos1 = hit.point;
+							}
+						}
+					}
+				}
+				else
+				{
+
+				}
 			}
             // Nothing was hit, handle exit callback
             else if (lastHit != null) {
@@ -232,6 +273,23 @@ namespace ControllerSelection {
                 }
                 lastHit = null;
             }
+
+			//REMOTE GRAB outside of hit test
+			if (remoteGrab)
+			{
+				if ( (OVRInput.Get(primaryButton, activeController)) && (OVRInput.Get(secondaryButton, activeController)))
+				{
+					// still remote grabbing
+					gizmoPos2 = (pointer.origin + (remoteGrabDistance * pointer.direction));
+					myRawInteraction.RemoteGrabInteraction(primaryDown, gizmoPos2);
+					
+				}
+				else
+				{
+					//END remote grabbing
+					remoteGrab = null;
+				}
+			}
         }
     }
 }

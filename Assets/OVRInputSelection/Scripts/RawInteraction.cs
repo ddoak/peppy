@@ -156,4 +156,17 @@ public class RawInteraction : MonoBehaviour {
 
 	}
 
+	public void RemoteGrabInteraction(Transform t, Vector3 destination)
+	{
+		Debug.Log("do  RemoteGrabInteraction!");
+
+		GameObject go = t.gameObject;
+		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		if (bu != null)
+		{
+			//Debug.Log("      --> script");
+			bu.RemoteGrabInteraction(destination);
+		}
+
+	}
 }
