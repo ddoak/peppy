@@ -255,7 +255,7 @@ namespace ControllerSelection {
 							if (lastHit == primaryDown && lastHit == secondaryDown)
 							{
 								// START remote grabbing
-								Debug.Log(lastHit + " is candidate for remoteGrab");
+								//Debug.Log(lastHit + " is candidate for remoteGrab");
 								remoteGrab = lastHit;
 								remoteGrabDistance = hit.distance;
 								//Debug.Log("   --->" + hit.distance);
@@ -297,7 +297,39 @@ namespace ControllerSelection {
 					remoteGrabDestinationPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
 					//gizmoPos3 = gizmoPos2 + remoteGrabOffset;
 					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabDestinationPos);
-					
+
+					//torque test
+
+					Debug.Log(activeController);
+
+
+					//Debug.Log (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch) );
+
+					//Debug.Log(OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, activeController));
+
+
+					//
+
+					Quaternion q = OVRInput.GetLocalControllerRotation(activeController);
+					Vector3 v = q.eulerAngles; // Quaternion.ToEulerAngles(q); 
+
+					//float zRot = v.z;
+
+
+					//if (zRot > 180.0f)
+					//{
+					//	zRot -= 360.0f;
+					//}
+
+					//Debug.Log(zRot);
+
+					//if (Mathf.Abs(zRot) > 15.0f)
+					//{
+					//	remoteGrab.gameObject.GetComponent<Rigidbody>().AddTorque(pointer.direction * zRot * 2.0f);
+					//}
+
+					remoteGrab.gameObject.transform.rotation = Quaternion.Slerp(remoteGrab.gameObject.transform.rotation, q, 0.1f);
+
 				}
 				else
 				{
@@ -314,3 +346,5 @@ namespace ControllerSelection {
         }
     }
 }
+// Useful ref:
+// https://developer.oculus.com/documentation/unity/latest/concepts/unity-integration-ovrinput/

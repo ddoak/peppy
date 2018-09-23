@@ -162,7 +162,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void SelectAllFromUI(bool value)
 	{
-		Debug.Log("Select All from the manager! ---> " +  value);
+		//Debug.Log("Select All from the manager! ---> " +  value);
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.SetGlobalSelect(value);
