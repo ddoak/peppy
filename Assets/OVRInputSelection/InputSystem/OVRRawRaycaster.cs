@@ -75,9 +75,10 @@ namespace ControllerSelection {
 
 		public Transform remoteGrab = null;
 		public float remoteGrabDistance;
+		//public Vector3 remoteGrabOffset;
 
-		private Vector3 gizmoPos1 = new Vector3(0f, 0f, 0f);
-		private Vector3 gizmoPos2 = new Vector3(0f, 0f, 0f);
+		private Vector3 remoteGrabStartPos = new Vector3(0f, 0f, 0f);
+		private Vector3 remoteGrabDestinationPos = new Vector3(0f, 0f, 0f);
 
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
@@ -107,9 +108,11 @@ namespace ControllerSelection {
 		void OnDrawGizmos()
 		{
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(gizmoPos1, 0.04f);
+			Gizmos.DrawWireSphere(remoteGrabStartPos, 0.04f);
 			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(gizmoPos2, 0.04f);
+			Gizmos.DrawWireSphere(remoteGrabDestinationPos, 0.04f);
+			//Gizmos.color = Color.red;
+			//Gizmos.DrawWireSphere(gizmoPos3, 0.04f);
 		}
 
 		void Update() {
@@ -255,8 +258,19 @@ namespace ControllerSelection {
 								Debug.Log(lastHit + " is candidate for remoteGrab");
 								remoteGrab = lastHit;
 								remoteGrabDistance = hit.distance;
-								Debug.Log("   --->" + hit.distance);
-								gizmoPos1 = hit.point;
+								//Debug.Log("   --->" + hit.distance);
+								remoteGrabStartPos = hit.point;
+								BackboneUnit bu = (remoteGrab.gameObject.GetComponent("BackboneUnit") as BackboneUnit);
+								if (bu != null)
+								{
+									bu.remoteGrabSelectOn = true;
+									bu.UpdateRenderMode();
+								}
+
+								//Rigidbody hitRigidBody = lastHit.gameObject.GetComponent<Rigidbody>();
+								//remoteGrabOffset = hitRigidBody.position - hit.point;
+
+
 							}
 						}
 					}
@@ -280,13 +294,20 @@ namespace ControllerSelection {
 				if ( (OVRInput.Get(primaryButton, activeController)) && (OVRInput.Get(secondaryButton, activeController)))
 				{
 					// still remote grabbing
-					gizmoPos2 = (pointer.origin + (remoteGrabDistance * pointer.direction));
-					myRawInteraction.RemoteGrabInteraction(primaryDown, gizmoPos2);
+					remoteGrabDestinationPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
+					//gizmoPos3 = gizmoPos2 + remoteGrabOffset;
+					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabDestinationPos);
 					
 				}
 				else
 				{
 					//END remote grabbing
+					BackboneUnit bu = (remoteGrab.gameObject.GetComponent("BackboneUnit") as BackboneUnit);
+					if (bu != null)
+					{
+						bu.remoteGrabSelectOn = false;
+						bu.UpdateRenderMode();
+					}
 					remoteGrab = null;
 				}
 			}

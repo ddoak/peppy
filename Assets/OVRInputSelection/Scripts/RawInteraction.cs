@@ -133,10 +133,11 @@ public class RawInteraction : MonoBehaviour {
 
 		GameObject go = t.gameObject;
 		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
-		if (bu != null)
+		//if (bu != null)
 		{
 			//Debug.Log("      --> script");
-			bu.TractorBeam(pointer, false);
+			//bu.TractorBeam(pointer.origin, false, 1.0f);
+			TractorBeam(go, pointer.origin, false, 1.0f);
 		}
 
 	}
@@ -147,11 +148,13 @@ public class RawInteraction : MonoBehaviour {
 
 
 		GameObject go = t.gameObject;
-		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
-		if (bu != null)
+		//BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		//if (bu != null)
 		{
 			//Debug.Log("      --> script");
-			bu.TractorBeam(pointer, true);
+			//bu.TractorBeam(pointer.origin, true, 1.0f);
+			TractorBeam(go, pointer.origin, true, 1.0f);
+
 		}
 
 	}
@@ -161,12 +164,40 @@ public class RawInteraction : MonoBehaviour {
 		Debug.Log("do  RemoteGrabInteraction!");
 
 		GameObject go = t.gameObject;
-		BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
-		if (bu != null)
+		//BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
+		//if (bu != null)
 		{
 			//Debug.Log("      --> script");
-			bu.RemoteGrabInteraction(destination);
+			//bu.TractorBeam(destination, true, 3.0f);
+			TractorBeam(go, destination, true, 5.0f);
 		}
 
+
+	}
+
+	public void TractorBeam(GameObject go, Vector3 position, bool attract, float scale)
+		{
+
+			//Debug.Log("tractor beam me!");
+
+			float tractorBeamAttractionFactor = scale * 100.0f;
+			float tractorBeamMax = scale * 100.0f;
+			float tractorBeamDistanceRatio = 400f / scale; // larger = weaker
+
+
+			Vector3 tractorBeam = position - go.transform.position;
+			if (!attract)
+			{
+				// repel
+				tractorBeam = go.transform.position - position;
+			}
+			float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
+
+			go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+			// add scaling for 'size' of target?
+
+	
 	}
 }
+
+

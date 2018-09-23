@@ -5148,7 +5148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingSpace: {fileID: 1323360151}
-  joyPadClickButton: 8192
+  joyPadClickButton: 2
   performSphereCastForGazepointer: 0
   matchNormalOnPhysicsColliders: 0
   useLeftStickScroll: 1
@@ -6077,7 +6077,7 @@ GameObject:
   - component: {fileID: 1722166616}
   - component: {fileID: 1722166615}
   - component: {fileID: 1722166614}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6109,8 +6109,8 @@ Rigidbody:
   m_GameObject: {fileID: 1722166613}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 100
-  m_AngularDrag: 100
+  m_Drag: 30
+  m_AngularDrag: 30
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0

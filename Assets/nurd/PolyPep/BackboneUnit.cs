@@ -16,6 +16,7 @@ public class BackboneUnit : MonoBehaviour {
 	private bool activeSequenceSelectLast = false;
 	public bool controllerHoverOn = false;
 	public bool controllerSelectOn = false;
+	public bool remoteGrabSelectOn = false;
 
 	public Residue myResidue;
 	public PolyPepBuilder myPolyPepBuilder;
@@ -111,48 +112,6 @@ public class BackboneUnit : MonoBehaviour {
 			UpdateRenderMode();
 			activeSequenceSelectLast = activeSequenceSelect;	
 		}
-	}
-
-	public void TractorBeam(Ray pointer, bool attract)
-	{
-		//Debug.Log("tractor beam me!");
-
-		float tractorBeamAttractionFactor = 100.0f;
-		float tractorBeamMax = 200.0f;
-		float tractorBeamDistanceRatio = 250f; // larger = weaker
-
-
-		Vector3 tractorBeam = pointer.origin - gameObject.transform.position;
-		if (!attract)
-		{
-			// repel
-			tractorBeam = gameObject.transform.position - pointer.origin;
-		}
-		float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
-		gameObject.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
-		// add scaling for 'size' of target?
-
-	}
-
-	public void RemoteGrabInteraction(Vector3 destination)
-	{
-		//Debug.Log("push beam me!");
-
-		float tractorBeamAttractionFactor = 200.0f;
-		float tractorBeamMax = 400.0f;
-		float tractorBeamDistanceRatio = 100f; // larger = weaker
-
-
-		Vector3 tractorBeam = destination - gameObject.transform.position;
-		//if (!attract)
-		//{
-		//	// repel
-		//	tractorBeam = gameObject.transform.position - pointer.origin;
-		//}
-		float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
-		gameObject.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
-		// add scaling for 'size' of target?
-
 	}
 
 	private void SetRenderingMode(GameObject go, string shaderName)
@@ -251,13 +210,13 @@ public class BackboneUnit : MonoBehaviour {
 
 	public void UpdateRenderMode()
 	{
-		if (controllerHoverOn)
-		{
-			SetRenderingMode(gameObject, "ToonOutlineRed");
-		}
-		else if (activeSequenceSelect)
+		if (remoteGrabSelectOn)
 		{
 			SetRenderingMode(gameObject, "ToonOutlineGreen");
+		}
+		else if (controllerHoverOn)
+		{
+			SetRenderingMode(gameObject, "ToonOutlineRed");
 		}
 		else if (controllerSelectOn)
 		{
