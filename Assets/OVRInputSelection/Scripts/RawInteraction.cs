@@ -127,7 +127,7 @@ public class RawInteraction : MonoBehaviour {
 		}
 	}
 
-	public void OnPrimarySelectedButtonDown(Transform t, Ray pointer)
+	public void OnPrimarySelectedButtonDownAxis(Transform t, Ray pointer, float axisValue)
 	{
 		//Debug.Log("Primary Select Button Down" + t.gameObject.name);
 
@@ -137,12 +137,13 @@ public class RawInteraction : MonoBehaviour {
 		{
 			//Debug.Log("      --> script");
 			//bu.TractorBeam(pointer.origin, false, 1.0f);
-			TractorBeam(go, pointer.origin, false, 1.0f);
+			//Debug.Log(axisValue);
+			TractorBeam(go, pointer.origin, false, axisValue * 1.5f);
 		}
 
 	}
 
-	public void OnSecondarySelectedButtonDown(Transform t, Ray pointer)
+	public void OnSecondarySelectedButtonDownAxis(Transform t, Ray pointer, float axisValue)
 	{
 		//Debug.Log("Secondary Select Button Down" + t.gameObject.name);
 
@@ -153,7 +154,8 @@ public class RawInteraction : MonoBehaviour {
 		{
 			//Debug.Log("      --> script");
 			//bu.TractorBeam(pointer.origin, true, 1.0f);
-			TractorBeam(go, pointer.origin, true, 1.0f);
+			//Debug.Log(axisValue);
+			TractorBeam(go, pointer.origin, true, axisValue * 1.5f);
 
 		}
 
@@ -161,7 +163,7 @@ public class RawInteraction : MonoBehaviour {
 
 	public void RemoteGrabInteraction(Transform t, Vector3 destination)
 	{
-		Debug.Log("do  RemoteGrabInteraction!");
+		//Debug.Log("do  RemoteGrabInteraction!");
 
 		GameObject go = t.gameObject;
 		//BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);

@@ -7219,11 +7219,11 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  onPrimarySelectDown:
+  onPrimarySelectDownAxis:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1919213148}
-        m_MethodName: OnPrimarySelectedButtonDown
+        m_MethodName: OnPrimarySelectedButtonDownAxis
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7233,13 +7233,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
+    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallbackAxis, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  onSecondarySelectDown:
+  onSecondarySelectDownAxis:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1919213148}
-        m_MethodName: OnSecondarySelectedButtonDown
+        m_MethodName: OnSecondarySelectedButtonDownAxis
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7249,7 +7249,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallback, Assembly-CSharp,
+    m_TypeName: ControllerSelection.OVRRawRaycaster+SelectionCallbackAxis, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   lastHit: {fileID: 0}
   primaryDown: {fileID: 0}
