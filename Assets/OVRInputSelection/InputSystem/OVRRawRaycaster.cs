@@ -358,34 +358,18 @@ namespace ControllerSelection {
 					approxMovingAvgPoke -= approxMovingAvgPoke / 5;
 					approxMovingAvgPoke += poke / 5;
 
-					//poke = (1.0f + (poke * 50.0f));
-
-					if (Mathf.Abs(poke) > 0.001f)
-					{
-						Debug.Log("poke = " + poke);
-					}
-
-
-					////Debug.Log("remoteGrab raw poke = " + poke);
-					//remoteGrabPoke += poke;
-					////remoteGrabPoke *= 0.9f;
-					//Debug.Log("remoteGrab poke = " + remoteGrabPoke);
-					prevPointer = pointer;
-
-					//poke = 1.0f;
-					//if (Mathf.Abs(remoteGrabPoke) > 8.5f)
+					//if (Mathf.Abs(poke) > 0.001f)
 					//{
-					//	poke = 1.5f;
+					//	Debug.Log("poke = " + poke);
 					//}
 
-					//
 
 					if (remoteGrabTime > 5)
 					{
 						remoteGrabDistance *= (1.0f + (poke * 5.0f));
 					}
 					
-
+					prevPointer = pointer;
 
 					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
 
