@@ -85,6 +85,11 @@ namespace ControllerSelection {
 		private Quaternion remoteGrabObjectTargetQ = Quaternion.identity;
 		private Quaternion remoteGrabControllerStartQ = Quaternion.identity;
 
+		private bool tractorBeaming = false;
+		private int tractorTime = 0;
+		private int tractorDelay = 2;
+
+
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
 
@@ -219,19 +224,48 @@ namespace ControllerSelection {
 					onHoverBDown.Invoke(bDown);
 				}
 
-				if (primaryDown)
+				if (primaryDown && !secondaryDown)
 				{
 					//Debug.Log(primaryDown);
-					float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, activeController);
 					//Debug.Log(axisValue);
-					onPrimarySelectDownAxis.Invoke(primaryDown, pointer, axisValue);
+					if (!tractorBeaming)
+					{
+						tractorBeaming = true;
+						tractorTime = 0;
+					}
+					else
+					{
+						tractorTime++;
+						if (tractorTime > tractorDelay)
+						{
+							float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, activeController);
+							onPrimarySelectDownAxis.Invoke(primaryDown, pointer, axisValue);
+						}
+					}
 				}
-				if (secondaryDown)
+				else if (secondaryDown && !primaryDown)
 				{
 					//Debug.Log(secondaryDown);
-					float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, activeController);
 					//Debug.Log(axisValue);
-					onSecondarySelectDownAxis.Invoke(secondaryDown, pointer, axisValue);
+					if (!tractorBeaming)
+					{
+						tractorBeaming = true;
+						tractorTime = 0;
+					}
+					else
+					{
+						tractorTime++;
+						if (tractorTime > tractorDelay)
+						{
+							float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, activeController);
+							onSecondarySelectDownAxis.Invoke(secondaryDown, pointer, axisValue);
+						}
+					}
+
+				}
+				else
+				{
+					tractorBeaming = false;
 				}
 
 #if UNITY_ANDROID && !UNITY_EDITOR

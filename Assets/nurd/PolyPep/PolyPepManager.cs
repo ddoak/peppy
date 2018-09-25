@@ -75,23 +75,15 @@ public class PolyPepManager : MonoBehaviour {
 
 		}
 
-		{ 
+		{
 			// create chains - hard coded for the moment
-			GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 1f, 0f), Quaternion.identity);
-			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-			pp_cs.numResidues = 10;
 
-			GameObject pp2 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 2f, 0f), Quaternion.identity);
-			PolyPepBuilder pp2_cs = pp2.GetComponent<PolyPepBuilder>();
-			pp2_cs.numResidues = 10;
-
-			GameObject pp3 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 3f, 0f), Quaternion.identity);
-			PolyPepBuilder pp3_cs = pp3.GetComponent<PolyPepBuilder>();
-			pp3_cs.numResidues = 10;
-
-			GameObject pp4 = Instantiate(polyPepBuilder_pf, new Vector3(0f, 4f, 0f), Quaternion.identity);
-			PolyPepBuilder pp4_cs = pp4.GetComponent<PolyPepBuilder>();
-			pp4_cs.numResidues = 10;
+			for (int i = 0; i < 4; i++)
+			{
+				GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
+				PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+				pp_cs.numResidues = 4;
+			}
 		}
 
 		foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )

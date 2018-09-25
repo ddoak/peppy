@@ -222,6 +222,18 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		SetAllColliderIsTrigger (true);
 
+		for (int i = 0; i < polyLength; i++)
+		{
+			var rigidBodies = polyArr[i].GetComponentsInChildren<Rigidbody>();
+			foreach (var rb in rigidBodies)
+			{
+				rb.mass = 1;
+				rb.drag = 5;
+				rb.angularDrag = 5;
+			}
+		}
+
+
 		// assign references in chainArr
 		for (int resid = 0; resid < numResidues; resid ++)
 		{
