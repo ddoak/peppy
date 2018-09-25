@@ -87,7 +87,7 @@ namespace ControllerSelection {
 
 		private bool tractorBeaming = false;
 		private int tractorTime = 0;
-		private int tractorDelay = 3; // frames
+		private int tractorDelay = 3; // frames before tractorbeam begins
 
 		private Ray prevPointer;
 		private float remoteGrabPoke;
@@ -307,7 +307,6 @@ namespace ControllerSelection {
 								remoteGrabDistance = hit.distance;
 								//Debug.Log("   --->" + hit.distance);
 								remoteGrabStartPos = hit.point;
-								remoteGrabPoke = 0f;
 								approxMovingAvgPoke = 0f;
 								remoteGrabTime = 0;
 
@@ -349,6 +348,8 @@ namespace ControllerSelection {
 				{
 					// still remote grabbing
 
+
+					// poke (detecting sustained controller movement along pointer axis)
 					remoteGrabTime++;
 
 					Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
@@ -366,6 +367,7 @@ namespace ControllerSelection {
 
 					if (remoteGrabTime > 5)
 					{
+						// scale remoteGrabDistance 
 						remoteGrabDistance *= (1.0f + (poke * 5.0f));
 					}
 					
@@ -373,10 +375,10 @@ namespace ControllerSelection {
 
 					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
 
-					// tractor beam to destination 
+					// tractor beam to destination (mostly tangential to pointer axis (pitch / yaw movement)
 					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
 
-					//add torque from wrist twist
+					//add ROLL - torque from wrist twist
 					Quaternion remoteGrabControllerCurrentQ = OVRInput.GetLocalControllerRotation(activeController);
 					Quaternion remoteGrabControllerDeltaQ =   remoteGrabControllerCurrentQ * Quaternion.Inverse(remoteGrabControllerStartQ);
 					remoteGrabObjectTargetQ =   remoteGrabControllerDeltaQ * remoteGrabObjectStartQ;
