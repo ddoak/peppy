@@ -82,7 +82,8 @@ public class PolyPepManager : MonoBehaviour {
 			{
 				GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
 				PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-				pp_cs.numResidues = 4;
+				pp_cs.numResidues = 12;
+				pp.name = "polyPep_" + (i).ToString();
 			}
 		}
 

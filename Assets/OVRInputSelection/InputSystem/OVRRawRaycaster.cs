@@ -80,15 +80,19 @@ namespace ControllerSelection {
 		//public Vector3 remoteGrabOffset;
 
 		private Vector3 remoteGrabStartPos = new Vector3(0f, 0f, 0f);
-		private Vector3 remoteGrabDestinationPos = new Vector3(0f, 0f, 0f);
+		private Vector3 remoteGrabTargetPos = new Vector3(0f, 0f, 0f);
 		private Quaternion remoteGrabObjectStartQ = Quaternion.identity;
 		private Quaternion remoteGrabObjectTargetQ = Quaternion.identity;
 		private Quaternion remoteGrabControllerStartQ = Quaternion.identity;
 
 		private bool tractorBeaming = false;
 		private int tractorTime = 0;
-		private int tractorDelay = 2;
+		private int tractorDelay = 3; // frames
 
+		private Ray prevPointer;
+		private float remoteGrabPoke;
+		private int remoteGrabTime = 0;
+		private float approxMovingAvgPoke;
 
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
@@ -120,7 +124,7 @@ namespace ControllerSelection {
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireSphere(remoteGrabStartPos, 0.04f);
 			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(remoteGrabDestinationPos, 0.04f);
+			Gizmos.DrawWireSphere(remoteGrabTargetPos, 0.04f);
 			//Gizmos.color = Color.red;
 			//Gizmos.DrawWireSphere(gizmoPos3, 0.04f);
 		}
@@ -303,6 +307,9 @@ namespace ControllerSelection {
 								remoteGrabDistance = hit.distance;
 								//Debug.Log("   --->" + hit.distance);
 								remoteGrabStartPos = hit.point;
+								remoteGrabPoke = 0f;
+								approxMovingAvgPoke = 0f;
+								remoteGrabTime = 0;
 
 								remoteGrabObjectStartQ = remoteGrab.gameObject.transform.rotation;
 								remoteGrabControllerStartQ = OVRInput.GetLocalControllerRotation(activeController);
@@ -341,35 +348,65 @@ namespace ControllerSelection {
 				if ( (OVRInput.Get(primaryButton, activeController)) && (OVRInput.Get(secondaryButton, activeController)))
 				{
 					// still remote grabbing
-					remoteGrabDestinationPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
+
+					remoteGrabTime++;
+
+					Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
+
+					float poke = Vector3.Dot(deltaPointer, pointer.direction);
+
+					approxMovingAvgPoke -= approxMovingAvgPoke / 5;
+					approxMovingAvgPoke += poke / 5;
+
+					//poke = (1.0f + (poke * 50.0f));
+
+					if (Mathf.Abs(poke) > 0.001f)
+					{
+						Debug.Log("poke = " + poke);
+					}
+
+
+					////Debug.Log("remoteGrab raw poke = " + poke);
+					//remoteGrabPoke += poke;
+					////remoteGrabPoke *= 0.9f;
+					//Debug.Log("remoteGrab poke = " + remoteGrabPoke);
+					prevPointer = pointer;
+
+					//poke = 1.0f;
+					//if (Mathf.Abs(remoteGrabPoke) > 8.5f)
+					//{
+					//	poke = 1.5f;
+					//}
+
+					//
+
+					if (remoteGrabTime > 5)
+					{
+						remoteGrabDistance *= (1.0f + (poke * 5.0f));
+					}
+					
+
+
+					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
 
 					// tractor beam to destination 
-					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabDestinationPos);
+					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
 
-					//torque test
-
-
+					//add torque from wrist twist
 					Quaternion remoteGrabControllerCurrentQ = OVRInput.GetLocalControllerRotation(activeController);
 					Quaternion remoteGrabControllerDeltaQ =   remoteGrabControllerCurrentQ * Quaternion.Inverse(remoteGrabControllerStartQ);
 					remoteGrabObjectTargetQ =   remoteGrabControllerDeltaQ * remoteGrabObjectStartQ;
 
 					//remoteGrab.gameObject.transform.rotation = Quaternion.Slerp(remoteGrab.gameObject.transform.rotation, remoteGrabObjectTargetQ, 0.1f);
 
-
-
-
 					Vector3 vInit = remoteGrabControllerStartQ.eulerAngles;
-
 					Vector3 vDelta = remoteGrabControllerDeltaQ.eulerAngles;
-
 					Vector3 vCurrent = remoteGrabControllerCurrentQ.eulerAngles; // Quaternion.ToEulerAngles(q); 
 
 
 					//Debug.Log(vInit.z + " -> " + vCurrent.z + " d = " + vDelta.z);
 
 					float zRot = vDelta.z;
-
-
 					if (zRot > 180.0f)
 					{
 						zRot -= 360.0f;
@@ -377,7 +414,7 @@ namespace ControllerSelection {
 
 					//Debug.Log(zRot);
 
-					if (Mathf.Abs(zRot) > 15.0f)
+					if (Mathf.Abs(zRot) > 15.0f) // threshold 
 					{
 						remoteGrab.gameObject.GetComponent<Rigidbody>().AddTorque(pointer.direction * zRot * 2.5f);
 					}
