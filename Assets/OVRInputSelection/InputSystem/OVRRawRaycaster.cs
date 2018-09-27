@@ -85,6 +85,8 @@ namespace ControllerSelection {
 		private Quaternion remoteGrabObjectTargetQ = Quaternion.identity;
 		private Quaternion remoteGrabControllerStartQ = Quaternion.identity;
 
+		private Transform centreEyeAnchor;
+
 		private bool tractorBeaming = false;
 		private int tractorTime = 0;
 		private int tractorDelay = 3; // frames before tractorbeam begins
@@ -101,7 +103,9 @@ namespace ControllerSelection {
             if (trackingSpace == null) {
                 Debug.LogWarning("OVRRawRaycaster did not have a tracking space set. Looking for one");
                 trackingSpace = OVRInputHelpers.FindTrackingSpace();
+				
             }
+			centreEyeAnchor =  trackingSpace.transform.Find("CenterEyeAnchor");
         }
 
         void OnEnable() {
@@ -413,8 +417,16 @@ namespace ControllerSelection {
 					{
 						// not bu - UI - make the 'front' face the pointer
 						// flipped because go was initially set up with z facing away
-						Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
+
+						//Use pointer position
+						//Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
+
+						//Use HMD (possibly better - maybe a bit queasy)
+						Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + centreEyeAnchor.forward;
+
 						remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+
+
 					}
 
 

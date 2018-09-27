@@ -50,8 +50,8 @@ public class PolyPepManager : MonoBehaviour {
 
 			phiSliderUI.GetComponent<Slider>().value = 0;
 			psiSliderUI.GetComponent<Slider>().value = 0;
-			vdwSliderUI.GetComponent<Slider>().value = 12;
-			hbondSliderUI.GetComponent<Slider>().value = 2000;
+			vdwSliderUI.GetComponent<Slider>().value = 10;
+			hbondSliderUI.GetComponent<Slider>().value = 200;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 200;
 
 			//temp = GameObject.Find("Slider_ResStart");
