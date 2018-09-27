@@ -378,34 +378,47 @@ namespace ControllerSelection {
 					// tractor beam to destination (mostly tangential to pointer axis (pitch / yaw movement)
 					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
 
-					//add ROLL - torque from wrist twist
-					Quaternion remoteGrabControllerCurrentQ = OVRInput.GetLocalControllerRotation(activeController);
-					Quaternion remoteGrabControllerDeltaQ =   remoteGrabControllerCurrentQ * Quaternion.Inverse(remoteGrabControllerStartQ);
-					remoteGrabObjectTargetQ =   remoteGrabControllerDeltaQ * remoteGrabObjectStartQ;
 
-					//remoteGrab.gameObject.transform.rotation = Quaternion.Slerp(remoteGrab.gameObject.transform.rotation, remoteGrabObjectTargetQ, 0.1f);
-
-					Vector3 vInit = remoteGrabControllerStartQ.eulerAngles;
-					Vector3 vDelta = remoteGrabControllerDeltaQ.eulerAngles;
-					Vector3 vCurrent = remoteGrabControllerCurrentQ.eulerAngles; // Quaternion.ToEulerAngles(q); 
-
-
-					//Debug.Log(vInit.z + " -> " + vCurrent.z + " d = " + vDelta.z);
-
-					float zRot = vDelta.z;
-					if (zRot > 180.0f)
+					BackboneUnit bu = (remoteGrab.gameObject.GetComponent("BackboneUnit") as BackboneUnit);
+					if (bu != null)
 					{
-						zRot -= 360.0f;
+						//add ROLL - torque from wrist twist
+						Quaternion remoteGrabControllerCurrentQ = OVRInput.GetLocalControllerRotation(activeController);
+						Quaternion remoteGrabControllerDeltaQ =   remoteGrabControllerCurrentQ * Quaternion.Inverse(remoteGrabControllerStartQ);
+						remoteGrabObjectTargetQ =   remoteGrabControllerDeltaQ * remoteGrabObjectStartQ;
+
+						//remoteGrab.gameObject.transform.rotation = Quaternion.Slerp(remoteGrab.gameObject.transform.rotation, remoteGrabObjectTargetQ, 0.1f);
+
+
+						Vector3 vInit = remoteGrabControllerStartQ.eulerAngles;
+						Vector3 vDelta = remoteGrabControllerDeltaQ.eulerAngles;
+						Vector3 vCurrent = remoteGrabControllerCurrentQ.eulerAngles; // Quaternion.ToEulerAngles(q); 
+
+						//Debug.Log(vInit.z + " -> " + vCurrent.z + " d = " + vDelta.z);
+
+						float zRot = vDelta.z;
+						if (zRot > 180.0f)
+						{
+							zRot -= 360.0f;
+						}
+
+						//Debug.Log(zRot);
+
+						if (Mathf.Abs(zRot) > 15.0f) // threshold 
+						{
+							remoteGrab.gameObject.GetComponent<Rigidbody>().AddTorque(pointer.direction * zRot * 2.5f);
+						}
+					}
+					else
+					{
+						// not bu - UI - make the 'front' face the pointer
+						// flipped because go was initially set up with z facing away
+						Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
+						remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
 					}
 
-					//Debug.Log(zRot);
 
-					if (Mathf.Abs(zRot) > 15.0f) // threshold 
-					{
-						remoteGrab.gameObject.GetComponent<Rigidbody>().AddTorque(pointer.direction * zRot * 2.5f);
-					}
 
-					//remoteGrab.gameObject.transform.rotation = Quaternion.Slerp(remoteGrab.gameObject.transform.rotation, q, 0.1f);
 
 				}
 				else
