@@ -1086,7 +1086,7 @@ public class PolyPepBuilder : MonoBehaviour {
 					WakeResidRbs(resid);
 				}
 			}
-			Debug.Log("HBond Springs = ON ");
+			//Debug.Log("HBond Springs = ON ");
 		}
 		else
 		{
@@ -1095,7 +1095,7 @@ public class PolyPepBuilder : MonoBehaviour {
 				GameObject donorGO = GetAmideForResidue(resid);
 				SwitchOffBackboneHbondConstraint(resid);
 			}
-			Debug.Log("HBond Springs = OFF ");
+			//Debug.Log("HBond Springs = OFF ");
 		}
 	}
 

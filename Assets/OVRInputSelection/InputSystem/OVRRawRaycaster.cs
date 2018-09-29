@@ -90,6 +90,8 @@ namespace ControllerSelection {
 		private bool tractorBeaming = false;
 		private int tractorTime = 0;
 		private int tractorDelay = 3; // frames before tractorbeam begins
+		private float tractorLerp = 0.01f;
+		private float tractorAxisInputFiltered = 0.0f;
 
 		private Ray prevPointer;
 		private float remoteGrabPoke;
@@ -240,6 +242,7 @@ namespace ControllerSelection {
 					{
 						tractorBeaming = true;
 						tractorTime = 0;
+						tractorAxisInputFiltered = 0.0f;
 					}
 					else
 					{
@@ -247,7 +250,8 @@ namespace ControllerSelection {
 						if (tractorTime > tractorDelay)
 						{
 							float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, activeController);
-							onPrimarySelectDownAxis.Invoke(primaryDown, pointer, axisValue);
+							tractorAxisInputFiltered = Mathf.Lerp(tractorAxisInputFiltered, axisValue, tractorLerp);
+							onPrimarySelectDownAxis.Invoke(primaryDown, pointer, tractorAxisInputFiltered);
 						}
 					}
 				}
@@ -259,6 +263,7 @@ namespace ControllerSelection {
 					{
 						tractorBeaming = true;
 						tractorTime = 0;
+						tractorAxisInputFiltered = 0.0f;
 					}
 					else
 					{
@@ -266,7 +271,8 @@ namespace ControllerSelection {
 						if (tractorTime > tractorDelay)
 						{
 							float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, activeController);
-							onSecondarySelectDownAxis.Invoke(secondaryDown, pointer, axisValue);
+							tractorAxisInputFiltered = Mathf.Lerp(tractorAxisInputFiltered, axisValue, tractorLerp);
+							onSecondarySelectDownAxis.Invoke(secondaryDown, pointer, tractorAxisInputFiltered);
 						}
 					}
 
