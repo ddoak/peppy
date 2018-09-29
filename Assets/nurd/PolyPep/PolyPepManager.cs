@@ -23,6 +23,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider scaleSliderUI;
 	public Slider hbondSliderUI;
 	public Slider phiPsiDriveSliderUI;
+	public Slider spawnLengthSliderUI;
 
 
 	void Awake()
@@ -41,6 +42,10 @@ public class PolyPepManager : MonoBehaviour {
 
 			temp = GameObject.Find("Slider_PhiPsiDrive");
 			phiPsiDriveSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("Slider_SpawnLength");
+			spawnLengthSliderUI = temp.GetComponent<Slider>();
+
 	}
 
 	void Start()
@@ -55,6 +60,7 @@ public class PolyPepManager : MonoBehaviour {
 			vdwSliderUI.GetComponent<Slider>().value = 10;
 			hbondSliderUI.GetComponent<Slider>().value = 200;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 200;
+			spawnLengthSliderUI.GetComponent<Slider>().value = 12;
 
 			//temp = GameObject.Find("Slider_ResStart");
 
@@ -102,7 +108,9 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void SpawnPolypeptide(Transform spawnTransform)
 	{
-	// create chains - hard coded for the moment
+		// create chains - hard coded for the moment
+
+		Debug.Log(spawnLengthSliderUI.GetComponent<Slider>().value);
 
 		for (int i = 0; i< 1; i++)
 		{
@@ -110,7 +118,7 @@ public class PolyPepManager : MonoBehaviour {
 			Debug.Log(spawnTransform.position);
 			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.position, Quaternion.identity);
 			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-			pp_cs.numResidues = 6;
+			pp_cs.numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
 			pp_cs.buildTransform = spawnTransform;
 			//pp.name = "polyPep_" + (i).ToString();
 			pp.name = "polyPep_" + allPolyPepBuilders.Count;
