@@ -137,15 +137,12 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		Transform lastUnitTransform = buildTransform;
 
+		//lastUnitTransform.position += new Vector3 (0f, 1.0f, 0f);
+
 		for (int i = 0; i < polyLength; i++)
 		{
 			
-			if (i == 0)
-			{
-				//start of chain
-				//lastUnitTransform = transform;
-			}
-			else
+			if (i > 0)
 			{
 				lastUnitTransform = polyArr[i - 1].transform;
 			}
@@ -161,7 +158,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			//        N--   C--   C--   N--   C--   C--
 			//        H           O           R
 			//
-			// prefab backbone bonds are aligned to Z axis, Y rotations of prefabs create correct backbone bond angles
+			// prefab backbone bonds are aligned to Z axis / buildTransform.right , Y rotations of prefabs create correct backbone bond angles
 			//
 			// prefabs for 2,3 and 4 positions are flipped 180 X to make alternating extended chain
 
@@ -169,33 +166,61 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				case 0:
 					AddResidueToChain(i / 3);
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), chainArr[i/3].transform);
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(0, 0, 0), chainArr[i/3].transform);
 					break;
 				case 1:
 					// Yrot = +69
-					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), chainArr[i / 3].transform);
+					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(0, 69, 0), chainArr[i / 3].transform);
 					break;
 				case 2:
 					// Yrot = +69 -64 = 5
-					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), chainArr[i / 3].transform);
+					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(180, 5, 0), chainArr[i / 3].transform);
 					break;
 				case 3:
 					AddResidueToChain(i / 3);
 					// Yrot = +69 -64 +58 = 63
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
 					
 					break;
 				case 4:
 					// Yrot = +69 -64 +58 -69 = -6
-					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), chainArr[i / 3].transform);
+					polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(180, -6, 0), chainArr[i / 3].transform);
 					break;
 				case 5:
 					// Yrot = +69 -64 +58 -69 +64 = 58
-					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), chainArr[i / 3].transform);
+					polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(0, 58, 0), chainArr[i / 3].transform);
 					break;
 
 			}
+			//{
+			//	case 0:
+			//		AddResidueToChain(i / 3);
+			//	polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), chainArr[i / 3].transform);
+			//	break;
+			//	case 1:
+			//		// Yrot = +69
+			//		polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), chainArr[i / 3].transform);
+			//	break;
+			//	case 2:
+			//		// Yrot = +69 -64 = 5
+			//		polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), chainArr[i / 3].transform);
+			//	break;
+			//	case 3:
+			//		AddResidueToChain(i / 3);
+			//	// Yrot = +69 -64 +58 = 63
+			//	polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
 
+			//	break;
+			//	case 4:
+			//		// Yrot = +69 -64 +58 -69 = -6
+			//		polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), chainArr[i / 3].transform);
+			//	break;
+			//	case 5:
+			//		// Yrot = +69 -64 +58 -69 +64 = 58
+			//		polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), chainArr[i / 3].transform);
+			//	break;
+
+			//}
 
 
 
@@ -218,7 +243,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			if (i > 0)
 			{
-				//AddBackboneConstraint(polyArr[i - 1], polyArr[i]);
 				AddBackboneTopologyConstraint(i);
 			}
 
@@ -1281,6 +1305,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		float maxY = -Mathf.Infinity;
 		float maxZ = -Mathf.Infinity;
 	
+		//legacy assumes single polypeptide!
 		foreach (GameObject go in GameObject.FindGameObjectsWithTag("N"))
 		{
 
@@ -1325,12 +1350,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void ResetLevel()
-	{
-		Scene m_Scene = SceneManager.GetActiveScene();
-		Debug.Log("Loading... " + m_Scene.name);
-		SceneManager.LoadScene(m_Scene.name);
-	}
 
 	// Update is called once per frame
 	void Update()
