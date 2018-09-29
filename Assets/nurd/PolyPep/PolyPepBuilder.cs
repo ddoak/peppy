@@ -16,6 +16,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject residuePf;
 	public GameObject hBondPsPf;
 
+	public Transform buildTransform;
+
 	// bond lengths used in backbone configurable joints
 	// values are replicated in the prefabs (Carbonyl_pf, Amide_pf, Calpha_pf)
 	float bondLengthPeptide = 1.33f;
@@ -125,21 +127,23 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 		}
 
-
-		// offset from handling cube
-		var offsetPositionBase = new Vector3(0.5f, 0f, 0f);
 		// periodic offsets for polymer
-		float xOffset = 0.2f; // empirical - enough to avoid collider overlap
-		var offsetPositionUnit = new Vector3(xOffset * transform.localScale.x, 0f, 0f);
+		float Offset = 0.2f; // empirical - enough to avoid collider overlap
 
+
+
+
+		var offsetPositionUnit = (Offset * buildTransform.right);
+
+		Transform lastUnitTransform = buildTransform;
 
 		for (int i = 0; i < polyLength; i++)
 		{
-			Transform lastUnitTransform;
+			
 			if (i == 0)
 			{
 				//start of chain
-				lastUnitTransform = transform;
+				//lastUnitTransform = transform;
 			}
 			else
 			{
@@ -245,7 +249,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		InitBackboneHbondConstraints();
 
-		ReCentrePolyPep();
+		//ReCentrePolyPep();
 	}
 
 	void AddResidueToChain(int index)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class PolyPepManager : MonoBehaviour {
@@ -22,6 +23,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider scaleSliderUI;
 	public Slider hbondSliderUI;
 	public Slider phiPsiDriveSliderUI;
+
 
 	void Awake()
 	{
@@ -75,29 +77,49 @@ public class PolyPepManager : MonoBehaviour {
 
 		}
 
-		{
-			// create chains - hard coded for the moment
+		//{
+		//	// create chains - hard coded for the moment
 
-			for (int i = 0; i < 6; i++)
-			{
-				GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
-				PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-				pp_cs.numResidues = 14;
-				pp.name = "polyPep_" + (i).ToString();
-			}
-		}
+		//	for (int i = 0; i < 6; i++)
+		//	{
+		//		GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
+		//		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+		//		pp_cs.numResidues = 14;
+		//		pp.name = "polyPep_" + (i).ToString();
+		//	}
+		//}
 
-		foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
-		{
-			//Debug.Log("------------------->" + polyPep);
-			allPolyPepBuilders.Add(polyPep);
+		//foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
+		//{
+		//	//Debug.Log("------------------->" + polyPep);
+		//	allPolyPepBuilders.Add(polyPep);
 
-		}
+		//}
 
 
 
 	}
-	
+
+	public void SpawnPolypeptide(Transform spawnTransform)
+	{
+	// create chains - hard coded for the moment
+
+		for (int i = 0; i< 1; i++)
+		{
+			//GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i * 1), 0f), Quaternion.identity);
+			Debug.Log(spawnTransform.position);
+			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.position, Quaternion.identity);
+			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+			pp_cs.numResidues = 6;
+			pp_cs.buildTransform = spawnTransform;
+			//pp.name = "polyPep_" + (i).ToString();
+			pp.name = "polyPep_" + allPolyPepBuilders.Count;
+			allPolyPepBuilders.Add(pp_cs);
+			pp_cs.ScaleVDW(vdwSliderUI.GetComponent<Slider>().value / 10.0f);
+		}
+	}
+
+
 
 	public void UpdateVDWScalesFromUI(float scaleVDWx10)
 	{
@@ -240,6 +262,13 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.SetPhiPsiForSelection(phiTarget, psiTarget);
 		}
+	}
+
+	public void ResetLevel()
+	{
+		Scene m_Scene = SceneManager.GetActiveScene();
+		Debug.Log("Loading... " + m_Scene.name);
+		SceneManager.LoadScene(m_Scene.name);
 	}
 
 	// Update is called once per frame
