@@ -29,7 +29,7 @@ using UnityEngine.UI;
 /// UI pointer driven by gaze input.
 /// </summary>
 public class OVRGazePointer : MonoBehaviour {
-    private Transform gazeIcon; //the transform that rotates according to our movement
+    public Transform gazeIcon; //the transform that rotates according to our movement
 
     [Tooltip("Should the pointer be hidden when not over interactive objects.")]
     public bool hideByDefault = true;

@@ -65,7 +65,7 @@ namespace ControllerSelection {
         public void SetPointer(Ray ray) {
             if (linePointer != null) {
                 linePointer.SetPosition(0, ray.origin);
-                linePointer.SetPosition(1, ray.origin + ray.direction * rayDrawDistance);
+				linePointer.SetPosition(1, ray.origin + ray.direction * rayDrawDistance);
             }
 
             if (gazePointer != null) {

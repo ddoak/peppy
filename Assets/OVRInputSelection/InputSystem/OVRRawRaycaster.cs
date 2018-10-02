@@ -53,6 +53,8 @@ namespace ControllerSelection {
 
 		public RawInteraction myRawInteraction;
 
+		public OVRPointerVisualizer myOVRPointerVisualizer;
+
         [Header("Hover Callbacks")]
         public OVRRawRaycaster.HoverCallback onHoverEnter;
         public OVRRawRaycaster.HoverCallback onHoverExit;
@@ -74,6 +76,8 @@ namespace ControllerSelection {
         public Transform secondaryDown = null;
 		public Transform aDown = null;
 		public Transform bDown = null;
+
+		public Vector3 myHitPos;
 
 		public Transform remoteGrab = null;
 		public float remoteGrabDistance;
@@ -131,8 +135,12 @@ namespace ControllerSelection {
 			Gizmos.DrawWireSphere(remoteGrabStartPos, 0.04f);
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(remoteGrabTargetPos, 0.04f);
-			//Gizmos.color = Color.red;
-			//Gizmos.DrawWireSphere(gizmoPos3, 0.04f);
+			if (lastHit)
+			{
+				Gizmos.color = Color.black;
+				Gizmos.DrawWireSphere(myHitPos, 0.04f);
+			}
+
 		}
 
 		void Update() {
@@ -140,61 +148,84 @@ namespace ControllerSelection {
             Ray pointer = OVRInputHelpers.GetSelectionRay(activeController, trackingSpace);
 
             RaycastHit hit; // Was anything hit?
-            if (Physics.Raycast(pointer, out hit, raycastDistance, ~excludeLayers)) {
-                if (lastHit != null && lastHit != hit.transform) {
-                    if (onHoverExit != null) {
-                        onHoverExit.Invoke(lastHit);
-                    }
-                    lastHit = null;
-                }
+			if (Physics.Raycast(pointer, out hit, raycastDistance, ~excludeLayers))
+			{
 
-                if (lastHit == null) {
-                    if (onHoverEnter != null) {
-                        onHoverEnter.Invoke(hit.transform);
-                    }
-                }
+				myHitPos = hit.point;
+				myOVRPointerVisualizer.rayDrawDistance = hit.distance;
+				//Debug.Log(hit.distance);
 
-                if (onHover != null) {
-                    onHover.Invoke(hit.transform);
-                }
 
-                lastHit = hit.transform;
+				if (lastHit != null && lastHit != hit.transform)
+				{
+					if (onHoverExit != null)
+					{
+						onHoverExit.Invoke(lastHit);
+					}
+					lastHit = null;
+				}
 
-                // Handle selection callbacks. An object is selected if the button selecting it was
-                // pressed AND released while hovering over the object.
+				if (lastHit == null)
+				{
+					if (onHoverEnter != null)
+					{
+						onHoverEnter.Invoke(hit.transform);
+					}
+				}
 
-                if (activeController != OVRInput.Controller.None) {
-                    if (OVRInput.GetDown(secondaryButton, activeController)) {
-                        secondaryDown = lastHit;
+				if (onHover != null)
+				{
+					onHover.Invoke(hit.transform);
+				}
+
+				lastHit = hit.transform;
+
+				// Handle selection callbacks. An object is selected if the button selecting it was
+				// pressed AND released while hovering over the object.
+
+				if (activeController != OVRInput.Controller.None)
+				{
+					if (OVRInput.GetDown(secondaryButton, activeController))
+					{
+						secondaryDown = lastHit;
 						//Debug.Log("1");
-                    }
-                    else if (OVRInput.GetUp(secondaryButton, activeController)) {
-                        if (secondaryDown != null && secondaryDown == lastHit) {
-                            if (onSecondarySelect != null) {
-                                onSecondarySelect.Invoke(secondaryDown, pointer);
+					}
+					else if (OVRInput.GetUp(secondaryButton, activeController))
+					{
+						if (secondaryDown != null && secondaryDown == lastHit)
+						{
+							if (onSecondarySelect != null)
+							{
+								onSecondarySelect.Invoke(secondaryDown, pointer);
 								//Debug.Log("2");
 							}
-                        }
-                    }
-                    if (!OVRInput.Get(secondaryButton, activeController)) {
-                        secondaryDown = null;
+						}
+					}
+					if (!OVRInput.Get(secondaryButton, activeController))
+					{
+						secondaryDown = null;
 						//Debug.Log("3");
 					}
 
-                    if (OVRInput.GetDown(primaryButton, activeController)) {
-                        primaryDown = lastHit;
+					if (OVRInput.GetDown(primaryButton, activeController))
+					{
+						primaryDown = lastHit;
 						//Debug.Log("4");
 					}
-                    else if (OVRInput.GetUp(primaryButton, activeController)) {
-                        if (primaryDown != null && primaryDown == lastHit) {
-                            if (onPrimarySelect != null) {
-                                onPrimarySelect.Invoke(primaryDown, pointer);
+					else if (OVRInput.GetUp(primaryButton, activeController))
+					{
+						if (primaryDown != null && primaryDown == lastHit)
+						{
+							if (onPrimarySelect != null)
+							{
+								onPrimarySelect.Invoke(primaryDown, pointer);
 								//Debug.Log("5");
 							}
-                        }
-                    }
-                    if (!OVRInput.Get(primaryButton, activeController)) {
-                        primaryDown = null;
+						}
+					}
+					if (!OVRInput.Get(primaryButton, activeController))
+					{
+						primaryDown = null;
 						//Debug.Log("6");
 					}
 				}
@@ -343,13 +374,19 @@ namespace ControllerSelection {
 
 				}
 			}
-            // Nothing was hit, handle exit callback
-            else if (lastHit != null) {
-                if (onHoverExit != null) {
-                    onHoverExit.Invoke(lastHit);
-                }
-                lastHit = null;
-            }
+			// Nothing was hit, handle exit callback
+			else
+			{
+				myOVRPointerVisualizer.rayDrawDistance = 10.0f;
+
+				if (lastHit != null) {
+					if (onHoverExit != null) {
+						onHoverExit.Invoke(lastHit);
+					}
+					lastHit = null;
+				}
+			}
+
 
 			//REMOTE GRAB UPDATE (outside of hit test)
 			if (remoteGrab)
