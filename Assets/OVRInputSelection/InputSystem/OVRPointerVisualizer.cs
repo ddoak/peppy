@@ -76,7 +76,7 @@ namespace ControllerSelection {
         public void SetPointerVisibility() {
             if (trackingSpace != null && activeController != OVRInput.Controller.None) {
                 if (linePointer != null) {
-                    linePointer.enabled = true;
+					linePointer.enabled = true;
                 }
                 if (gazePointer != null) {
                     gazePointer.gameObject.SetActive(false);
