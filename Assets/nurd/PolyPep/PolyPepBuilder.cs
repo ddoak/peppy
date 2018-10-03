@@ -127,17 +127,11 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 		}
 
-		// periodic offsets for polymer
-		float Offset = 0.2f; // empirical - enough to avoid collider overlap
-
-
-
-
-		var offsetPositionUnit = (Offset * buildTransform.right);
+		// periodic offsets for backbone unit polymer
+		float buildOffset = 0.2f; // empirical - enough to avoid collider overlap
+		var offsetPositionUnit = (buildOffset * buildTransform.right);
 
 		Transform lastUnitTransform = buildTransform;
-
-		//lastUnitTransform.position += new Vector3 (0f, 1.0f, 0f);
 
 		for (int i = 0; i < polyLength; i++)
 		{
@@ -179,8 +173,7 @@ public class PolyPepBuilder : MonoBehaviour {
 				case 3:
 					AddResidueToChain(i / 3);
 					// Yrot = +69 -64 +58 = 63
-					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
-					
+					polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + offsetPositionUnit), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);	
 					break;
 				case 4:
 					// Yrot = +69 -64 +58 -69 = -6
@@ -192,45 +185,14 @@ public class PolyPepBuilder : MonoBehaviour {
 					break;
 
 			}
-			//{
-			//	case 0:
-			//		AddResidueToChain(i / 3);
-			//	polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 0, 0), chainArr[i / 3].transform);
-			//	break;
-			//	case 1:
-			//		// Yrot = +69
-			//		polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 69, 0), chainArr[i / 3].transform);
-			//	break;
-			//	case 2:
-			//		// Yrot = +69 -64 = 5
-			//		polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 5, 0), chainArr[i / 3].transform);
-			//	break;
-			//	case 3:
-			//		AddResidueToChain(i / 3);
-			//	// Yrot = +69 -64 +58 = 63
-			//	polyArr[i] = Instantiate(amidePf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, 63, 0), chainArr[i / 3].transform);
-
-			//	break;
-			//	case 4:
-			//		// Yrot = +69 -64 +58 -69 = -6
-			//		polyArr[i] = Instantiate(calphaPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(180, -6, 0), chainArr[i / 3].transform);
-			//	break;
-			//	case 5:
-			//		// Yrot = +69 -64 +58 -69 +64 = 58
-			//		polyArr[i] = Instantiate(carbonylPf, (lastUnitTransform.position + transform.TransformDirection(offsetPositionUnit)), transform.rotation * Quaternion.Euler(0, 58, 0), chainArr[i / 3].transform);
-			//	break;
-
-			//}
-
-
 
 			polyArr[i].name = ((i / 3)).ToString() + "_" + polyArr[i].name;
 			polyArr[i].GetComponent<BackboneUnit>().residue = i / 3;
 
-			ScaleVDW(1.0f);
-			SetRbDrag(polyArr[i]);
-			//SetCollidersGameObject(polyArr[i]);
-
+			if (i > 0)
+			{
+				AddBackboneTopologyConstraint(i);
+			}
 
 			{
 				// turn off shadows / renderer
@@ -241,25 +203,24 @@ public class PolyPepBuilder : MonoBehaviour {
 				}
 			}
 
-			if (i > 0)
-			{
-				AddBackboneTopologyConstraint(i);
-			}
+			//ScaleVDW(2.0f);
+			SetRbDrag(polyArr[i]);
+			//SetCollidersGameObject(polyArr[i]);
 
 		}
 
-		SetAllColliderIsTrigger (true);
+		//SetAllColliderIsTrigger (true);
 
-		for (int i = 0; i < polyLength; i++)
-		{
-			var rigidBodies = polyArr[i].GetComponentsInChildren<Rigidbody>();
-			foreach (var rb in rigidBodies)
-			{
-				rb.mass = 1;
-				rb.drag = 5;
-				rb.angularDrag = 5;
-			}
-		}
+		//for (int i = 0; i < polyLength; i++)
+		//{
+		//	var rigidBodies = polyArr[i].GetComponentsInChildren<Rigidbody>();
+		//	foreach (var rb in rigidBodies)
+		//	{
+		//		rb.mass = 1;
+		//		rb.drag = 5;
+		//		rb.angularDrag = 5;
+		//	}
+		//}
 
 
 		// assign references in chainArr
@@ -329,8 +290,9 @@ public class PolyPepBuilder : MonoBehaviour {
 	void SetRbDrag(GameObject go)
 	{
 		// empirical values which seem to behave well
+		go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
-		go.GetComponent<Rigidbody>().angularDrag = 1;
+		go.GetComponent<Rigidbody>().angularDrag = 5;
 
 		//test
 		//go.GetComponent<Rigidbody>().mass = 0.001f;

@@ -11,11 +11,18 @@ public class PolyPepManager : MonoBehaviour {
 	public List<PolyPepBuilder> allPolyPepBuilders = new List<PolyPepBuilder>();
 
 	public bool collidersOn = false;
+	public float vdwScale = 1.0f;
+
+	public bool hbondsOn = false;
+	public float hbondStrength = 100.0f;
 
 	public int UIDefinedSecondaryStructure { get; set; }
 
 	public float phiTarget = 0f;
 	public float psiTarget = 0f;
+	public float phiPsiDrive = 100.0f;
+
+
 
 	public Slider phiSliderUI;
 	public Slider psiSliderUI;
@@ -111,23 +118,22 @@ public class PolyPepManager : MonoBehaviour {
 
 		//Debug.Log(spawnLengthSliderUI.GetComponent<Slider>().value);
 
-		for (int i = 0; i< 1; i++)
-		{
-			int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
-			//Debug.Log(spawnTransform.position);
+		int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
+		//Debug.Log(spawnTransform.position);
 
-			Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.1f;
-			// offset to try to keep new pp in sensible position
-			// working solution - no scale, centre of mass / springs ...
-			spawnTransform.transform.position += offset;
-			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
-			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-			pp_cs.numResidues = numResidues;
-			pp_cs.buildTransform = spawnTransform.transform ;
-			pp.name = "polyPep_" + allPolyPepBuilders.Count;
-			allPolyPepBuilders.Add(pp_cs);
-			pp_cs.ScaleVDW(vdwSliderUI.GetComponent<Slider>().value / 10.0f);
-		}
+		Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.1f;
+		// offset to try to keep new pp in sensible position
+		// working solution - no scale, centre of mass / springs ...
+		spawnTransform.transform.position += offset;
+		GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
+		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+		pp_cs.numResidues = numResidues;
+		pp_cs.buildTransform = spawnTransform.transform ;
+		pp.name = "polyPep_" + allPolyPepBuilders.Count;
+		allPolyPepBuilders.Add(pp_cs);
+
+		pp_cs.ScaleVDW(vdwSliderUI.GetComponent<Slider>().value / 10.0f);
+		//UpdateCollidersFromUI(true);
 	}
 
 	void OnDrawGizmos()
@@ -146,35 +152,39 @@ public class PolyPepManager : MonoBehaviour {
 	{
 
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		vdwScale = scaleVDWx10 / 10.0f;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.ScaleVDW(scaleVDWx10 / 10.0f);
+			_ppb.ScaleVDW(vdwScale);
 		}
 	}
 
 	public void UpdateCollidersFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		collidersOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.SetAllColliderIsTrigger(!value);
+			_ppb.SetAllColliderIsTrigger(!collidersOn);
 		}
 	}
 
 	public void UpdateHbondOnFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		hbondsOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.ActiveHbondSpringConstraints = value;
+			_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateHBondSprings();
 		}
 	}
 
-	public void UpdateHbondStrengthFromUI(float hbondStrength)
+	public void UpdateHbondStrengthFromUI(float hbondStrengthFromUI)
 	{
 
 		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
+		hbondStrength = hbondStrengthFromUI;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.hbondStrength = hbondStrength;
@@ -182,10 +192,11 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
-	public void UpdatePhiPsiDriveFromUI(float phiPsiDrive)
+	public void UpdatePhiPsiDriveFromUI(float phiPsiDriveFromUI)
 	{
 
 		//Debug.Log("hello PhiPsi Drive from the manager! ---> " + phiPsiDrive);
+		phiPsiDrive = phiPsiDriveFromUI;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
