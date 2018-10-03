@@ -2211,6 +2211,34 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 531422433}
   m_CullTransparentMesh: 0
+--- !u!1 &543889711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 543889712}
+  m_Layer: 11
+  m_Name: SpawnPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &543889712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 543889711}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1722166617}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &577288332
 GameObject:
   m_ObjectHideFlags: 0
@@ -5630,7 +5658,7 @@ MonoBehaviour:
         m_MethodName: SpawnPolypeptide
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1722166617}
+          m_ObjectArgument: {fileID: 543889712}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -8544,6 +8572,7 @@ Transform:
   m_Children:
   - {fileID: 577288333}
   - {fileID: 1518476871}
+  - {fileID: 543889712}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
@@ -11219,7 +11248,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1238769239}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 48
+  m_MaxValue: 32
   m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:

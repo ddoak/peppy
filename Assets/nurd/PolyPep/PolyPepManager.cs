@@ -25,7 +25,6 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider phiPsiDriveSliderUI;
 	public Slider spawnLengthSliderUI;
 
-
 	void Awake()
 	{
 			GameObject temp = GameObject.Find("Slider_Phi");
@@ -110,23 +109,37 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		// create chains - hard coded for the moment
 
-		Debug.Log(spawnLengthSliderUI.GetComponent<Slider>().value);
+		//Debug.Log(spawnLengthSliderUI.GetComponent<Slider>().value);
 
 		for (int i = 0; i< 1; i++)
 		{
-			//GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i * 1), 0f), Quaternion.identity);
-			Debug.Log(spawnTransform.position);
-			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.position, Quaternion.identity);
+			int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
+			//Debug.Log(spawnTransform.position);
+
+			Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.1f;
+			// offset to try to keep new pp in sensible position
+			// working solution - no scale, centre of mass / springs ...
+			spawnTransform.transform.position += offset;
+			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
 			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-			pp_cs.numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
-			pp_cs.buildTransform = spawnTransform;
-			//pp.name = "polyPep_" + (i).ToString();
+			pp_cs.numResidues = numResidues;
+			pp_cs.buildTransform = spawnTransform.transform ;
 			pp.name = "polyPep_" + allPolyPepBuilders.Count;
 			allPolyPepBuilders.Add(pp_cs);
 			pp_cs.ScaleVDW(vdwSliderUI.GetComponent<Slider>().value / 10.0f);
 		}
 	}
 
+	void OnDrawGizmos()
+	{
+		//if (spawnTransform)
+		//{
+		//	Gizmos.color = Color.cyan;
+		//	Gizmos.DrawWireSphere(spawnTransform.transform.position, 0.04f);
+		//}
+		Gizmos.color = Color.black;
+		Gizmos.DrawWireSphere(gameObject.transform.position, 0.04f);
+	}
 
 
 	public void UpdateVDWScalesFromUI(float scaleVDWx10)
