@@ -20,6 +20,7 @@ public class BackboneUnit : MonoBehaviour {
 
 	public Residue myResidue;
 	public PolyPepBuilder myPolyPepBuilder;
+	public PolyPepManager myPolyPepManager;
 
 	// 
 	private Renderer rendererPhi;	// amide only
@@ -30,7 +31,7 @@ public class BackboneUnit : MonoBehaviour {
 	private List<Renderer> renderersAtoms = new List<Renderer>();
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
 		// init my references to renderers
 		{
@@ -66,13 +67,29 @@ public class BackboneUnit : MonoBehaviour {
 		}
 
 		// init parent script references
-
-
 		myResidue = (gameObject.transform.parent.gameObject.GetComponent("Residue") as Residue);
 		myPolyPepBuilder = (gameObject.transform.parent.parent.gameObject.GetComponent("PolyPepBuilder") as PolyPepBuilder);
+		GameObject manager = GameObject.Find("PolyPepManager");
+		myPolyPepManager = manager.GetComponent("PolyPepManager") as PolyPepManager;
 
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
+	}
+
+	void Start()
+	{
+		//duplication of PolyPepManager UI code 
+
+		myPolyPepBuilder.ScaleVDW(myPolyPepManager.vdwScale);
+		myPolyPepBuilder.SetAllColliderIsTrigger(!myPolyPepManager.collidersOn);
+
+		myPolyPepBuilder.ActiveHbondSpringConstraints = myPolyPepManager.hbondsOn;
+		myPolyPepBuilder.UpdateHBondSprings();
+
+		myPolyPepBuilder.drivePhiPsiMaxForce = myPolyPepManager.phiPsiDrive;
+		myPolyPepBuilder.drivePhiPsiPosSpring = myPolyPepManager.phiPsiDrive;
+		myPolyPepBuilder.UpdatePhiPsiDrives();
+
 		UpdateRenderMode();
 	}
 

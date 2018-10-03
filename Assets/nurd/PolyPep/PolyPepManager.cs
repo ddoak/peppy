@@ -114,26 +114,22 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void SpawnPolypeptide(Transform spawnTransform)
 	{
-		// create chains - hard coded for the moment
+		//if (!collidersOn)
+		{
+			int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
+			//Debug.Log(spawnTransform.position);
 
-		//Debug.Log(spawnLengthSliderUI.GetComponent<Slider>().value);
-
-		int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
-		//Debug.Log(spawnTransform.position);
-
-		Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.1f;
-		// offset to try to keep new pp in sensible position
-		// working solution - no scale, centre of mass / springs ...
-		spawnTransform.transform.position += offset;
-		GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
-		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-		pp_cs.numResidues = numResidues;
-		pp_cs.buildTransform = spawnTransform.transform ;
-		pp.name = "polyPep_" + allPolyPepBuilders.Count;
-		allPolyPepBuilders.Add(pp_cs);
-
-		pp_cs.ScaleVDW(vdwSliderUI.GetComponent<Slider>().value / 10.0f);
-		//UpdateCollidersFromUI(true);
+			Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.1f;
+			// offset to try to keep new pp in sensible position
+			// working solution - no scale, centre of mass / springs ...
+			spawnTransform.transform.position += offset;
+			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
+			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
+			pp_cs.numResidues = numResidues;
+			pp_cs.buildTransform = spawnTransform.transform ;
+			pp.name = "polyPep_" + allPolyPepBuilders.Count;
+			allPolyPepBuilders.Add(pp_cs);
+		}
 	}
 
 	void OnDrawGizmos()

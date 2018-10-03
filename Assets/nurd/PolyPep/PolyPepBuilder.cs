@@ -203,10 +203,10 @@ public class PolyPepBuilder : MonoBehaviour {
 				}
 			}
 
-			//ScaleVDW(2.0f);
+	
 			SetRbDrag(polyArr[i]);
-			//SetCollidersGameObject(polyArr[i]);
-
+			
+			// BackboneUnit script handles setup of UI parameters (collisions / vdw scale etc.)
 		}
 
 		//SetAllColliderIsTrigger (true);
