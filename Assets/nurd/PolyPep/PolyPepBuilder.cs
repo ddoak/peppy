@@ -292,7 +292,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
-		go.GetComponent<Rigidbody>().angularDrag = 5;
+		go.GetComponent<Rigidbody>().angularDrag = 1;
 
 		//test
 		//go.GetComponent<Rigidbody>().mass = 0.001f;

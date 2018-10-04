@@ -22,6 +22,8 @@ public class PolyPepManager : MonoBehaviour {
 	public float psiTarget = 0f;
 	public float phiPsiDrive = 100.0f;
 
+	public bool doCartoonBondRendering = false;
+
 
 
 	public Slider phiSliderUI;

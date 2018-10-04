@@ -179,10 +179,10 @@ public class BackboneUnit : MonoBehaviour {
 			}
 		}
 
-		bool doBondCartoonRendering = false;
+		//bool doBondCartoonRendering = true;
 		if (rendererPhi)
 		{
-			if (doBondCartoonRendering)//myResidue.drivePhiPsiOn)
+			if (myPolyPepManager.doCartoonBondRendering && myResidue.drivePhiPsiOn)
 			{
 				rendererPhi.material.shader = shaderToonOutline;
 				rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
@@ -196,7 +196,7 @@ public class BackboneUnit : MonoBehaviour {
 
 		if (rendererPsi)
 		{
-			if (doBondCartoonRendering)//myResidue.drivePhiPsiOn)
+			if (myPolyPepManager.doCartoonBondRendering && myResidue.drivePhiPsiOn)
 			{
 				rendererPsi.material.shader = shaderToonOutline;
 				rendererPsi.material.SetColor("_OutlineColor", Color.magenta);
@@ -210,7 +210,7 @@ public class BackboneUnit : MonoBehaviour {
 
 		if (rendererPeptide)
 		{
-			if (doBondCartoonRendering)
+			if (myPolyPepManager.doCartoonBondRendering)
 			{
 				rendererPeptide.material.shader = shaderToonOutline;
 				rendererPeptide.material.SetColor("_OutlineColor", Color.black);
