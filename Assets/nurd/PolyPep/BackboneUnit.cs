@@ -96,6 +96,7 @@ public class BackboneUnit : MonoBehaviour {
 	public void SetBackboneUnitControllerHover(bool flag)
 	{
 		controllerHoverOn = flag;
+		myResidue.residueHovered = flag;
 		UpdateRenderMode();
 	}
 

@@ -20,17 +20,14 @@ public class Residue : MonoBehaviour {
 	public GameObject myCube;
 
 	public bool residueSelected = false;
+	public bool residueHovered = false;
 
 	public bool drivePhiPsiOn = false;
-
-	Shader shaderStandard;
-	Shader shaderToonOutline;
 
 	// Use this for initialization
 	private void Awake()
 	{
-		shaderStandard = Shader.Find("Standard");
-		shaderToonOutline = Shader.Find("Toon/Basic Outline");
+
 	}
 
 	void Start ()
@@ -62,14 +59,22 @@ public class Residue : MonoBehaviour {
 	{ 
 
 		Renderer _myCubeRenderer  = myCube.GetComponent<Renderer>();
-		if (residueSelected)
+		if (residueHovered)
 		{
-			_myCubeRenderer.material.SetColor("_Color", Color.yellow);
+			_myCubeRenderer.material.SetColor("_Color", Color.red);
 		}
 		else
 		{
-			_myCubeRenderer.material.SetColor("_Color", Color.white);
+			if (residueSelected)
+			{
+				_myCubeRenderer.material.SetColor("_Color", Color.yellow);
+			}
+			else
+			{
+				_myCubeRenderer.material.SetColor("_Color", Color.white);
+			}
 		}
+
 		myCube.transform.rotation = ramaPlot.transform.rotation;
 		myCube.transform.position = ramaPlot.transform.position + (ramaPlot.transform.right * ramaPlotScale * phiCurrent) + (ramaPlot.transform.up * ramaPlotScale * psiCurrent);
 	}
