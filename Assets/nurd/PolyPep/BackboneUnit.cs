@@ -112,6 +112,9 @@ public class BackboneUnit : MonoBehaviour {
 			buAmide.SetBackboneUnitSelect(flag);
 			buCalpha.SetBackboneUnitSelect(flag);
 			buCarbonyl.SetBackboneUnitSelect(flag);
+
+			//Debug.Log(res + " " + flag);
+			myResidue.residueSelected = flag;
 		}
 	}
 

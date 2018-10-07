@@ -1308,7 +1308,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		{
 			BackboneUnit _bbu = (polyArr[i].GetComponent("BackboneUnit") as BackboneUnit);
 			Assert.IsTrue(_bbu);
-			_bbu.SetBackboneUnitSelect(value);
+			_bbu.SetMyResidueSelect(value);
+			//_bbu.SetBackboneUnitSelect(value);
 		}
 	}
 
@@ -1322,6 +1323,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		HbondLineTrace();
 		UpdateHbondParticleSystems();
 		//UpdateHBondSprings();
+
 	}
 }
 
