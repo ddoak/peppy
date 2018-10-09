@@ -135,6 +135,13 @@ public class BackboneUnit : MonoBehaviour {
 		}
 	}
 
+	public void SetRemoteGrabSelect(bool value)
+	{
+		remoteGrabSelectOn = value;
+		myResidue.residueGrabbed = value;
+		UpdateRenderMode();
+	}
+
 	private void SetRenderingMode(GameObject go, string shaderName)
 	{
 

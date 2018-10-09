@@ -17,10 +17,13 @@ public class Residue : MonoBehaviour {
 	public GameObject ramaPlot;
 	public float ramaPlotScale = 0.0012f; //  set visually against UI
 
-	public GameObject myCube;
+	public GameObject myPlotCube;
+	private Vector3 myPlotCubeBaseScale = new Vector3(0.01f, 0.01f, 0.01f);
+	float deltaScale = 1.0f;
 
 	public bool residueSelected = false;
 	public bool residueHovered = false;
+	public bool residueGrabbed = false;
 
 	public bool drivePhiPsiOn = false;
 
@@ -34,10 +37,10 @@ public class Residue : MonoBehaviour {
 	{
 		ramaPlot = GameObject.Find("RamaPlotOrigin");
 
-		myCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		myCube.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-		myCube.transform.rotation = ramaPlot.transform.rotation;
-		myCube.transform.position = ramaPlot.transform.position;
+		myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		myPlotCube.transform.localScale = myPlotCubeBaseScale;
+		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
+		myPlotCube.transform.position = ramaPlot.transform.position;
 
 	}
 	
@@ -58,25 +61,43 @@ public class Residue : MonoBehaviour {
 	void UpdatePhiPsiPlotObj()
 	{ 
 
-		Renderer _myCubeRenderer  = myCube.GetComponent<Renderer>();
-		if (residueHovered)
+		Renderer _myPlotCubeRenderer  = myPlotCube.GetComponent<Renderer>();
+		Vector3 deltaPos = new Vector3(0.0f, 0.0f, 0.0f);
+		float targetDeltaScale = 1.0f;
+		if (residueGrabbed)
 		{
-			_myCubeRenderer.material.SetColor("_Color", Color.red);
+			_myPlotCubeRenderer.material.SetColor("_Color", Color.green);
+			//deltaPos += ramaPlot.transform.forward * -0.015f;
+			targetDeltaScale = 1.6f;
 		}
 		else
 		{
-			if (residueSelected)
+			if (residueHovered)
 			{
-				_myCubeRenderer.material.SetColor("_Color", Color.yellow);
+				_myPlotCubeRenderer.material.SetColor("_Color", Color.red);
+				//deltaPos += ramaPlot.transform.forward * -0.01f;
+				targetDeltaScale = 1.4f;
 			}
 			else
 			{
-				_myCubeRenderer.material.SetColor("_Color", Color.white);
+				if(residueSelected)
+				{
+					_myPlotCubeRenderer.material.SetColor("_Color", Color.yellow);
+					targetDeltaScale = 1.2f;
+				}
+				else
+				{
+					_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
+					targetDeltaScale = 1.0f;
+				}
 			}
 		}
 
-		myCube.transform.rotation = ramaPlot.transform.rotation;
-		myCube.transform.position = ramaPlot.transform.position + (ramaPlot.transform.right * ramaPlotScale * phiCurrent) + (ramaPlot.transform.up * ramaPlotScale * psiCurrent);
+
+		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
+		myPlotCube.transform.position = ramaPlot.transform.position + (ramaPlot.transform.right * ramaPlotScale * phiCurrent) + (ramaPlot.transform.up * ramaPlotScale * psiCurrent) + deltaPos;
+		deltaScale = Mathf.Lerp(deltaScale, targetDeltaScale, 0.2f);
+		myPlotCube.transform.localScale = myPlotCubeBaseScale * deltaScale;
 	}
 
 	// Update is called once per frame
