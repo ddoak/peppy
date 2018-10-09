@@ -1023,40 +1023,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		}
 
-		//if (drivePhiPsi == true)
-		//{
-		//	for (int i = 0; i < numResidues; i++)
-		//	{
-		//		chainPhiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-		//		chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
-		//		chainPhiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
-
-		//		chainPsiJointDrives[i].maximumForce = drivePhiPsiMaxForce;
-		//		chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamper;
-		//		chainPsiJointDrives[i].positionSpring = drivePhiPsiPosSpring;
-
-		//		UpdatePhiPsiDriveParamForResidue(i);
-		//	}
-		//	Debug.Log("PhiPsi Drive = ON ");
-		//}
-		//else
-		//{
-		//	for (int i = 0; i < numResidues; i++)
-		//	{
-		//		chainPhiJointDrives[i].maximumForce = 0.0f;
-		//		chainPhiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
-		//		chainPhiJointDrives[i].positionSpring = 0.0f;
-
-		//		chainPsiJointDrives[i].maximumForce = 0.0f;
-		//		chainPsiJointDrives[i].positionDamper = drivePhiPsiPosDamperPassive;
-		//		chainPsiJointDrives[i].positionSpring = 0.0f;
-
-		//		UpdatePhiPsiDriveParamForResidue(i);
-		//	}
-		//	Debug.Log("PhiPsi Drive = OFF ");
-
-		//}
-
 	}
 
 
@@ -1087,6 +1053,12 @@ public class PolyPepBuilder : MonoBehaviour {
 			}
 			//Debug.Log("HBond Springs = OFF ");
 		}
+	}
+
+	public void UpdateHbondStrengthFromUI()
+	{
+		//TODO  Update Hbonds with new strength!
+		UpdateHBondSprings();
 	}
 
 	private bool LoadPhiPsiData(string fileName)
@@ -1143,7 +1115,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	}
 
 
-	void ParsePhiPsi(string line)
+	private void ParsePhiPsi(string line)
 	{
 		//
 		// parses output from PYMOL command: phi_psi all
@@ -1167,12 +1139,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		SetPhiPsiForResidue(myResid, myPhi, myPsi);
 	}
 
-	public void UpdateHbondStrengthFromUI()
-	{
-		//TODO  Update Hbonds with new strength!
-		UpdateHBondSprings();
-	}
-
 	public void UpdateResidueSelectionStartFromUI()
 	{
 		residSelectStart = (int)resStartSliderUI.value - 1;
@@ -1184,7 +1150,7 @@ public class PolyPepBuilder : MonoBehaviour {
 				resStartSliderUI.value = resEndSliderUI.value;
 			}
 		}
-		
+
 		if (residSelectStart != residSelectStartLast)
 		{
 			UpdateResidueSelection();
@@ -1231,7 +1197,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	private void UpdateResidueSelection()
 	{
-		for (int resid = 0; resid < residSelectStart; resid ++)
+		for (int resid = 0; resid < residSelectStart; resid++)
 		{
 			SetSequenceSelectionForResidue(resid, false);
 		}
@@ -1267,7 +1233,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		float maxY = -Mathf.Infinity;
 		float maxZ = -Mathf.Infinity;
 	
-		//legacy assumes single polypeptide!
+		//CAUTION! legacy assumes single polypeptide!
 		foreach (GameObject go in GameObject.FindGameObjectsWithTag("N"))
 		{
 
