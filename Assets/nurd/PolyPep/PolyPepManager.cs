@@ -22,9 +22,8 @@ public class PolyPepManager : MonoBehaviour {
 	public float psiTarget = 0f;
 	public float phiPsiDrive = 100.0f;
 
-	public bool doCartoonBondRendering = false;
-
-
+	public bool showDrivenBondsOn = false;
+	public bool doCartoonBondRendering = true;
 
 	public Slider phiSliderUI;
 	public Slider psiSliderUI;
@@ -178,6 +177,16 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void UpdateShowDrivenBondsOnFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		showDrivenBondsOn = value;
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.UpdateRenderModeBbu();
+		}
+	}
+
 	public void UpdateHbondStrengthFromUI(float hbondStrengthFromUI)
 	{
 
@@ -200,6 +209,8 @@ public class PolyPepManager : MonoBehaviour {
 			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
 			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
 			_ppb.UpdatePhiPsiDrives();
+			_ppb.UpdateRenderModeBbu();
+
 
 			// drivePhiPsiPosDamper ?
 		}

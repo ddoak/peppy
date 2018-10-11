@@ -191,47 +191,52 @@ public class BackboneUnit : MonoBehaviour {
 		}
 
 		//bool doBondCartoonRendering = true;
-		if (rendererPhi)
+		if (myPolyPepManager.doCartoonBondRendering)
 		{
-			if (myPolyPepManager.doCartoonBondRendering && myResidue.drivePhiPsiOn)
+			float bondToonRenderScale = (myPolyPepManager.phiPsiDrive / 400.0f) * 2.5f;
+			if (rendererPhi)
 			{
-				rendererPhi.material.shader = shaderToonOutline;
-				rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
-				rendererPhi.material.SetFloat("_Outline", 0.005f);
+				if (myPolyPepManager.showDrivenBondsOn && myResidue.drivePhiPsiOn)
+				{
+					rendererPhi.material.shader = shaderToonOutline;
+					rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
+					rendererPhi.material.SetFloat("_Outline", 0.005f * bondToonRenderScale);
+				}
+				else
+				{
+					rendererPhi.material.shader = shaderStandard;
+				}
 			}
-			else
+
+			if (rendererPsi)
 			{
-				rendererPhi.material.shader = shaderStandard;
+				if (myPolyPepManager.showDrivenBondsOn && myResidue.drivePhiPsiOn)
+				{
+					rendererPsi.material.shader = shaderToonOutline;
+					rendererPsi.material.SetColor("_OutlineColor", Color.magenta);
+					rendererPsi.material.SetFloat("_Outline", 0.005f * bondToonRenderScale);
+				}
+				else
+				{
+					rendererPsi.material.shader = shaderStandard;
+				}
+			}
+
+			if (rendererPeptide)
+			{
+				if (myPolyPepManager.showDrivenBondsOn)
+				{
+					rendererPeptide.material.shader = shaderToonOutline;
+					rendererPeptide.material.SetColor("_OutlineColor", Color.black);
+					rendererPeptide.material.SetFloat("_Outline", 0.005f);
+				}
+				else
+				{
+					rendererPeptide.material.shader = shaderStandard;
+				}
 			}
 		}
 
-		if (rendererPsi)
-		{
-			if (myPolyPepManager.doCartoonBondRendering && myResidue.drivePhiPsiOn)
-			{
-				rendererPsi.material.shader = shaderToonOutline;
-				rendererPsi.material.SetColor("_OutlineColor", Color.magenta);
-				rendererPsi.material.SetFloat("_Outline", 0.005f);
-			}
-			else
-			{
-				rendererPsi.material.shader = shaderStandard;
-			}
-		}
-
-		if (rendererPeptide)
-		{
-			if (myPolyPepManager.doCartoonBondRendering)
-			{
-				rendererPeptide.material.shader = shaderToonOutline;
-				rendererPeptide.material.SetColor("_OutlineColor", Color.black);
-				rendererPeptide.material.SetFloat("_Outline", 0.005f);
-			}
-			else
-			{
-				rendererPeptide.material.shader = shaderStandard;
-			}
-		}
 
 	}
 

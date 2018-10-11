@@ -1279,6 +1279,16 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void UpdateRenderModeBbu()
+	{
+		for (int i = 0; i < polyLength; i++)
+		{
+			BackboneUnit _bbu = (polyArr[i].GetComponent("BackboneUnit") as BackboneUnit);
+			Assert.IsTrue(_bbu);
+			_bbu.UpdateRenderMode();
+			//_bbu.SetBackboneUnitSelect(value);
+		}
+	}
 
 	// Update is called once per frame
 	void Update()
