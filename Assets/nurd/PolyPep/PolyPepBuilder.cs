@@ -913,14 +913,30 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void SetPhiPsiDriveOffForSelection()
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			if (residue.IsResidueSelected())
+			{
+				residue.drivePhiPsiOn = false;
+			}
+		}
+		UpdatePhiPsiDrives();
+	}
+
 	public void SetPhiPsiForSelection(float phi, float psi)
 	{
 		// use 'painted' selection from controller i.e. controllerSelectOn
 		for (int resid = 0; resid < numResidues; resid++)
 		{
+
 			Residue residue = chainArr[resid].GetComponent<Residue>();
-			BackboneUnit buAmide = residue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
-			if (buAmide.controllerSelectOn)
+			//BackboneUnit buAmide = residue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			//if (buAmide.controllerSelectOn)
+
+			if  (residue.IsResidueSelected())
 			{
 				SetPhiPsiForResidue(resid, phi, psi);
 				residue.drivePhiPsiOn = true;
@@ -1279,7 +1295,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void UpdateRenderModeBbu()
+	public void UpdateRenderModeAllBbu()
 	{
 		for (int i = 0; i < polyLength; i++)
 		{

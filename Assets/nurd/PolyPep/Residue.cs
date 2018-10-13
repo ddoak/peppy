@@ -103,6 +103,12 @@ public class Residue : MonoBehaviour {
 		myPlotCube.transform.localScale = myPlotCubeBaseScale * deltaScale;
 	}
 
+	public bool IsResidueSelected()
+	{
+		BackboneUnit buAmide = amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+		return buAmide.controllerSelectOn;
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{

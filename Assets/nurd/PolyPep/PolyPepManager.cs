@@ -183,7 +183,7 @@ public class PolyPepManager : MonoBehaviour {
 		showDrivenBondsOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.UpdateRenderModeBbu();
+			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
 
@@ -209,7 +209,7 @@ public class PolyPepManager : MonoBehaviour {
 			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
 			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
 			_ppb.UpdatePhiPsiDrives();
-			_ppb.UpdateRenderModeBbu();
+			_ppb.UpdateRenderModeAllBbu();
 
 
 			// drivePhiPsiPosDamper ?
@@ -222,6 +222,16 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.SetGlobalSelect(value);
+		}
+	}
+
+	public void SetSelectionDriveOffFromUI ()
+	{
+		//Debug.Log("hello from the manager! ---> SetSelectionDriveOffFromUI");
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.SetPhiPsiDriveOffForSelection();
+			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
 
