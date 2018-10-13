@@ -25,6 +25,8 @@ public class PolyPepManager : MonoBehaviour {
 	public bool showDrivenBondsOn = false;
 	public bool doCartoonBondRendering = true;
 
+	public float toonRenderScale = 0.002f;
+
 	public Slider phiSliderUI;
 	public Slider psiSliderUI;
 	public Slider vdwSliderUI;
