@@ -913,14 +913,14 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	public void SetPhiPsiDriveOffForSelection()
+	public void SetPhiPsiDriveForSelection(bool value)
 	{
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			Residue residue = chainArr[resid].GetComponent<Residue>();
 			if (residue.IsResidueSelected())
 			{
-				residue.drivePhiPsiOn = false;
+				residue.drivePhiPsiOn = value;
 			}
 		}
 		UpdatePhiPsiDrives();

@@ -225,12 +225,12 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
-	public void SetSelectionDriveOffFromUI ()
+	public void SetSelectionDriveFromUI (bool value)
 	{
 		//Debug.Log("hello from the manager! ---> SetSelectionDriveOffFromUI");
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.SetPhiPsiDriveOffForSelection();
+			_ppb.SetPhiPsiDriveForSelection(value);
 			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
