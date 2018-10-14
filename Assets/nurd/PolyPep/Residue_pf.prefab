@@ -8,15 +8,15 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
+  m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1903836867372088}
-  m_IsPrefabParent: 1
+  m_IsPrefabAsset: 1
 --- !u!1 &1903836867372088
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 4518374160278888}
   - component: {fileID: 114873614660651314}
@@ -30,7 +30,7 @@ GameObject:
 --- !u!4 &4518374160278888
 Transform:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1903836867372088}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -43,7 +43,7 @@ Transform:
 --- !u!114 &114873614660651314
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1903836867372088}
   m_Enabled: 1
@@ -51,3 +51,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b22d70f0956c9741b45b232fe387751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amide_pf: {fileID: 1106350776754678, guid: 4936e546446ffae4385076fe2eaded75, type: 2}
+  calpha_pf: {fileID: 1106350776754678, guid: 98047eb084056d04d9c000b3606e91e9, type: 2}
+  carbonyl_pf: {fileID: 1106350776754678, guid: be5cfe1926cf4d24bb8c219702f2b5be,
+    type: 2}
+  phiTarget: 0
+  psiTarget: 0
+  phiCurrent: 0
+  psiCurrent: 0
+  ramaPlot: {fileID: 0}
+  ramaPlotScale: 0.0012
+  myPlotCube: {fileID: 0}
+  residueSelected: 0
+  residueHovered: 0
+  residueGrabbed: 0
+  drivePhiPsiOn: 0
+  drivePhiPsiTorqValue: 0

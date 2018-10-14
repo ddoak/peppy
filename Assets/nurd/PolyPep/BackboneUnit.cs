@@ -193,7 +193,8 @@ public class BackboneUnit : MonoBehaviour {
 		//bool doBondCartoonRendering = true;
 		if (myPolyPepManager.doCartoonBondRendering)
 		{
-			float bondToonRenderScale = (myPolyPepManager.phiPsiDrive / 400.0f) * 3.0f;
+			//float bondToonRenderScale = (myPolyPepManager.phiPsiDrive / 400.0f) * 3.0f;
+			float bondToonRenderScale = (myResidue.drivePhiPsiTorqValue / 400.0f) * 5.0f;
 			if (rendererPhi)
 			{
 				if (myPolyPepManager.showDrivenBondsOn && myResidue.drivePhiPsiOn)

@@ -999,17 +999,18 @@ public class PolyPepBuilder : MonoBehaviour {
 				residue.drivePhiPsiTorqValue = drivePhiPsiMaxForce; // placeholder tracking value
 			}
 
+
 			if (residue.drivePhiPsiOn)
 			//on
 			{
 				// active
-				chainPhiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+				chainPhiJointDrives[resid].maximumForce = residue.drivePhiPsiTorqValue;
 				chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-				chainPhiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
+				chainPhiJointDrives[resid].positionSpring = residue.drivePhiPsiTorqValue;
 
-				chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+				chainPsiJointDrives[resid].maximumForce = residue.drivePhiPsiTorqValue;
 				chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-				chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
+				chainPsiJointDrives[resid].positionSpring = residue.drivePhiPsiTorqValue;
 				//Debug.Log("PhiPsi Drive = ON ");
 			}
 			else
@@ -1025,6 +1026,37 @@ public class PolyPepBuilder : MonoBehaviour {
 				chainPsiJointDrives[resid].positionSpring = 0.0f;
 				//Debug.Log("PhiPsi Drive = OFF ");
 			}
+
+
+
+
+			//if (residue.drivePhiPsiOn)
+			////on
+			//{
+			//	// active
+			//	chainPhiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
+			//	chainPhiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
+
+			//	chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
+			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
+			//	chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
+			//	//Debug.Log("PhiPsi Drive = ON ");
+			//}
+			//else
+			////off
+			//{
+			//	//passive
+			//	chainPhiJointDrives[resid].maximumForce = 0.0f;
+			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
+			//	chainPhiJointDrives[resid].positionSpring = 0.0f;
+
+			//	chainPsiJointDrives[resid].maximumForce = 0.0f;
+			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
+			//	chainPsiJointDrives[resid].positionSpring = 0.0f;
+			//	//Debug.Log("PhiPsi Drive = OFF ");
+			//}
+
 			UpdatePhiPsiDriveParamForResidue(resid);
 
 		}
