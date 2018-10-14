@@ -926,27 +926,22 @@ public class PolyPepBuilder : MonoBehaviour {
 		UpdatePhiPsiDrives();
 	}
 
-	public void SetPhiPsiForSelection(float phi, float psi)
+	public void SetPhiPsiTargetValuesForSelection(float phi, float psi)
 	{
 		// use 'painted' selection from controller i.e. controllerSelectOn
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-
 			Residue residue = chainArr[resid].GetComponent<Residue>();
-			//BackboneUnit buAmide = residue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
-			//if (buAmide.controllerSelectOn)
-
 			if  (residue.IsResidueSelected())
 			{
-				SetPhiPsiForResidue(resid, phi, psi);
+				SetPhiPsiTargetValuesForResidue(resid, phi, psi);
 				residue.drivePhiPsiOn = true;
-				//Debug.Log("hello");
 			}
 		}
 		UpdatePhiPsiDrives();
 	}
 
-	void SetPhiPsiForResidue(int resid, float phi, float psi)
+	void SetPhiPsiTargetValuesForResidue(int resid, float phi, float psi)
 	{
 		Residue residue = chainArr[resid].GetComponent<Residue>();
 
@@ -991,9 +986,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		// values are empirical
 		//
 
-		//float drivePhiPsiMaxForce = 200.0f;	// 100.0f
-		//float drivePhiPsiPosSpring = 200.0f; // 100.0f
-
 		//int drivePhiPsiPosDamper = 1;
 		int drivePhiPsiPosDamperPassive = 0;
 
@@ -1001,6 +993,12 @@ public class PolyPepBuilder : MonoBehaviour {
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			Residue residue = chainArr[resid].GetComponent<Residue>();
+
+			if (residue.IsResidueSelected())
+			{
+				residue.drivePhiPsiTorqValue = drivePhiPsiMaxForce; // placeholder tracking value
+			}
+
 			if (residue.drivePhiPsiOn)
 			//on
 			{
@@ -1012,13 +1010,8 @@ public class PolyPepBuilder : MonoBehaviour {
 				chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
 				chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
 				chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
-
-				UpdatePhiPsiDriveParamForResidue(resid);
-
 				//Debug.Log("PhiPsi Drive = ON ");
 			}
-			
-
 			else
 			//off
 			{
@@ -1030,12 +1023,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				chainPsiJointDrives[resid].maximumForce = 0.0f;
 				chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
 				chainPsiJointDrives[resid].positionSpring = 0.0f;
-
-				UpdatePhiPsiDriveParamForResidue(resid);
-
 				//Debug.Log("PhiPsi Drive = OFF ");
 			}
-			
+			UpdatePhiPsiDriveParamForResidue(resid);
 
 		}
 
@@ -1152,7 +1142,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		Debug.Log("  phi = " + myPhi);
 		Debug.Log("  psi = " + myPsi);
 
-		SetPhiPsiForResidue(myResid, myPhi, myPsi);
+		SetPhiPsiTargetValuesForResidue(myResid, myPhi, myPsi);
 	}
 
 	public void UpdateResidueSelectionStartFromUI()

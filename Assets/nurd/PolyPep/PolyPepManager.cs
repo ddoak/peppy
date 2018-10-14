@@ -22,7 +22,7 @@ public class PolyPepManager : MonoBehaviour {
 	public float psiTarget = 0f;
 	public float phiPsiDrive = 100.0f;
 
-	public bool showDrivenBondsOn = false;
+	public bool showDrivenBondsOn = true;
 	public bool doCartoonBondRendering = true;
 
 	public float toonRenderScale = 0.002f;
@@ -313,7 +313,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.SetPhiPsiForSelection(phiTarget, psiTarget);
+			_ppb.SetPhiPsiTargetValuesForSelection(phiTarget, psiTarget);
 		}
 	}
 

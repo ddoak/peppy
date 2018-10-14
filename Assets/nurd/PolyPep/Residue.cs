@@ -26,7 +26,7 @@ public class Residue : MonoBehaviour {
 	public bool residueGrabbed = false;
 
 	public bool drivePhiPsiOn = false;
-	public float drivePhiPsiValue = 0.0f;
+	public float drivePhiPsiTorqValue = 0.0f;
 
 	// Use this for initialization
 	private void Awake()
