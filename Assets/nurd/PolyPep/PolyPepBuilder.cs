@@ -16,6 +16,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public GameObject residuePf;
 	public GameObject hBondPsPf;
 
+	public PolyPepManager myPolyPepManager;
+
 	public Transform buildTransform;
 
 	// bond lengths used in backbone configurable joints
@@ -41,11 +43,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public JointDrive[] chainPhiJointDrives;
 	private JointDrive[] chainPsiJointDrives;
-
-	//public bool UseColliders { get; set; } //= true;
-	public bool setTargetPhiPsi { get; set; }
-	public bool setDrivePhiPsi { get; set; }
-	public bool ActiveHbondSpringConstraints { get; set; }
 
 	public float hbondStrength = 0f; // updated by PolyPepManager
 
@@ -563,7 +560,7 @@ public class PolyPepBuilder : MonoBehaviour {
 				//DrawLine(donorHLocation, acceptorOLocation, Color.yellow, 0.05f);
 				hbondBackbonePsPf[resid].transform.rotation = lookAtAcceptor;
 
-				if (ActiveHbondSpringConstraints)
+				if (myPolyPepManager.hbondsOn)
 				{
 					ParticleSystem ps = hbondBackbonePsPf[resid].GetComponent<ParticleSystem>();
 					ParticleSystem.EmissionModule em = ps.emission;
@@ -592,90 +589,103 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	void HbondLineTrace()
+	void UpdateHbonds()
 	{
 		float hbondCastScale = 3.0f; // length of cast in NH bond lengths ;)
 
 		for (int resid = 0; resid < numResidues; resid++)
-		//int resid = 1;
 		{
-			GameObject donorGO = GetAmideForResidue(resid);
-			var hbond_sj = hbondBackboneSj_HO[resid];
-			var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
-
-			Transform donorN_amide = donorGO.transform.Find("N_amide");
-			Transform tf_H = donorGO.transform.Find("tf_H");
-
-			Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
-
-			Vector3 NHBondUnit = relativeNHBond.normalized;
-
-			Vector3 endLocation = (donorHLocation + (hbondCastScale * relativeNHBond));
-
-			//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
-			//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
-
-			if (true)
+			if (myPolyPepManager.hbondsOn)
 			{
-				RaycastHit hit;
-				Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
-				float castLength = (hbondCastScale * relativeNHBond.magnitude);
-				float castRadius = 0.05f;
-				bool foundAcceptor = false;
-				//set layerMask for hbond and default layers (? may help reduce snappy hbonding through other atoms)
-				int layerMask = (1 << 9) + 1;
-				
+				GameObject donorGO = GetAmideForResidue(resid);
+				var hbond_sj = hbondBackboneSj_HO[resid];
+				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
-				//if (Physics.SphereCast(donorHLocation, castRadius, relativeNHBond.normalized, out hit, castLength))
-				if (Physics.SphereCast(donorRay, castRadius, out hit, castLength, layerMask))
+				Transform donorN_amide = donorGO.transform.Find("N_amide");
+				Transform tf_H = donorGO.transform.Find("tf_H");
+
+				Vector3 relativeNHBond = donorHLocation - donorN_amide.position;
+
+				Vector3 NHBondUnit = relativeNHBond.normalized;
+
+				Vector3 endLocation = (donorHLocation + (hbondCastScale * relativeNHBond));
+
+				//Quaternion lookAwayFromN = Quaternion.LookRotation(relativeNHBond);
+				//hbondBackbonePsPf[resid].transform.rotation = lookAwayFromN;
+
+				if (true)
 				{
-					
-					if ((hit.collider.gameObject.name == "hbond_acceptor") || (hit.collider.gameObject.name == "O_carbonyl"))
-					{
-						
-						//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
-						GameObject acceptorGO = hit.collider.transform.parent.parent.gameObject;
-						//Debug.Log(acceptorGO);
+					RaycastHit hit;
+					Ray donorRay = new Ray(donorHLocation, -tf_H.transform.up);
+					float castLength = (hbondCastScale * relativeNHBond.magnitude);
+					float castRadius = 0.05f;
+					bool foundAcceptor = false;
+					//set layerMask for hbond and default layers (? may help reduce snappy hbonding through other atoms)
+					int layerMask = (1 << 9) + 1;
 
-						if (acceptorGO.GetComponent<BackboneUnit>() != null)
+					if (Physics.SphereCast(donorRay, castRadius, out hit, castLength, layerMask))
+					{
+
+						if ((hit.collider.gameObject.name == "hbond_acceptor") || (hit.collider.gameObject.name == "O_carbonyl"))
 						{
-							int targetAcceptorResid = acceptorGO.GetComponent<BackboneUnit>().residue;
-							//Debug.Log(resid + "---> " + targetAcceptorResid);
-							//int offset = 3;
-							//if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
+
+							//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);
+							GameObject acceptorGO = hit.collider.transform.parent.parent.gameObject;
+							//Debug.Log(acceptorGO);
+
+							if (acceptorGO.GetComponent<BackboneUnit>() != null)
 							{
-								foundAcceptor = true;
-								//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
-								SetAcceptorForBackboneHbondConstraint(resid, acceptorGO);
-								SwitchOnBackboneHbondConstraint(resid);
+								int targetAcceptorResid = acceptorGO.GetComponent<BackboneUnit>().residue;
+								//Debug.Log(resid + "---> " + targetAcceptorResid);
+								//int offset = 3;
+								//if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
+								{
+									foundAcceptor = true;
+									//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
+
+									// scale hbond strength - 1st attempt at softer switching function
+									float hbondLength = Vector3.Distance(hit.point, donorRay.origin);
+									float hbondLengthRelative = ((castLength - hbondLength) / castLength);
+									float scaledHbondStrength = hbondStrength * hbondLengthRelative * hbondLengthRelative;
+									//Debug.Log(resid + "---> " + targetAcceptorResid + "  hbond length = " + hbondLength + " " + hbondLengthRelative * hbondLengthRelative);
+
+									SetAcceptorForBackboneHbondConstraint(resid, acceptorGO);
+									SwitchOnBackboneHbondConstraint(resid, scaledHbondStrength);
+								}
+								//else
+								//{
+								//	//found CO but too close in chain
+								//	//DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
+								//}
 							}
-							//else
-							//{
-							//	//found CO but too close in chain
-							//	//DrawLine(donorHLocation, hit.point, Color.magenta, 0.02f);
-							//}
 						}
+						else
+						{
+							// hit something - not CO
+							//DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+						}
+
 					}
 					else
 					{
-						// hit something - not CO
-						//DrawLine(donorHLocation, hit.point, Color.cyan, 0.02f);
+						// no hit
+						//DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
 					}
-					
+					if (!foundAcceptor)
+					{
+						SwitchOffBackboneHbondConstraint(resid);
+						ClearAcceptorForBackboneHbondConstraint(resid);
+					}
 				}
-				else
-				{
-					// no hit
-					//DrawLine(donorHLocation, endLocation, Color.green, 0.02f);
-				}
-				if (!foundAcceptor)
-				{
-					SwitchOffBackboneHbondConstraint(resid);
-					ClearAcceptorForBackboneHbondConstraint(resid);
-				}
+
 			}
-			
+			else
+			{
+				SwitchOffBackboneHbondConstraint(resid);
+				ClearAcceptorForBackboneHbondConstraint(resid);
+			}
 		}
+
 	}
 
 
@@ -685,11 +695,11 @@ public class PolyPepBuilder : MonoBehaviour {
 		SetSpringJointValuesForBackboneHbondConstraint(resid, 0, 0);
 	}
 
-	void SwitchOnBackboneHbondConstraint(int resid)
+	void SwitchOnBackboneHbondConstraint(int resid, float hbondScaledStrength)
 	{
-		if (ActiveHbondSpringConstraints)
+		if (myPolyPepManager.hbondsOn)
 		{
-			SetSpringJointValuesForBackboneHbondConstraint(resid, (int)hbondStrength, 5); // empirical values
+			SetSpringJointValuesForBackboneHbondConstraint(resid, (int)hbondScaledStrength, 5); // empirical values
 		}
 	}
 
@@ -1066,38 +1076,38 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void UpdateHBondSprings()
 	{
-		if (ActiveHbondSpringConstraints)
-		{
-			for (int resid = 0; resid < numResidues; resid++)
-			{
-				GameObject donorGO = GetAmideForResidue(resid);
-				var hbond_sj = donorGO.GetComponent<SpringJoint>();
-				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
+		//if (ActiveHbondSpringConstraints)
+		//{
+		//	for (int resid = 0; resid < numResidues; resid++)
+		//	{
+		//		GameObject donorGO = GetAmideForResidue(resid);
+		//		var hbond_sj = donorGO.GetComponent<SpringJoint>();
+		//		var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
-				if (hbond_sj.connectedBody != null)
-				{
-					SwitchOnBackboneHbondConstraint(resid);
-					WakeResidRbs(resid);
-				}
-			}
-			//Debug.Log("HBond Springs = ON ");
-		}
-		else
-		{
-			for (int resid = 0; resid < numResidues; resid++)
-			{
-				GameObject donorGO = GetAmideForResidue(resid);
-				SwitchOffBackboneHbondConstraint(resid);
-			}
-			//Debug.Log("HBond Springs = OFF ");
-		}
+		//		if (hbond_sj.connectedBody != null)
+		//		{
+		//			SwitchOnBackboneHbondConstraint(resid);
+		//			WakeResidRbs(resid);
+		//		}
+		//	}
+		//	//Debug.Log("HBond Springs = ON ");
+		//}
+		//else
+		//{
+		//	for (int resid = 0; resid < numResidues; resid++)
+		//	{
+		//		GameObject donorGO = GetAmideForResidue(resid);
+		//		SwitchOffBackboneHbondConstraint(resid);
+		//	}
+		//	//Debug.Log("HBond Springs = OFF ");
+		//}
 	}
 
-	public void UpdateHbondStrengthFromUI()
-	{
-		//TODO  Update Hbonds with new strength!
-		UpdateHBondSprings();
-	}
+	//public void UpdateHbondStrengthFromUI()
+	//{
+	//	//TODO  Update Hbonds with new strength!
+	//	UpdateHBondSprings();
+	//}
 
 	private bool LoadPhiPsiData(string fileName)
 	{
@@ -1332,12 +1342,9 @@ public class PolyPepBuilder : MonoBehaviour {
 	void Update()
 	{
 		//UpdatePhiPsiDrives();
-
 		//UpdateDistanceConstraintGfx();
-		HbondLineTrace();
+		UpdateHbonds();
 		UpdateHbondParticleSystems();
-		//UpdateHBondSprings();
-
 	}
 }
 

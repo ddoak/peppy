@@ -126,12 +126,13 @@ public class PolyPepManager : MonoBehaviour {
 			// offset to try to keep new pp in sensible position
 			// working solution - no scale, centre of mass / springs ...
 			spawnTransform.transform.position += offset;
-			GameObject pp = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
-			PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-			pp_cs.numResidues = numResidues;
-			pp_cs.buildTransform = spawnTransform.transform ;
-			pp.name = "polyPep_" + allPolyPepBuilders.Count;
-			allPolyPepBuilders.Add(pp_cs);
+			GameObject ppb = Instantiate(polyPepBuilder_pf, spawnTransform.transform.position, Quaternion.identity);
+			PolyPepBuilder ppb_cs = ppb.GetComponent<PolyPepBuilder>();
+			ppb_cs.numResidues = numResidues;
+			ppb_cs.buildTransform = spawnTransform.transform ;
+			ppb_cs.myPolyPepManager = GetComponent<PolyPepManager>();
+			ppb.name = "polyPep_" + allPolyPepBuilders.Count;
+			allPolyPepBuilders.Add(ppb_cs);
 		}
 	}
 
@@ -174,7 +175,7 @@ public class PolyPepManager : MonoBehaviour {
 		hbondsOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.ActiveHbondSpringConstraints = hbondsOn;
+			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateHBondSprings();
 		}
 	}
@@ -193,7 +194,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 
 		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
-		hbondStrength = hbondStrengthFromUI;
+		hbondStrength = hbondStrengthFromUI * 500.0f;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.hbondStrength = hbondStrength;
