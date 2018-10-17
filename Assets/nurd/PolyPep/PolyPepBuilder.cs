@@ -196,7 +196,9 @@ public class PolyPepBuilder : MonoBehaviour {
 				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
 				foreach (Renderer child in allChildren)
 				{
-					child.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+					Renderer myRenderer = child.GetComponent<Renderer>();
+					myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+					myRenderer.receiveShadows = false;
 				}
 			}
 
@@ -283,18 +285,31 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void UpdateAllDrag()
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			SetRbDrag(GetAmideForResidue(resid));
+			SetRbDrag(GetCalphaForResidue(resid));
+			SetRbDrag(GetCarbonylForResidue(resid));
+		}
+	}
 
 	void SetRbDrag(GameObject go)
 	{
+		if (myPolyPepManager.dragHigh)
+		{
+			go.GetComponent<Rigidbody>().mass = 1;
+			go.GetComponent<Rigidbody>().drag = 40;
+			go.GetComponent<Rigidbody>().angularDrag = 20;
+		}
+		else
+		{
 		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 1;
-
-		//test
-		//go.GetComponent<Rigidbody>().mass = 0.001f;
-
-
+		}
 	}
 
 	public void SetAllColliderIsTrigger(bool value)
@@ -697,10 +712,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void SwitchOnBackboneHbondConstraint(int resid, float hbondScaledStrength)
 	{
-		if (myPolyPepManager.hbondsOn)
-		{
-			SetSpringJointValuesForBackboneHbondConstraint(resid, (int)hbondScaledStrength, 5); // empirical values
-		}
+		SetSpringJointValuesForBackboneHbondConstraint(resid, (int)hbondScaledStrength, 5); // empirical values
 	}
 
 	void SetSpringJointValuesForBackboneHbondConstraint(int resid, int springStrength, int springDamper)

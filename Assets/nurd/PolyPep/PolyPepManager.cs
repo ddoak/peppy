@@ -13,6 +13,8 @@ public class PolyPepManager : MonoBehaviour {
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
 
+	public bool dragHigh = false;
+
 	public bool hbondsOn = false;
 	public float hbondStrength = 100.0f;
 
@@ -67,8 +69,8 @@ public class PolyPepManager : MonoBehaviour {
 			phiSliderUI.GetComponent<Slider>().value = 0;
 			psiSliderUI.GetComponent<Slider>().value = 0;
 			vdwSliderUI.GetComponent<Slider>().value = 10;
-			hbondSliderUI.GetComponent<Slider>().value = 200;
-			phiPsiDriveSliderUI.GetComponent<Slider>().value = 100;
+			hbondSliderUI.GetComponent<Slider>().value = 50;
+			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
 			spawnLengthSliderUI.GetComponent<Slider>().value = 10;
 
 			//temp = GameObject.Find("Slider_ResStart");
@@ -168,6 +170,18 @@ public class PolyPepManager : MonoBehaviour {
 			_ppb.SetAllColliderIsTrigger(!collidersOn);
 		}
 	}
+
+	public void UpdateDragFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		dragHigh = value;
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
+			_ppb.UpdateAllDrag();
+		}
+	}
+
 
 	public void UpdateHbondOnFromUI(bool value)
 	{
