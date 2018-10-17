@@ -1350,6 +1350,19 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	private void DoJiggle()
+	{
+		if (myPolyPepManager.jiggleStrength > 0.0f)
+		{
+			for (int i = 0; i < polyLength; i++)
+			{
+				Rigidbody rb = polyArr[i].GetComponent<Rigidbody>();
+				rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+			}
+		}
+
+	}
+	
 	// Update is called once per frame
 	void Update()
 	{
@@ -1357,6 +1370,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//UpdateDistanceConstraintGfx();
 		UpdateHbonds();
 		UpdateHbondParticleSystems();
+		DoJiggle();
 	}
 }
 

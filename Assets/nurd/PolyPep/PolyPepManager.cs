@@ -14,6 +14,7 @@ public class PolyPepManager : MonoBehaviour {
 	public float vdwScale = 1.0f;
 
 	public bool dragHigh = false;
+	public float jiggleStrength = 0.0f;
 
 	public bool hbondsOn = false;
 	public float hbondStrength = 100.0f;
@@ -37,6 +38,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider hbondSliderUI;
 	public Slider phiPsiDriveSliderUI;
 	public Slider spawnLengthSliderUI;
+	public Slider jiggleStrengthSliderUI;
 
 	void Awake()
 	{
@@ -58,6 +60,9 @@ public class PolyPepManager : MonoBehaviour {
 			temp = GameObject.Find("Slider_SpawnLength");
 			spawnLengthSliderUI = temp.GetComponent<Slider>();
 
+			temp = GameObject.Find("Slider_JiggleStrength");
+			jiggleStrengthSliderUI = temp.GetComponent<Slider>();
+
 	}
 
 	void Start()
@@ -73,6 +78,7 @@ public class PolyPepManager : MonoBehaviour {
 			hbondSliderUI.GetComponent<Slider>().value = 50;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
 			spawnLengthSliderUI.GetComponent<Slider>().value = 10;
+			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			//temp = GameObject.Find("Slider_ResStart");
 
@@ -323,6 +329,11 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.SetPhiPsiTargetValuesForSelection(phiTarget, psiTarget);
 		}
+	}
+
+	public void UpdateJiggleFromUI(float jiggleFromUI)
+	{
+		jiggleStrength = jiggleFromUI;
 	}
 
 	public void ResetLevel()
