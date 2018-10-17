@@ -300,7 +300,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		if (myPolyPepManager.dragHigh)
 		{
 			go.GetComponent<Rigidbody>().mass = 1;
-			go.GetComponent<Rigidbody>().drag = 40;
+			go.GetComponent<Rigidbody>().drag = 25;
 			go.GetComponent<Rigidbody>().angularDrag = 20;
 		}
 		else
@@ -661,7 +661,7 @@ public class PolyPepBuilder : MonoBehaviour {
 									// scale hbond strength - 1st attempt at softer switching function
 									float hbondLength = Vector3.Distance(hit.point, donorRay.origin);
 									float hbondLengthRelative = ((castLength - hbondLength) / castLength);
-									float scaledHbondStrength = hbondStrength * hbondLengthRelative * hbondLengthRelative;
+									float scaledHbondStrength = myPolyPepManager.hbondStrength * hbondLengthRelative * hbondLengthRelative;
 									//Debug.Log(resid + "---> " + targetAcceptorResid + "  hbond length = " + hbondLength + " " + hbondLengthRelative * hbondLengthRelative);
 
 									SetAcceptorForBackboneHbondConstraint(resid, acceptorGO);

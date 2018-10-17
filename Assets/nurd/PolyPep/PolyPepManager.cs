@@ -17,6 +17,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public bool hbondsOn = false;
 	public float hbondStrength = 100.0f;
+	public float hbondScale = 500.0f; // multiplier between UI slider strength and value used in config joint
 
 	public int UIDefinedSecondaryStructure { get; set; }
 
@@ -208,12 +209,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 
 		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
-		hbondStrength = hbondStrengthFromUI * 500.0f;
-		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
-		{
-			_ppb.hbondStrength = hbondStrength;
-			_ppb.UpdateHBondSprings();
-		}
+		hbondStrength = hbondStrengthFromUI * hbondScale;
 	}
 
 	public void UpdatePhiPsiDriveFromUI(float phiPsiDriveFromUI)
@@ -227,9 +223,6 @@ public class PolyPepManager : MonoBehaviour {
 			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
 			_ppb.UpdatePhiPsiDrives();
 			_ppb.UpdateRenderModeAllBbu();
-
-
-			// drivePhiPsiPosDamper ?
 		}
 	}
 

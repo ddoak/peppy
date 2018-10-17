@@ -514,6 +514,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   residue: 0
+  activeSequenceSelect: 0
+  controllerHoverOn: 0
+  controllerSelectOn: 0
+  remoteGrabSelectOn: 0
+  myResidue: {fileID: 0}
+  myPolyPepBuilder: {fileID: 0}
+  myPolyPepManager: {fileID: 0}
 --- !u!114 &114903749518982374
 MonoBehaviour:
   m_ObjectHideFlags: 1
