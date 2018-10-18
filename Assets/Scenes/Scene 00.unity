@@ -1528,13 +1528,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: -0.02667736, y: -0.2587203, z: -0.0071481764, w: 0.9655574}
+  m_LocalRotation: {x: -0.04213311, y: -0.2585727, z: -0.011289531, w: 0.96500653}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -3.1650002, y: -30.000002, z: 0}
+  m_LocalEulerAnglesHint: {x: -5, y: -30.000002, z: 0}
 --- !u!1 &170691172
 GameObject:
   m_ObjectHideFlags: 0
@@ -20296,7 +20296,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (18/10/17)
+  m_Text: (18/10/18)
 --- !u!222 &2026089958
 CanvasRenderer:
   m_ObjectHideFlags: 0
