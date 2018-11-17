@@ -67,6 +67,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	Shader shaderStandard;
 	Shader shaderToonOutline;
 
+
+	private void Awake()
+	{
+		buildTransform = transform;
+	}
+
 	// Use this for initialization
 	void Start()
 	{
