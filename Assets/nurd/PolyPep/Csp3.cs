@@ -11,10 +11,14 @@ public class Csp3 : MonoBehaviour {
 	public List<Transform> HtfList = new List<Transform>();
 	public List<Transform> BtfList = new List<Transform>();
 
+	private void Awake()
+	{
+		SetupSp3Atom();
+	}
 	// Use this for initialization
 	void Start () {
 
-		SetupSp3Atom();
+		
 
 	}
 	
@@ -25,6 +29,7 @@ public class Csp3 : MonoBehaviour {
 
 		foreach (Transform child in GetComponentsInChildren<Transform>())
 		{
+			//  generate tetrahedral sp3 positions from cube vertices
 			//Debug.Log(child);
 			float _scale = 0.1f; // 0.075f;
 			bool addSocketOffset = true;
@@ -34,6 +39,9 @@ public class Csp3 : MonoBehaviour {
 					//Debug.Log("----> Found a H_0");
 					HtfList.Add(child);
 					socketPos = new Vector3(1, 0, -1 / Mathf.Sqrt(2));
+					// orient forward (Z) along direction of first sp3 bond using LookAt
+					// essential to retain sanity later when building molecule
+					transform.LookAt(transform.position + socketPos);
 					break;
 				case "H_1":
 					HtfList.Add(child);
@@ -67,11 +75,12 @@ public class Csp3 : MonoBehaviour {
 
 		}
 
+		
 		int j = 0;
 		foreach (Transform _H in HtfList)
 		{
 			//Debug.Log("H List ---> " + _H.name + " " + BtfList[j]);
-
+			// use LookAt to align bonds to sp3 atom positions
 			posA = transform.position;
 			posB = _H.transform.position; //  HtfList[j].position;
 			Vector3 relativePos = posB - posA;
@@ -81,7 +90,7 @@ public class Csp3 : MonoBehaviour {
 			j++;
 		}
 
-		// random rotation to try to avoid axis aligned bugs
+		// dev: set random rotation to try to avoid axis aligned bugs
 		transform.rotation = Random.rotation;
 
 		CollidersOff();
