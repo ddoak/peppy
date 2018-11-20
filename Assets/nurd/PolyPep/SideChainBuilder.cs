@@ -52,8 +52,23 @@ public class SideChainBuilder : MonoBehaviour {
 			//Quaternion.Inverse()
 			//Quaternion.Slerp()
 
+
+			ConfigurableJoint cj = SideChainList[j].AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
+			cj.connectedBody = SideChainList[i].GetComponent<Rigidbody>();
+
+			cj.autoConfigureConnectedAnchor = true;
+			//cj.connectedAnchor = new Vector3(0f, 0f, 0f);
+			cj.xMotion = ConfigurableJointMotion.Locked;
+			cj.yMotion = ConfigurableJointMotion.Locked;
+			cj.zMotion = ConfigurableJointMotion.Locked;
+
+			cj.angularXMotion = ConfigurableJointMotion.Locked;
+			cj.angularYMotion = ConfigurableJointMotion.Locked;
+			cj.angularZMotion = ConfigurableJointMotion.Free;
+
 		}
 	}
+
 
 
 	void OnDrawGizmos()
