@@ -8,6 +8,8 @@ public class Residue : MonoBehaviour {
 	public GameObject calpha_pf;
 	public GameObject carbonyl_pf;
 
+	public List<GameObject> sideChainList = new List<GameObject>();
+
 	public float phiTarget;
 	public float psiTarget;
 

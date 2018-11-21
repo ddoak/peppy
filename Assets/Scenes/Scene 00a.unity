@@ -3051,7 +3051,7 @@ GameObject:
   - component: {fileID: 351905552}
   m_Layer: 11
   m_Name: UI_about
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3377,6 +3377,7 @@ MonoBehaviour:
   polyPepBuilder_pf: {fileID: 1140521256564886, guid: 9c474393345b8134f866f1e3fa7e3db3,
     type: 2}
   allPolyPepBuilders: []
+  sideChainBuilder: {fileID: 0}
   collidersOn: 0
   vdwScale: 1
   dragHigh: 0
@@ -7687,7 +7688,7 @@ GameObject:
   - component: {fileID: 787038819}
   m_Layer: 11
   m_Name: UI_controls
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16495,8 +16496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1e9789f184c10459ebb153ab69ebd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ctet_pf: {fileID: 1424276724713092, guid: 64ad9cd3a6de52a48a6072900fcf4797, type: 2}
-  sideChainArr: []
+  Csp3_pf: {fileID: 1424276724713092, guid: 64ad9cd3a6de52a48a6072900fcf4797, type: 2}
   posA: {x: 0, y: 0, z: 0}
   posB: {x: 0, y: 0, z: 0}
   posC: {x: 0, y: 0, z: 0}
@@ -17223,7 +17223,7 @@ GameObject:
   - component: {fileID: 1722166614}
   m_Layer: 11
   m_Name: UI
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

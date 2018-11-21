@@ -18,6 +18,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public PolyPepManager myPolyPepManager;
 
+	public SideChainBuilder sideChainBuilder;
+
 	public Transform buildTransform;
 
 	// bond lengths used in backbone configurable joints
@@ -82,6 +84,14 @@ public class PolyPepBuilder : MonoBehaviour {
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 
 		buildPolypeptideChain();
+
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			sideChainBuilder.BuildSideChain(gameObject, resid); // ppb_cs.chainArr[0].GetComponent<Residue>());
+		}
+
+		//sideChainBuilder.BuildSideChain(gameObject, 0);
+		//sideChainBuilder.BuildSideChain(gameObject, 5);
 
 		// test: add arbitrary distance constraints
 		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);

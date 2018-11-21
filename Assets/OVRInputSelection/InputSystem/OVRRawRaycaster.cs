@@ -459,16 +459,23 @@ namespace ControllerSelection {
 					}
 					else
 					{
-						// not bu - UI - make the 'front' face the pointer
-						// flipped because go was initially set up with z facing away
+						// not bu - 
+						//Debug.Log(remoteGrab.gameObject.tag);
+						if (remoteGrab.gameObject.tag == "UI")
+						{
+							
+							// UI - make the 'front' face the pointer
+							// flipped because go was initially set up with z facing away
 
-						//Use pointer position
-						//Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
+							//Use pointer position
+							//Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
 
-						//Use HMD (possibly better - maybe a bit queasy)
-						Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + centreEyeAnchor.forward;
+							//Use HMD (possibly better - maybe a bit queasy)
+							Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + centreEyeAnchor.forward;
 
-						remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+							remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+						}
+
 
 
 					}

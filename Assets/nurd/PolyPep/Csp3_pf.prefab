@@ -141,8 +141,9 @@ GameObject:
   - component: {fileID: 4836243021114472}
   - component: {fileID: 114871080452377148}
   - component: {fileID: 54165224126312604}
+  - component: {fileID: 114072122354666724}
   m_Layer: 0
-  m_Name: Ctet_pf
+  m_Name: Csp3_pf
   m_TagString: calpha
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -838,6 +839,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114072122354666724
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424276724713092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df302a863008fa34e9a53c2fdde91a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  posA: {x: 0, y: 0, z: 0}
+  posB: {x: 0, y: 0, z: 0}
+  posC: {x: 0, y: 0, z: 0}
+  HtfList: []
+  BtfList: []
 --- !u!114 &114871080452377148
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -10,6 +10,8 @@ public class PolyPepManager : MonoBehaviour {
 	public GameObject polyPepBuilder_pf;
 	public List<PolyPepBuilder> allPolyPepBuilders = new List<PolyPepBuilder>();
 
+	public SideChainBuilder sideChainBuilder;
+
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
 
@@ -62,6 +64,9 @@ public class PolyPepManager : MonoBehaviour {
 
 			temp = GameObject.Find("Slider_JiggleStrength");
 			jiggleStrengthSliderUI = temp.GetComponent<Slider>();
+
+			temp = GameObject.Find("SideChainBuilder");
+			sideChainBuilder = temp.GetComponent<SideChainBuilder>();
 
 	}
 
@@ -120,7 +125,8 @@ public class PolyPepManager : MonoBehaviour {
 
 		//}
 
-		SpawnPolypeptide(transform);
+		// test always spawn pp on startup
+		//SpawnPolypeptide(transform);
 
 	}
 
@@ -141,7 +147,10 @@ public class PolyPepManager : MonoBehaviour {
 			ppb_cs.myPolyPepManager = GetComponent<PolyPepManager>();
 			ppb.name = "polyPep_" + allPolyPepBuilders.Count;
 			allPolyPepBuilders.Add(ppb_cs);
+
+			ppb_cs.sideChainBuilder = sideChainBuilder;
 		}
+		
 	}
 
 	void OnDrawGizmos()
