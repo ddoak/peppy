@@ -31,7 +31,7 @@ public class Csp3 : MonoBehaviour {
 		{
 			//  generate tetrahedral sp3 positions from cube vertices
 			//Debug.Log(child);
-			float _scale = 0.1f; // 0.075f;
+			float _scale = 0.12f; // 0.075f;
 			bool addSocketOffset = true;
 			switch (child.name)
 			{
@@ -81,6 +81,7 @@ public class Csp3 : MonoBehaviour {
 		{
 			//Debug.Log("H List ---> " + _H.name + " " + BtfList[j]);
 			// use LookAt to align bonds to sp3 atom positions
+
 			posA = transform.position;
 			posB = _H.transform.position; //  HtfList[j].position;
 			Vector3 relativePos = posB - posA;
@@ -93,14 +94,25 @@ public class Csp3 : MonoBehaviour {
 		// dev: set random rotation to try to avoid axis aligned bugs
 		transform.rotation = Random.rotation;
 
+		ShadowsOff();
 		CollidersOff();
+	}
+
+	void ShadowsOff()
+	{
+		foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+		{
+			Renderer myRenderer = renderer.GetComponent<Renderer>();
+			myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			myRenderer.receiveShadows = false;
+		}
 	}
 
 	void CollidersOff()
 	{
-			foreach (var col in GetComponentsInChildren<Collider>())
+			foreach (Collider collider in GetComponentsInChildren<Collider>())
 			{
-				col.isTrigger = true;
+				collider.isTrigger = true;
 			}
 	}
 

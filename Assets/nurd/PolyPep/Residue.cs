@@ -8,6 +8,8 @@ public class Residue : MonoBehaviour {
 	public GameObject calpha_pf;
 	public GameObject carbonyl_pf;
 
+	public GameObject sidechain;
+
 	public List<GameObject> sideChainList = new List<GameObject>();
 
 	public float phiTarget;
@@ -110,6 +112,28 @@ public class Residue : MonoBehaviour {
 	{
 		BackboneUnit buAmide = amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
 		return buAmide.controllerSelectOn;
+	}
+
+	public void DisableProxySideChain()
+	{
+		// switch off the proxy sidechain renderer
+		foreach (Renderer renderer in calpha_pf.GetComponentsInChildren<Renderer>())
+		{
+			//Debug.Log(renderer);
+			if (renderer.name == "R_sidechain" || renderer.name == "bond_CA_R")
+			{
+				renderer.enabled = false;
+			}
+		}
+		// switch off the proxy sidechain collider
+		foreach (Collider collider in calpha_pf.GetComponentsInChildren<Collider>())
+		{
+			//Debug.Log(collider);
+			if (collider.name == "R_sidechain" || collider.name == "bond_CA_R")
+			{
+				collider.enabled = false;
+			}
+		}
 	}
 
 	// Update is called once per frame

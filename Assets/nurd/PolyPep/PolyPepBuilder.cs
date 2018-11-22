@@ -85,10 +85,21 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		buildPolypeptideChain();
 
-		for (int resid = 0; resid < numResidues; resid++)
+		//for (int resid = 0; resid < numResidues; resid++)
+		//{
+		//	sideChainBuilder.BuildSideChain(gameObject, resid, "LEU"); // ppb_cs.chainArr[0].GetComponent<Residue>());
+		//}
+
+		if (numResidues > 9)
 		{
-			sideChainBuilder.BuildSideChain(gameObject, resid); // ppb_cs.chainArr[0].GetComponent<Residue>());
+			sideChainBuilder.BuildSideChain(gameObject, 2, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "VAL");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "ILE");
 		}
+
+
+
 
 		//sideChainBuilder.BuildSideChain(gameObject, 0);
 		//sideChainBuilder.BuildSideChain(gameObject, 5);

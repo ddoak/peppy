@@ -106,26 +106,7 @@ public class PolyPepManager : MonoBehaviour {
 
 		}
 
-		//{
-		//	// create chains - hard coded for the moment
-
-		//	for (int i = 0; i < 6; i++)
-		//	{
-		//		GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
-		//		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-		//		pp_cs.numResidues = 14;
-		//		pp.name = "polyPep_" + (i).ToString();
-		//	}
-		//}
-
-		//foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
-		//{
-		//	//Debug.Log("------------------->" + polyPep);
-		//	allPolyPepBuilders.Add(polyPep);
-
-		//}
-
-		// test always spawn pp on startup
+		// dev: test always spawn pp on startup
 		//SpawnPolypeptide(transform);
 
 	}
