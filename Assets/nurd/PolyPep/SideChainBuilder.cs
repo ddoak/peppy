@@ -55,6 +55,9 @@ public class SideChainBuilder : MonoBehaviour {
 			case "THR":
 				build_THR(residue_cs);
 				break;
+			case "LYS":
+				build_LYS(residue_cs);
+				break;
 			default:
 				break;
 		}
@@ -402,6 +405,65 @@ public class SideChainBuilder : MonoBehaviour {
 		_CB.GetComponent<Csp3>().ConvertToCH1();
 		_CG.GetComponent<Csp3>().ConvertToCH3();
 		_OG.GetComponent<Csp3>().ConvertToOH();
+	}
+
+	void build_LYS(Residue residue_cs)
+	{
+		sideChainLength = 5;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD = residue_cs.sideChainList[2];
+		GameObject _CE = residue_cs.sideChainList[3];
+		GameObject _NF = residue_cs.sideChainList[4];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD.name = "CD";
+		_CE.name = "CE";
+		_NF.name = "NF";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD.transform.position = _CG.transform.Find("H_3").position;
+			_CD.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_CD, _CG);
+		}
+		{
+			_CE.transform.position = _CD.transform.Find("H_3").position;
+			_CE.transform.LookAt(_CD.transform.position);
+			AddConfigJointBond(_CE, _CD);
+		}
+		{
+			_NF.transform.position = _CE.transform.Find("H_3").position;
+			_NF.transform.LookAt(_CE.transform.position);
+			AddConfigJointBond(_NF, _CE);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertToCH2();
+		_CD.GetComponent<Csp3>().ConvertToCH2();
+		_CE.GetComponent<Csp3>().ConvertToCH2();
+		_NF.GetComponent<Csp3>().ConvertToNH3();
 	}
 
 	void AddConfigJointBond(GameObject go1, GameObject g02)
