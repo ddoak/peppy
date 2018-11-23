@@ -92,10 +92,14 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		if (numResidues > 9)
 		{
-			sideChainBuilder.BuildSideChain(gameObject, 2, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "VAL");
-			sideChainBuilder.BuildSideChain(gameObject, 6, "LEU");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
 		}
 
 		// test: add arbitrary distance constraints
@@ -335,13 +339,19 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public void SetAllColliderIsTrigger(bool value)
 	{
-		for (int i = 0; i < polyLength; i++)
+		//for (int i = 0; i < polyLength; i++)
+		//{
+		//	var colliders = polyArr[i].GetComponentsInChildren<Collider>();
+		//	foreach (var col in colliders)
+		//	{
+		//		col.isTrigger = value;
+		//	}
+		//}
+
+		Collider[] allChildren = GetComponentsInChildren<Collider>();
+		foreach (Collider childCollider in allChildren)
 		{
-			var colliders = polyArr[i].GetComponentsInChildren<Collider>();
-			foreach (var col in colliders)
-			{
-				col.isTrigger = value;
-			}
+			childCollider.isTrigger = value;
 		}
 	}
 

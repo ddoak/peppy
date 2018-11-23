@@ -259,7 +259,176 @@ public class Csp3 : MonoBehaviour {
 		}
 	}
 
-	void ShadowsOff()
+	public void ConvertToS()
+	{
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_1":
+				case "H_2":
+				case "H_3":
+					_H.GetComponent<Renderer>().enabled = false;
+					_H.GetComponent<Collider>().enabled = false;
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+					if (!keepDebugAtomMaterial)
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+				case "tf_bond_H3":
+					_bond.GetComponent<Renderer>().enabled = false;
+					_bond.GetComponent<Collider>().enabled = false;
+					break;
+				default:
+					break;
+			}
+		}
+
+		foreach (Transform child in GetComponentsInChildren<Transform>())
+		{
+			if (child.name == "C")
+			{
+				child.name = "S";
+				child.GetComponent<Renderer>().material.color = Color.yellow;
+				child.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+			}
+		}
+	}
+
+	public void ConvertToSH()
+	{
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_1":
+				case "H_2":
+					_H.GetComponent<Renderer>().enabled = false;
+					_H.GetComponent<Collider>().enabled = false;
+					break;
+				case "H_3":
+					_H.transform.position += _H.transform.forward * 0.05f;
+					if (!keepDebugAtomMaterial)
+					{
+						_H.GetComponent<Renderer>().material.color = Color.white;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+					if (!keepDebugAtomMaterial)
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+					_bond.GetComponent<Renderer>().enabled = false;
+					_bond.GetComponent<Collider>().enabled = false;
+					break;
+				case "tf_bond_H3":
+					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
+					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
+					_bond.GetComponent<Renderer>().material.color = Color.grey;
+					break;
+				default:
+					break;
+			}
+		}
+
+		foreach (Transform child in GetComponentsInChildren<Transform>())
+		{
+			if (child.name == "C")
+			{
+				child.name = "S";
+				child.GetComponent<Renderer>().material.color = Color.yellow;
+				child.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+			}
+		}
+	}
+
+	public void ConvertToOH()
+	{
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_1":
+				case "H_2":
+					_H.GetComponent<Renderer>().enabled = false;
+					_H.GetComponent<Collider>().enabled = false;
+					break;
+				case "H_3":
+					_H.transform.position += _H.transform.forward * 0.05f;
+					if (!keepDebugAtomMaterial)
+					{
+						_H.GetComponent<Renderer>().material.color = Color.white;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+					if (!keepDebugAtomMaterial)
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+					_bond.GetComponent<Renderer>().enabled = false;
+					_bond.GetComponent<Collider>().enabled = false;
+					break;
+				case "tf_bond_H3":
+					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
+					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
+					_bond.GetComponent<Renderer>().material.color = Color.grey;
+					break;
+				default:
+					break;
+			}
+		}
+
+		foreach (Transform child in GetComponentsInChildren<Transform>())
+		{
+			if (child.name == "C")
+			{
+				child.name = "O";
+				child.GetComponent<Renderer>().material.color = Color.red;
+			}
+		}
+	}
+
+		void ShadowsOff()
 	{
 		foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
 		{

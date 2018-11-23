@@ -43,6 +43,18 @@ public class SideChainBuilder : MonoBehaviour {
 			case "ILE":
 				build_ILE(residue_cs);
 				break;
+			case "MET":
+				build_MET(residue_cs);
+				break;
+			case "CYS":
+				build_CYS(residue_cs);
+				break;
+			case "SER":
+				build_SER(residue_cs);
+				break;
+			case "THR":
+				build_THR(residue_cs);
+				break;
 			default:
 				break;
 		}
@@ -178,7 +190,7 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 
 		// ILE has counterintuitive atom nomenclature - need to check DGD
-		// CB is chiral - - need to check DGD
+		// CB is chiral - need to check DGD - checked!
 
 		GameObject _CB = residue_cs.sideChainList[0];
 		GameObject _CG1 = residue_cs.sideChainList[1];
@@ -225,6 +237,173 @@ public class SideChainBuilder : MonoBehaviour {
 		_CD1.GetComponent<Csp3>().ConvertToCH3();
 
 	}
+
+	void build_MET(Residue residue_cs)
+	{
+		sideChainLength = 4;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _SD = residue_cs.sideChainList[2];
+		GameObject _CE = residue_cs.sideChainList[3];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_SD.name = "SD";
+		_CE.name = "CE";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_SD.transform.position = _CG.transform.Find("H_3").position;
+			_SD.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_SD, _CG);
+		}
+		{
+			_CE.transform.position = _SD.transform.Find("H_3").position;
+			_CE.transform.LookAt(_SD.transform.position);
+			AddConfigJointBond(_CE, _SD);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertToCH2();
+		_SD.GetComponent<Csp3>().ConvertToS();
+		_CE.GetComponent<Csp3>().ConvertToCH3();
+	}
+
+	void build_CYS(Residue residue_cs)
+	{
+		sideChainLength = 2;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _SG = residue_cs.sideChainList[1];
+
+		_CB.name = "CB";
+		_SG.name = "SG";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_SG.transform.position = _CB.transform.Find("H_3").position;
+			_SG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_SG, _CB);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_SG.GetComponent<Csp3>().ConvertToSH();
+
+	}
+
+	void build_SER(Residue residue_cs)
+	{
+		sideChainLength = 2;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _OG = residue_cs.sideChainList[1];
+
+		_CB.name = "CB";
+		_OG.name = "OG";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_OG.transform.position = _CB.transform.Find("H_3").position;
+			_OG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_OG, _CB);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_OG.GetComponent<Csp3>().ConvertToOH();
+
+	}
+
+	void build_THR(Residue residue_cs)
+	{
+		sideChainLength = 3;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+
+		// CB is chiral - need to check DGD - checked!
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _OG = residue_cs.sideChainList[2];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_OG.name = "OG";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_2").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_OG.transform.position = _CB.transform.Find("H_3").position;
+			_OG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_OG, _CB);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH1();
+		_CG.GetComponent<Csp3>().ConvertToCH3();
+		_OG.GetComponent<Csp3>().ConvertToOH();
+	}
+
 	void AddConfigJointBond(GameObject go1, GameObject g02)
 	{
 		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
