@@ -26,7 +26,7 @@ public class SideChainBuilder : MonoBehaviour {
 		Residue residue_cs = ppb_cs.chainArr[resid].GetComponent<Residue>();
 
 		// ought to do this in residue.cs ?
-		residue_cs.sidechain = new GameObject(type);
+		residue_cs.sidechain = new GameObject(resid + "_" + type);
 		residue_cs.sidechain.transform.parent = residue_cs.transform;
 
 		switch (type)
@@ -71,6 +71,7 @@ public class SideChainBuilder : MonoBehaviour {
 			_CB.transform.LookAt(CA_tf.position);
 			AddConfigJointBond(_CB, residue_cs.calpha_pf);
 		}
+		_CB.GetComponent<Csp3>().ConvertToCH3();
 	}
 
 	void build_VAL(Residue residue_cs)
@@ -110,6 +111,9 @@ public class SideChainBuilder : MonoBehaviour {
 			AddConfigJointBond(_CG2, _CB);
 		}
 
+		_CB.GetComponent<Csp3>().ConvertToCH1();
+		_CG1.GetComponent<Csp3>().ConvertToCH3();
+		_CG2.GetComponent<Csp3>().ConvertToCH3();
 	}
 
 	void build_LEU(Residue residue_cs)
@@ -156,6 +160,13 @@ public class SideChainBuilder : MonoBehaviour {
 			AddConfigJointBond(_CD2, _CG);
 		}
 
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+
+		_CG.GetComponent<Csp3>().ConvertToCH1();
+
+		_CD1.GetComponent<Csp3>().ConvertToCH3();
+		_CD2.GetComponent<Csp3>().ConvertToCH3();
+
 	}
 
 	void build_ILE(Residue residue_cs)
@@ -167,6 +178,7 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 
 		// ILE has counterintuitive atom nomenclature - need to check DGD
+		// CB is chiral - - need to check DGD
 
 		GameObject _CB = residue_cs.sideChainList[0];
 		GameObject _CG1 = residue_cs.sideChainList[1];
@@ -204,6 +216,13 @@ public class SideChainBuilder : MonoBehaviour {
 			_CD1.transform.LookAt(_CG1.transform.position);
 			AddConfigJointBond(_CD1, _CG1);
 		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH1();
+
+		_CG1.GetComponent<Csp3>().ConvertToCH2();
+
+		_CG2.GetComponent<Csp3>().ConvertToCH3();
+		_CD1.GetComponent<Csp3>().ConvertToCH3();
 
 	}
 	void AddConfigJointBond(GameObject go1, GameObject g02)

@@ -98,12 +98,6 @@ public class PolyPepBuilder : MonoBehaviour {
 			sideChainBuilder.BuildSideChain(gameObject, 8, "ILE");
 		}
 
-
-
-
-		//sideChainBuilder.BuildSideChain(gameObject, 0);
-		//sideChainBuilder.BuildSideChain(gameObject, 5);
-
 		// test: add arbitrary distance constraints
 		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);
 		//AddDistanceConstraint(polyArr[15], polyArr[30], 0.8f, 20);
@@ -278,7 +272,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			float radiusO = 1.0f;
 			float radiusH = 0.75f;
 
-			float radiusR = 1.25f;
+			float radiusR = 1.0f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
 			foreach (Transform child in allChildren)

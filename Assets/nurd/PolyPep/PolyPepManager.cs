@@ -107,7 +107,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 
 		// dev: test always spawn pp on startup
-		//SpawnPolypeptide(transform);
+		SpawnPolypeptide(transform);
 
 	}
 
