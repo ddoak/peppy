@@ -35,43 +35,52 @@ public class SideChainBuilder : MonoBehaviour {
 		switch (type)
 		{
 			case "ALA":
-				build_ALA(residue_cs);
+				Build_ALA(residue_cs);
 				break;
 			case "VAL":
-				build_VAL(residue_cs);
+				Build_VAL(residue_cs);
 				break;
 			case "LEU":
-				build_LEU(residue_cs);
+				Build_LEU(residue_cs);
 				break;
 			case "ILE":
-				build_ILE(residue_cs);
+				Build_ILE(residue_cs);
 				break;
 			case "MET":
-				build_MET(residue_cs);
+				Build_MET(residue_cs);
 				break;
 			case "CYS":
-				build_CYS(residue_cs);
+				Build_CYS(residue_cs);
 				break;
 			case "SER":
-				build_SER(residue_cs);
+				Build_SER(residue_cs);
 				break;
 			case "THR":
-				build_THR(residue_cs);
+				Build_THR(residue_cs);
 				break;
 			case "LYS":
-				build_LYS(residue_cs);
+				Build_LYS(residue_cs);
 				break;
 			case "ASP":
-				build_ASP(residue_cs);
+				Build_ASP(residue_cs);
 				break;
 			case "GLU":
-				build_GLU(residue_cs);
+				Build_GLU(residue_cs);
+				break;
+			case "ASN":
+				Build_ASN(residue_cs);
+				break;
+			case "GLN":
+				Build_GLN(residue_cs);
+				break;
+			case "ARG":
+				Build_ARG(residue_cs);
 				break;
 			case "TEST":
-				build_TEST(residue_cs);
+				Build_TEST(residue_cs);
 				break;
 			case "DEV":
-				build_DEV(residue_cs);
+				Build_DEV(residue_cs);
 				break;
 			default:
 				break;
@@ -80,7 +89,7 @@ public class SideChainBuilder : MonoBehaviour {
 		residue_cs.DisableProxySideChain();
 	}
 
-	void build_ALA(Residue residue_cs)
+	void Build_ALA(Residue residue_cs)
 	{
 		sideChainLength = 1;
 		for (int i = 0; i < sideChainLength; i++)
@@ -104,7 +113,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_CB.GetComponent<Csp3>().ConvertToCH3();
 	}
 
-	void build_VAL(Residue residue_cs)
+	void Build_VAL(Residue residue_cs)
 	{
 		sideChainLength = 3;
 		for (int i = 0; i < sideChainLength; i++)
@@ -146,7 +155,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_CG2.GetComponent<Csp3>().ConvertToCH3();
 	}
 
-	void build_LEU(Residue residue_cs)
+	void Build_LEU(Residue residue_cs)
 	{
 		sideChainLength = 4;
 		for (int i = 0; i < sideChainLength; i++)
@@ -199,7 +208,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_ILE(Residue residue_cs)
+	void Build_ILE(Residue residue_cs)
 	{
 		sideChainLength = 4;
 		for (int i = 0; i < sideChainLength; i++)
@@ -256,7 +265,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_MET(Residue residue_cs)
+	void Build_MET(Residue residue_cs)
 	{
 		sideChainLength = 4;
 		for (int i = 0; i < sideChainLength; i++)
@@ -307,7 +316,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_CE.GetComponent<Csp3>().ConvertToCH3();
 	}
 
-	void build_CYS(Residue residue_cs)
+	void Build_CYS(Residue residue_cs)
 	{
 		sideChainLength = 2;
 		for (int i = 0; i < sideChainLength; i++)
@@ -342,7 +351,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_SER(Residue residue_cs)
+	void Build_SER(Residue residue_cs)
 	{
 		sideChainLength = 2;
 		for (int i = 0; i < sideChainLength; i++)
@@ -377,7 +386,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_THR(Residue residue_cs)
+	void Build_THR(Residue residue_cs)
 	{
 		sideChainLength = 3;
 		for (int i = 0; i < sideChainLength; i++)
@@ -422,7 +431,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_OG.GetComponent<Csp3>().ConvertToOH();
 	}
 
-	void build_LYS(Residue residue_cs)
+	void Build_LYS(Residue residue_cs)
 	{
 		sideChainLength = 5;
 		for (int i = 0; i < sideChainLength; i++)
@@ -481,7 +490,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_NF.GetComponent<Csp3>().ConvertToNH3();
 	}
 
-	void build_ASP(Residue residue_cs)
+	void Build_ASP(Residue residue_cs)
 	{
 		sideChainLength = 2;
 		for (int i = 0; i < sideChainLength; i++)
@@ -524,7 +533,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_GLU(Residue residue_cs)
+	void Build_GLU(Residue residue_cs)
 	{
 		sideChainLength = 3;
 		for (int i = 0; i < sideChainLength; i++)
@@ -575,7 +584,201 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void build_TEST(Residue residue_cs)
+	void Build_ASN(Residue residue_cs)
+	{
+		sideChainLength = 3;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			if (i == 0)
+			{
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			if (i == 1 || i == 2)
+			{
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _ND = residue_cs.sideChainList[2];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_ND.name = "ND";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_ND.transform.position = _CG.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_ND.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_ND, _CG);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertSp2ToCO();
+		_ND.GetComponent<Csp3>().ConvertSp2ToNH2();
+
+	}
+
+	void Build_GLN(Residue residue_cs)
+	{
+		sideChainLength = 4;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			if (i == 0 || i == 1)
+			{
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			if (i == 2 || i == 3)
+			{
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD = residue_cs.sideChainList[2];
+		GameObject _NE = residue_cs.sideChainList[3];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD.name = "CD";
+		_NE.name = "NE";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD.transform.position = _CG.transform.Find("H_3").position;
+			_CD.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_CD, _CG);
+		}
+		{
+			_NE.transform.position = _CD.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_NE.transform.LookAt(_CD.transform.position);
+			AddConfigJointBond(_NE, _CD);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertToCH2();
+		_CD.GetComponent<Csp3>().ConvertSp2ToCO();
+		_NE.GetComponent<Csp3>().ConvertSp2ToNH2();
+
+	}
+
+	void Build_ARG(Residue residue_cs)
+	{
+		sideChainLength = 7;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			if (i < 3)
+			{
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			if (i >= 3)
+			{
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+		}
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD = residue_cs.sideChainList[2];
+		GameObject _NE = residue_cs.sideChainList[3];
+		GameObject _CZ = residue_cs.sideChainList[4];
+		GameObject _NH1 = residue_cs.sideChainList[5];
+		GameObject _NH2 = residue_cs.sideChainList[6];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD.name = "CD";
+		_NE.name = "NE";
+		_CZ.name = "CZ";
+		_NH1.name = "NH1";
+		_NH2.name = "NH2";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD.transform.position = _CG.transform.Find("H_3").position;
+			_CD.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_CD, _CG);
+		}
+		{
+			_NE.transform.position = _CD.transform.Find("H_3").position;
+			_NE.transform.LookAt(_CD.transform.position);
+			AddConfigJointBond(_NE, _CD);
+		}
+		{
+			_CZ.transform.position = _NE.transform.Find("H_2").position;
+			_CZ.transform.LookAt(_NE.transform.position);
+			AddConfigJointBond(_CZ, _NE);
+		}
+		{
+			_NH1.transform.position = _CZ.transform.Find("H_1").position;
+			_NH1.transform.LookAt(_CZ.transform.position);
+			AddConfigJointBond(_NH1, _CZ);
+		}
+		{
+			_NH2.transform.position = _CZ.transform.Find("H_2").position;
+			_NH2.transform.LookAt(_CZ.transform.position);
+			AddConfigJointBond(_NH2, _CZ);
+		}
+
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertToCH2();
+		_CD.GetComponent<Csp3>().ConvertToCH2();
+		_NE.GetComponent<Csp3>().ConvertSp2ToNH();
+		_CZ.GetComponent<Csp3>().ConvertSp2ToC();
+		_NH1.GetComponent<Csp3>().ConvertSp2ToNH2();
+		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
+	}
+
+	void Build_TEST(Residue residue_cs)
 	{
 		sideChainLength = 1;
 		for (int i = 0; i < sideChainLength; i++)
@@ -600,7 +803,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_CB.GetComponent<Csp3>().ConvertToCH3();
 	}
 
-	void build_DEV(Residue residue_cs)
+	void Build_DEV(Residue residue_cs)
 	{
 		sideChainLength = 1;
 		for (int i = 0; i < sideChainLength; i++)

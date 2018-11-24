@@ -93,11 +93,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		if (numResidues > 9)
 		{
 			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "TEST");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "ARG");
 			sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
 			sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
 			sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
 			sideChainBuilder.BuildSideChain(gameObject, 6, "GLU");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "ASN");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "GLN");
 			//sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
 			//sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
 			//sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
