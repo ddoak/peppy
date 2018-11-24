@@ -17,6 +17,7 @@ TagManager:
   - C
   - O
   - UI
+  - S
   layers:
   - Default
   - TransparentFX

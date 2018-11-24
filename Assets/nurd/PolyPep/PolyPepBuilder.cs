@@ -93,14 +93,19 @@ public class PolyPepBuilder : MonoBehaviour {
 		if (numResidues > 9)
 		{
 			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
-			sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
-			sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
-			sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
-			sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "TEST");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "GLU");
+			//sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
+			//sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
+			//sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
+			//sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
+			//sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
+			//sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
+			//sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
+			//sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
 		}
 
 		// test: add arbitrary distance constraints
@@ -276,6 +281,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			float radiusC = 1.0f;
 			float radiusO = 1.0f;
 			float radiusH = 0.75f;
+			float radiusS = 1.1f;
 
 			float radiusR = 1.0f;
 
@@ -303,6 +309,10 @@ public class PolyPepBuilder : MonoBehaviour {
 						break;
 					case "R":
 						atomScale = radiusR * scaleVDW;
+						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						break;
+					case "S":
+						atomScale = radiusS * scaleVDW;
 						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
 						break;
 				}
