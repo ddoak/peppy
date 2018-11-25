@@ -76,6 +76,9 @@ public class SideChainBuilder : MonoBehaviour {
 			case "ARG":
 				Build_ARG(residue_cs);
 				break;
+			case "PHE":
+				Build_PHE(residue_cs);
+				break;
 			case "TEST":
 				Build_TEST(residue_cs);
 				break;
@@ -773,9 +776,119 @@ public class SideChainBuilder : MonoBehaviour {
 		_CG.GetComponent<Csp3>().ConvertToCH2();
 		_CD.GetComponent<Csp3>().ConvertToCH2();
 		_NE.GetComponent<Csp3>().ConvertSp2ToNH();
-		_CZ.GetComponent<Csp3>().ConvertSp2ToC();
+		_CZ.GetComponent<Csp3>().ConvertSp2ToC(false);
 		_NH1.GetComponent<Csp3>().ConvertSp2ToNH2();
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
+	}
+
+	void Build_PHE(Residue residue_cs)
+	{
+		sideChainLength = 7;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			if (i == 0)
+			{
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			if (i > 0)
+			{
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD1 = residue_cs.sideChainList[2];
+		GameObject _CD2 = residue_cs.sideChainList[3];
+		GameObject _CE1 = residue_cs.sideChainList[4];
+		GameObject _CE2 = residue_cs.sideChainList[5];
+		GameObject _CZ = residue_cs.sideChainList[6];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD1.name = "CD1";
+		_CD2.name = "CD2";
+		_CE1.name = "CE1";
+		_CE2.name = "CE2";
+		_CZ.name = "CZ";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+
+		//{
+		//	_CG.transform.position = _CB.transform.Find("H_3").position;
+		//	_CG.transform.LookAt(_CB.transform.position);
+		//	AddConfigJointBond(_CG, _CB);
+		//}
+
+		// build ring without attaching to CB - to maintain planar geometry
+		{
+			_CD1.transform.position = _CG.transform.Find("H_2").position; //build on H_1 position -> sp2!
+			_CD1.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_CD1, _CG);
+		}
+		{
+			_CE1.transform.position = _CD1.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_CE1.transform.LookAt(_CD1.transform.position);
+			AddConfigJointBond(_CE1, _CD1);
+		}
+		{
+			_CZ.transform.position = _CE1.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_CZ.transform.LookAt(_CE1.transform.position);
+			AddConfigJointBond(_CZ, _CE1);
+		}
+		{
+			_CE2.transform.position = _CZ.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_CE2.transform.LookAt(_CZ.transform.position);
+			AddConfigJointBond(_CE2, _CZ);
+		}
+		{
+			_CD2.transform.position = _CE2.transform.Find("H_2").position; //build on H_2 position -> sp2!
+			_CD2.transform.LookAt(_CE2.transform.position);
+			AddConfigJointBond(_CD2, _CE2);
+			AddConfigJointBond(_CG, _CD2);
+		}
+
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			//_CG.transform.LookAt(_CB.transform.position);
+
+			//{
+			//	Vector3 v = B - A;
+			//	Quaternion q = Quaternion.FromToRotation(transform.right, v);
+			//	transform.rotation = q * transform.rotation;
+			//}
+			{
+				// this is the general solution for aligning atoms along bonds
+				// took until making PHE to work it out properly
+
+				Vector3 CGtoCB = _CB.transform.position - _CG.transform.position;
+				Vector3 CGbond = _CG.transform.Find("H_1").position - _CG.transform.position;
+				Quaternion q = Quaternion.FromToRotation(CGbond, CGtoCB);
+
+				_CG.transform.rotation = q * _CG.transform.rotation; // not commutative
+
+			}
+			AddConfigJointBond(_CG, _CB);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertSp2ToC(true);
+		_CD1.GetComponent<Csp3>().ConvertSp2ToCH();
+		_CE1.GetComponent<Csp3>().ConvertSp2ToCH();
+		_CZ.GetComponent<Csp3>().ConvertSp2ToCH();
+		_CE2.GetComponent<Csp3>().ConvertSp2ToCH();
+		_CD2.GetComponent<Csp3>().ConvertSp2ToCH();
+
 	}
 
 	void Build_TEST(Residue residue_cs)
@@ -828,10 +941,10 @@ public class SideChainBuilder : MonoBehaviour {
 		//_CB.GetComponent<Csp3>().ConvertToCH3();
 	}
 
-	void AddConfigJointBond(GameObject go1, GameObject g02)
+	void AddConfigJointBond(GameObject go1, GameObject go2)
 	{
 		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
-		cj.connectedBody = g02.GetComponent<Rigidbody>();
+		cj.connectedBody = go2.GetComponent<Rigidbody>();
 
 		// NOTE
 		// in PolyPepBuilder.cs anchor and connected anchor are inverted
@@ -839,9 +952,20 @@ public class SideChainBuilder : MonoBehaviour {
 		// and rot direction is accounted for in code
 
 
-		// orient config joint along bond axis (z = forward)
-		// => Xrot for joint is along this axis
-		cj.axis = Vector3.forward;
+		{
+			// a) was doing this initially with z aligned atoms
+			// orient config joint along bond axis (z = forward)
+			// => Xrot for joint is along this axis
+			//cj.axis = Vector3.forward;
+		}
+
+		{
+			// b) more general solution
+			//cj.axis is directly between attached objects 
+			Vector3 worldAxis = go1.transform.position - go2.transform.position;
+			Vector3 localAxis = go1.transform.InverseTransformDirection(worldAxis);
+			cj.axis = localAxis;
+		}
 
 		// can use autoconfigure because geometry has been set up correctly ?
 		cj.autoConfigureConnectedAnchor = true;

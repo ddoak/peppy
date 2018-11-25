@@ -87,12 +87,12 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//for (int resid = 0; resid < numResidues; resid++)
 		//{
-		//	sideChainBuilder.BuildSideChain(gameObject, resid, "LEU"); // ppb_cs.chainArr[0].GetComponent<Residue>());
+		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
 		if (numResidues > 9)
 		{
-			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 0, "PHE");
 			sideChainBuilder.BuildSideChain(gameObject, 2, "ARG");
 			sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
 			sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
@@ -100,6 +100,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			sideChainBuilder.BuildSideChain(gameObject, 6, "GLU");
 			sideChainBuilder.BuildSideChain(gameObject, 7, "ASN");
 			sideChainBuilder.BuildSideChain(gameObject, 8, "GLN");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "PHE");
 			//sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
 			//sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
 			//sideChainBuilder.BuildSideChain(gameObject, 4, "THR");

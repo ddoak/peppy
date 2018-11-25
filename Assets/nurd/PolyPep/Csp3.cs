@@ -605,7 +605,7 @@ public class Csp3 : MonoBehaviour {
 		}
 	}
 
-	public void ConvertSp2ToC()
+	public void ConvertSp2ToC(bool keepH1Bond)
 	{
 		foreach (Transform _H in HtfList)
 		{
@@ -633,6 +633,16 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H1":
+					if (keepH1Bond) // phe / tyr rings
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					else
+					{
+						_bond.GetComponent<Renderer>().enabled = false;
+						_bond.GetComponent<Collider>().enabled = false;
+					}
+					break;
 				case "tf_bond_H2":
 					_bond.GetComponent<Renderer>().enabled = false;
 					_bond.GetComponent<Collider>().enabled = false;
@@ -757,6 +767,57 @@ public class Csp3 : MonoBehaviour {
 				child.name = "N";
 				child.tag = "N";
 				child.GetComponent<Renderer>().material.color = Color.blue;
+			}
+		}
+
+	}
+
+	public void ConvertSp2ToCH()
+	{
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_2":
+					_H.GetComponent<Renderer>().enabled = false;
+					_H.GetComponent<Collider>().enabled = false;
+					break;
+				case "H_1":
+					_H.transform.position += _H.transform.forward * 0.05f;
+					if (!keepDebugAtomMaterial)
+					{
+						_H.GetComponent<Renderer>().material.color = Color.white;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+					if (!keepDebugAtomMaterial)
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
+					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
+					_bond.GetComponent<Renderer>().material.color = Color.grey;
+					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
+					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					break;
+				case "tf_bond_H2":
+					_bond.GetComponent<Renderer>().enabled = false;
+					_bond.GetComponent<Collider>().enabled = false;
+					break;
+				default:
+					break;
 			}
 		}
 
