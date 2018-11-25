@@ -100,7 +100,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			sideChainBuilder.BuildSideChain(gameObject, 6, "GLU");
 			sideChainBuilder.BuildSideChain(gameObject, 7, "ASN");
 			sideChainBuilder.BuildSideChain(gameObject, 8, "GLN");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "PHE");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "TYR");
 			//sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
 			//sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
 			//sideChainBuilder.BuildSideChain(gameObject, 4, "THR");

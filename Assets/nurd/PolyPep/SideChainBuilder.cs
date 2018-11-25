@@ -77,7 +77,10 @@ public class SideChainBuilder : MonoBehaviour {
 				Build_ARG(residue_cs);
 				break;
 			case "PHE":
-				Build_PHE(residue_cs);
+				Build_PHEorTYR(residue_cs, false);
+				break;
+			case "TYR":
+				Build_PHEorTYR(residue_cs, true);
 				break;
 			case "TEST":
 				Build_TEST(residue_cs);
@@ -781,7 +784,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
 	}
 
-	void Build_PHE(Residue residue_cs)
+	void Build_PHEorTYR(Residue residue_cs, bool makeTYR)
 	{
 		sideChainLength = 7;
 		for (int i = 0; i < sideChainLength; i++)
@@ -858,6 +861,22 @@ public class SideChainBuilder : MonoBehaviour {
 			AddConfigJointBond(_CG, _CD2);
 		}
 
+		if (makeTYR)
+		{
+			Csp3_pf.GetComponent<Csp3>().atomType = "sp3";
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * 6 * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+
+			GameObject _OH = residue_cs.sideChainList[7];
+			_OH.name = "OH";
+
+			{
+				_OH.transform.position = _CZ.transform.Find("H_1").position; //build on H_1 position -> sp2!
+				_OH.transform.LookAt(_CZ.transform.position);
+				AddConfigJointBond(_OH, _CZ);
+			}
+			_OH.GetComponent<Csp3>().ConvertToOH();
+		}
+
 		{
 			_CG.transform.position = _CB.transform.Find("H_3").position;
 			//_CG.transform.LookAt(_CB.transform.position);
@@ -885,9 +904,18 @@ public class SideChainBuilder : MonoBehaviour {
 		_CG.GetComponent<Csp3>().ConvertSp2ToC(true);
 		_CD1.GetComponent<Csp3>().ConvertSp2ToCH();
 		_CE1.GetComponent<Csp3>().ConvertSp2ToCH();
-		_CZ.GetComponent<Csp3>().ConvertSp2ToCH();
+		if (makeTYR)
+		{
+			_CZ.GetComponent<Csp3>().ConvertSp2ToC(false); 
+		}
+		else
+		{
+			_CZ.GetComponent<Csp3>().ConvertSp2ToCH();
+		}
+		
 		_CE2.GetComponent<Csp3>().ConvertSp2ToCH();
 		_CD2.GetComponent<Csp3>().ConvertSp2ToCH();
+
 
 	}
 
