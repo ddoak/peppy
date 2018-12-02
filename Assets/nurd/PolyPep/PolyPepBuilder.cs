@@ -90,25 +90,25 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		if (numResidues > 9)
+		//if (numResidues > 9)
 		{
-			sideChainBuilder.BuildSideChain(gameObject, 0, "PHE");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "ARG");
-			sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
-			sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
-			sideChainBuilder.BuildSideChain(gameObject, 6, "GLU");
-			sideChainBuilder.BuildSideChain(gameObject, 7, "ASN");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "GLN");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "TYR");
-			//sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
-			//sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
-			//sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
-			//sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
-			//sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
-			//sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
-			//sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
-			//sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
+			//sideChainBuilder.BuildSideChain(gameObject, 0, "PHE");
+			//sideChainBuilder.BuildSideChain(gameObject, 2, "ARG");
+			//sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
+			//sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
+			//sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
+			//sideChainBuilder.BuildSideChain(gameObject, 3, "PRO");
+			//sideChainBuilder.BuildSideChain(gameObject, 7, "ALA");
+			//sideChainBuilder.BuildSideChain(gameObject, 8, "ALA");
+			//sideChainBuilder.BuildSideChain(gameObject, 9, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
 		}
 
 		// test: add arbitrary distance constraints
@@ -655,9 +655,14 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-			if (myPolyPepManager.hbondsOn)
+
+			string resType = chainArr[resid].GetComponent<Residue>().type;
+			//Debug.Log(resType);
+
+			if ((myPolyPepManager.hbondsOn) && (chainArr[resid].GetComponent<Residue>().type != "PRO")) // DGD dirty hack to disable PRO HN hbond
 			{
 				GameObject donorGO = GetAmideForResidue(resid);
+
 				var hbond_sj = hbondBackboneSj_HO[resid];
 				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 

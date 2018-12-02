@@ -26,6 +26,7 @@ public class SideChainBuilder : MonoBehaviour {
 		Residue residue_cs = ppb_cs.chainArr[resid].GetComponent<Residue>();
 
 		// ought to do this in residue.cs ?
+		residue_cs.type = type;
 		residue_cs.sidechain = new GameObject(resid + "_" + type);
 		residue_cs.sidechain.transform.parent = residue_cs.transform;
 
@@ -81,6 +82,9 @@ public class SideChainBuilder : MonoBehaviour {
 				break;
 			case "TYR":
 				Build_PHEorTYR(residue_cs, true);
+				break;
+			case "PRO":
+				Build_PRO(residue_cs);
 				break;
 			case "TEST":
 				Build_TEST(residue_cs);
@@ -919,6 +923,78 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
+	void Build_PRO(Residue residue_cs)
+	{
+		sideChainLength = 3;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD = residue_cs.sideChainList[2];
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD.name = "CD";
+	
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD.transform.position = _CG.transform.Find("H_3").position;
+			_CD.transform.LookAt(_CG.transform.position);
+			AddConfigJointBond(_CD, _CG);
+		}
+
+		{
+			GameObject amide = residue_cs.amide_pf;
+			Transform HN = amide.transform.Find("tf_H/H_amide");
+
+			Vector3 NtoH = HN.position - amide.transform.position;
+
+			HN.GetComponent<Renderer>().enabled = false;
+			HN.GetComponent<Collider>().enabled = false;
+
+			_CD.transform.position = amide.transform.position + (1.6f * NtoH); 
+
+			{
+				// this is the general solution for aligning atoms along bonds
+				// took until making PHE to work it out properly
+
+				Vector3 CDtoAmideN = amide.transform.position - _CD.transform.position;
+				Vector3 CDNbond = _CD.transform.Find("H_3").position - _CD.transform.position;
+				Quaternion q = Quaternion.FromToRotation(CDNbond, CDtoAmideN);
+
+				_CD.transform.rotation = q * _CD.transform.rotation; // not commutative
+
+			}
+
+			AddConfigJointBondSlack(_CD, residue_cs.amide_pf);
+
+		}
+		
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertToCH2();
+		_CD.GetComponent<Csp3>().ConvertToCH2();
+
+	}
+
 	void Build_TEST(Residue residue_cs)
 	{
 		sideChainLength = 1;
@@ -1005,6 +1081,45 @@ public class SideChainBuilder : MonoBehaviour {
 		cj.angularXMotion = ConfigurableJointMotion.Free;
 		cj.angularYMotion = ConfigurableJointMotion.Locked;
 		cj.angularZMotion = ConfigurableJointMotion.Locked;
+	}
+
+	void AddConfigJointBondSlack(GameObject go1, GameObject go2)
+	{
+		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
+		cj.connectedBody = go2.GetComponent<Rigidbody>();
+
+		// NOTE
+		// in PolyPepBuilder.cs anchor and connected anchor are inverted
+		// incorrect - but works because cj is used only for rotation
+		// and rot direction is accounted for in code
+
+
+		{
+			// a) was doing this initially with z aligned atoms
+			// orient config joint along bond axis (z = forward)
+			// => Xrot for joint is along this axis
+			//cj.axis = Vector3.forward;
+		}
+
+		{
+			// b) more general solution
+			//cj.axis is directly between attached objects 
+			Vector3 worldAxis = go1.transform.position - go2.transform.position;
+			Vector3 localAxis = go1.transform.InverseTransformDirection(worldAxis);
+			cj.axis = localAxis;
+		}
+
+		// can use autoconfigure because geometry has been set up correctly ?
+		cj.autoConfigureConnectedAnchor = true;
+
+		cj.xMotion = ConfigurableJointMotion.Locked;
+		cj.yMotion = ConfigurableJointMotion.Locked;
+		cj.zMotion = ConfigurableJointMotion.Locked;
+
+		cj.angularXMotion = ConfigurableJointMotion.Free;
+		cj.angularYMotion = ConfigurableJointMotion.Free;
+		cj.angularZMotion = ConfigurableJointMotion.Locked;
+
 	}
 
 	void OnDrawGizmos()

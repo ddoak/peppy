@@ -9,6 +9,7 @@ public class Residue : MonoBehaviour {
 	public GameObject carbonyl_pf;
 
 	public GameObject sidechain;
+	public string type = "XXX";
 
 	public List<GameObject> sideChainList = new List<GameObject>();
 
