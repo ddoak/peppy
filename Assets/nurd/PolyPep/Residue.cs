@@ -9,7 +9,9 @@ public class Residue : MonoBehaviour {
 	public GameObject carbonyl_pf;
 
 	public GameObject sidechain;
+	public int resid;
 	public string type = "XXX";
+	public string label;
 
 	public List<GameObject> sideChainList = new List<GameObject>();
 
@@ -26,6 +28,10 @@ public class Residue : MonoBehaviour {
 	private Vector3 myPlotCubeBaseScale = new Vector3(0.01f, 0.01f, 0.01f);
 	float deltaScale = 1.0f;
 
+	public GameObject Label_pf;
+	public GameObject myLabel;
+	public GameObject myPlotCubeLabel;
+	
 	public bool residueSelected = false;
 	public bool residueHovered = false;
 	public bool residueGrabbed = false;
@@ -51,6 +57,18 @@ public class Residue : MonoBehaviour {
 		myPlotCube.transform.localScale = myPlotCubeBaseScale;
 		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
 		myPlotCube.transform.position = ramaPlot.transform.position;
+
+		myLabel = Instantiate(Label_pf, transform);
+		myLabel.name = "residueLabel";
+
+		myPlotCubeLabel = Instantiate(Label_pf, transform);
+		myPlotCubeLabel.name = "plotCubeLabel";
+
+		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
+		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0005f;
+		myPlotCubeLabel.GetComponent<TextMesh>().fontSize = 250;
+		myPlotCubeLabel.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
+		myPlotCubeLabel.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
 
 	}
 	
@@ -138,10 +156,31 @@ public class Residue : MonoBehaviour {
 		}
 	}
 
+	private void UpdateLabels()
+	{
+		//TODO - camera facing prob expensive
+
+		label = (resid+1).ToString() + ": " + type;
+		myLabel.GetComponent<TextMesh>().text = label;
+		myLabel.transform.position = calpha_pf.transform.position;
+
+		myLabel.transform.localScale = new Vector3(-1, 1, 1);
+		myLabel.transform.LookAt(Camera.main.transform);
+
+		
+		myPlotCubeLabel.GetComponent<TextMesh>().text = (resid + 1).ToString();
+		myPlotCubeLabel.transform.position = myPlotCube.transform.position - (0.005f * myPlotCube.transform.forward);
+
+		myPlotCubeLabel.transform.localScale = new Vector3(-1, 1, 1);
+		myPlotCubeLabel.transform.LookAt(Camera.main.transform);
+
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
 		MeasurePhiPsi();
 		UpdatePhiPsiPlotObj();
+		UpdateLabels();
 	}
 }

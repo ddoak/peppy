@@ -274,6 +274,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		chainArr[index] = Instantiate(residuePf, transform);
 		chainArr[index].name = "Residue_" + (index).ToString();
+		chainArr[index].GetComponent<Residue>().resid = index;
 	}
 
 	public void ScaleVDW(float scale)
