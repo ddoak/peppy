@@ -46,6 +46,7 @@ public class Residue : MonoBehaviour {
 		myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		myPlotCube.name = "PlotCube";
 		myPlotCube.GetComponent<Collider>().isTrigger = true;
+		myPlotCube.GetComponent<Collider>().enabled = false;
 		myPlotCube.transform.parent = gameObject.transform;
 		myPlotCube.transform.localScale = myPlotCubeBaseScale;
 		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
