@@ -331,6 +331,12 @@ public class PolyPepBuilder : MonoBehaviour {
 			SetRbDrag(GetAmideForResidue(resid));
 			SetRbDrag(GetCalphaForResidue(resid));
 			SetRbDrag(GetCarbonylForResidue(resid));
+
+			//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
+			foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+			{
+				SetRbDrag(_sidechainGO);
+			}
 		}
 	}
 
@@ -1404,10 +1410,20 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		if (myPolyPepManager.jiggleStrength > 0.0f)
 		{
+			//backbone
 			for (int i = 0; i < polyLength; i++)
 			{
 				Rigidbody rb = polyArr[i].GetComponent<Rigidbody>();
 				rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+			}
+			//sidechains
+			for (int resid = 0; resid < numResidues; resid++)
+			{ 
+				foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+				{
+					Rigidbody rb = _sidechainGO.GetComponent<Rigidbody>();
+					rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+				}
 			}
 		}
 
