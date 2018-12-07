@@ -33,7 +33,6 @@ public class Residue : MonoBehaviour {
 	public GameObject Label_pf;
 	public GameObject myLabel;
 	public GameObject myPlotCubeLabel;
-	public GameObject myPeptidePlane;
 
 	public bool residueSelected = false;
 	public bool residueHovered = false;
@@ -72,25 +71,6 @@ public class Residue : MonoBehaviour {
 		myPlotCubeLabel.GetComponent<TextMesh>().fontSize = 250;
 		myPlotCubeLabel.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
 		myPlotCubeLabel.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-
-		myPeptidePlane = GameObject.CreatePrimitive(PrimitiveType.Quad);
-		myPeptidePlane.name = "PeptidePlane";
-		//myPeptidePlane.transform.parent = gameObject.transform;
-
-		if (resid < 0)
-		{
-			//Mesh _mesh = myPeptidePlane.GetComponent<Mesh>();
-
-			Debug.Log( carbonyl_pf.transform.Find("C_carbonyl").position );
-			//_mesh.vertices[1] = carbonyl_pf.transform.Find("O_carbonyl").position;
-			//_mesh.vertices[2] = myPolyPepBuilder.GetComponent<PolyPepBuilder>().GetAmideForResidue(resid - 1).transform.Find("N_amide").position;
-			//_mesh.vertices[3] = myPolyPepBuilder.GetComponent<PolyPepBuilder>().GetAmideForResidue(resid - 1).transform.Find("H_amide").position;
-
-		}
-
-
-		
-		
 	}
 	
 	void MeasurePhiPsi()
@@ -203,15 +183,12 @@ public class Residue : MonoBehaviour {
 		MeasurePhiPsi();
 		UpdatePhiPsiPlotObj();
 		UpdateLabels();
-
-		//if (resid > 0)
+	}
+}
 		//{
+		//  peptide bond atom positions
 		//	Vector3 posC = myPolyPepBuilder.GetComponent<PolyPepBuilder>().GetCarbonylForResidue(resid - 1).transform.Find("C_carbonyl").position;
 		//	Vector3 posCO = myPolyPepBuilder.GetComponent<PolyPepBuilder>().GetCarbonylForResidue(resid - 1).transform.Find("tf_O/O_carbonyl").position;
 		//	Vector3 posN = amide_pf.transform.Find("N_amide").position;
 		//	Vector3 posNH = amide_pf.transform.Find("tf_H/H_amide").position;
 		//}
-
-
-	}
-}
