@@ -92,23 +92,25 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//if (numResidues > 9)
 		{
-			//sideChainBuilder.BuildSideChain(gameObject, 0, "PHE");
-			//sideChainBuilder.BuildSideChain(gameObject, 2, "ARG");
-			//sideChainBuilder.BuildSideChain(gameObject, 3, "ALA");
-			//sideChainBuilder.BuildSideChain(gameObject, 4, "ASP");
-			//sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
-			//sideChainBuilder.BuildSideChain(gameObject, 3, "PRO");
-			//sideChainBuilder.BuildSideChain(gameObject, 7, "ALA");
-			//sideChainBuilder.BuildSideChain(gameObject, 8, "ALA");
-			//sideChainBuilder.BuildSideChain(gameObject, 9, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "LYS");
-			sideChainBuilder.BuildSideChain(gameObject, 3, "VAL");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "THR");
-			sideChainBuilder.BuildSideChain(gameObject, 5, "LEU");
-			sideChainBuilder.BuildSideChain(gameObject, 6, "SER");
-			sideChainBuilder.BuildSideChain(gameObject, 7, "ILE");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "CYS");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "MET");
+
+			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "VAL");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "SER");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "THR");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "ASP");
+			sideChainBuilder.BuildSideChain(gameObject, 10, "ASN");
+			sideChainBuilder.BuildSideChain(gameObject, 11, "GLU");
+			sideChainBuilder.BuildSideChain(gameObject, 12, "GLN");
+			sideChainBuilder.BuildSideChain(gameObject, 13, "ARG");
+			sideChainBuilder.BuildSideChain(gameObject, 14, "LYS");
+			sideChainBuilder.BuildSideChain(gameObject, 15, "PHE");
+			sideChainBuilder.BuildSideChain(gameObject, 16, "TYR");
+			
+
 		}
 
 		// test: add arbitrary distance constraints
@@ -275,6 +277,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		chainArr[index] = Instantiate(residuePf, transform);
 		chainArr[index].name = "Residue_" + (index).ToString();
 		chainArr[index].GetComponent<Residue>().resid = index;
+		chainArr[index].GetComponent<Residue>().myPolyPepBuilder = gameObject.GetComponent<PolyPepBuilder>();
 	}
 
 	public void ScaleVDW(float scale)
@@ -354,7 +357,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
-		go.GetComponent<Rigidbody>().angularDrag = 1;
+		go.GetComponent<Rigidbody>().angularDrag = 5;
 		}
 	}
 
@@ -921,17 +924,17 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	GameObject GetAmideForResidue(int residue)
+	public GameObject GetAmideForResidue(int residue)
 	{
 		return (polyArr[residue * 3]);
 	}
 
-	GameObject GetCalphaForResidue(int residue)
+	public GameObject GetCalphaForResidue(int residue)
 	{
 		return (polyArr[(residue * 3) + 1]);
 	}
 
-	GameObject GetCarbonylForResidue(int residue)
+	public GameObject GetCarbonylForResidue(int residue)
 	{
 		return (polyArr[(residue * 3) + 2]);
 	}
