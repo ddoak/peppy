@@ -31,6 +31,9 @@ public class PolyPepManager : MonoBehaviour {
 	public bool showDrivenBondsOn = true;
 	public bool doCartoonBondRendering = true;
 
+	public bool allResLabelsOn = false;
+	public bool showPeptidePlanes = false;
+
 	public float toonRenderScale = 0.002f;
 
 	public Slider phiSliderUI;
@@ -323,6 +326,16 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateJiggleFromUI(float jiggleFromUI)
 	{
 		jiggleStrength = jiggleFromUI;
+	}
+
+	public void UpdateAllResidueLabelsOnFromUI(bool value)
+	{
+		allResLabelsOn = value;
+	}
+
+	public void UpdateShowPeptidePlanesOnFromUI(bool value)
+	{
+		 showPeptidePlanes= value;
 	}
 
 	public void ResetLevel()

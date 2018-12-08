@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 23195321496542850}
   - component: {fileID: 65042367213844318}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: PeptidePlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

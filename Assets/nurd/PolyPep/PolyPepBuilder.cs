@@ -90,7 +90,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		//if (numResidues > 9)
+		if (false && numResidues > 9)
 		{
 
 			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
@@ -278,6 +278,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		chainArr[index].name = "Residue_" + (index).ToString();
 		chainArr[index].GetComponent<Residue>().resid = index;
 		chainArr[index].GetComponent<Residue>().myPolyPepBuilder = gameObject.GetComponent<PolyPepBuilder>();
+		chainArr[index].GetComponent<Residue>().myPolyPepManager = myPolyPepManager;
 	}
 
 	public void ScaleVDW(float scale)

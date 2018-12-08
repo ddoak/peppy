@@ -43,9 +43,10 @@ MonoBehaviour:
   carbonyl_pf: {fileID: 1106350776754678, guid: be5cfe1926cf4d24bb8c219702f2b5be,
     type: 2}
   myPolyPepBuilder: {fileID: 0}
+  myPolyPepManager: {fileID: 0}
   sidechain: {fileID: 0}
   resid: 0
-  type: XXX
+  type: 
   label: 
   sideChainList: []
   phiTarget: 0
@@ -58,6 +59,8 @@ MonoBehaviour:
   Label_pf: {fileID: 1168876270144662, guid: 0afd8dac3b015364faed92e309447fc8, type: 2}
   myLabel: {fileID: 0}
   myPlotCubeLabel: {fileID: 0}
+  isNTerminal: 0
+  isCTerminal: 0
   residueSelected: 0
   residueHovered: 0
   residueGrabbed: 0

@@ -9,10 +9,11 @@ public class Residue : MonoBehaviour {
 	public GameObject carbonyl_pf;
 
 	public PolyPepBuilder myPolyPepBuilder;
+	public PolyPepManager myPolyPepManager;
 
 	public GameObject sidechain;
 	public int resid;
-	public string type = "xxx";
+	public string type;
 	public string label;
 
 	public List<GameObject> sideChainList = new List<GameObject>();
@@ -34,6 +35,11 @@ public class Residue : MonoBehaviour {
 	public GameObject myLabel;
 	public GameObject myPlotCubeLabel;
 
+	private GameObject myPeptidePlane;
+
+	public bool isNTerminal;
+	public bool isCTerminal;
+
 	public bool residueSelected = false;
 	public bool residueHovered = false;
 	public bool residueGrabbed = false;
@@ -44,7 +50,7 @@ public class Residue : MonoBehaviour {
 	// Use this for initialization
 	private void Awake()
 	{
-
+		
 	}
 
 	void Start ()
@@ -68,9 +74,21 @@ public class Residue : MonoBehaviour {
 
 		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
 		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0005f;
-		myPlotCubeLabel.GetComponent<TextMesh>().fontSize = 250;
+		myPlotCubeLabel.GetComponent<TextMesh>().fontSize = 300;
 		myPlotCubeLabel.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
 		myPlotCubeLabel.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
+
+		myPeptidePlane = carbonyl_pf.transform.Find("tf_bond_C_N/bond_CO_N/PeptidePlane").gameObject;
+
+
+		if (resid == 0)
+		{
+			isNTerminal = true;
+		}
+		if (resid == (myPolyPepBuilder.GetComponent<PolyPepBuilder>().numResidues - 1))
+		{
+			isCTerminal = true;
+		}
 	}
 	
 	void MeasurePhiPsi()
@@ -157,24 +175,45 @@ public class Residue : MonoBehaviour {
 		}
 	}
 
-	private void UpdateLabels()
+	private void UpdateShowResLabels()
 	{
-		//TODO - camera facing prob expensive
+		if (myPolyPepManager.GetComponent<PolyPepManager>().allResLabelsOn)
+		{
 
-		label = (resid+1).ToString() + ": " + type;
-		myLabel.GetComponent<TextMesh>().text = label;
-		myLabel.transform.position = calpha_pf.transform.position;
+			label = (resid+1).ToString() + ": " + type;
+			myLabel.SetActive(true);
+			myLabel.GetComponent<TextMesh>().text = label;
+			myLabel.transform.position = calpha_pf.transform.position;
 
-		myLabel.transform.localScale = new Vector3(-1, 1, 1);
-		myLabel.transform.LookAt(Camera.main.transform);
+			// 180 x rot to face camera
+			myLabel.transform.localScale = new Vector3(-1, 1, 1);
+			myLabel.transform.LookAt(Camera.main.transform);
 
-		
-		myPlotCubeLabel.GetComponent<TextMesh>().text = (resid + 1).ToString();
-		myPlotCubeLabel.transform.position = myPlotCube.transform.position - (0.005f * myPlotCube.transform.forward);
+			myPlotCubeLabel.SetActive(true);
+			myPlotCubeLabel.GetComponent<TextMesh>().text = (resid + 1).ToString();
+			// TODO fix magic number in scaling - places label on top face of PlotCube
+			myPlotCubeLabel.transform.position = myPlotCube.transform.position - (0.005f * myPlotCube.transform.forward);
 
-		myPlotCubeLabel.transform.localScale = new Vector3(-1, 1, 1);
-		myPlotCubeLabel.transform.LookAt(Camera.main.transform);
+			myPlotCubeLabel.transform.localScale = new Vector3(-1, 1, 1);
+			myPlotCubeLabel.transform.LookAt(Camera.main.transform);
+		}
+		else
+		{
+			myLabel.SetActive(false);
+			myPlotCubeLabel.SetActive(false);
+		}
+	}
 
+	private void UpdateShowPeptidePlanes()
+	{
+		if ((myPolyPepManager.GetComponent<PolyPepManager>().showPeptidePlanes) && (!isCTerminal))
+		{
+			myPeptidePlane.SetActive(true);
+		}
+		else
+		{
+			myPeptidePlane.SetActive(false);
+		}
 	}
 
 	// Update is called once per frame
@@ -182,7 +221,8 @@ public class Residue : MonoBehaviour {
 	{
 		MeasurePhiPsi();
 		UpdatePhiPsiPlotObj();
-		UpdateLabels();
+		UpdateShowResLabels();
+		UpdateShowPeptidePlanes();
 	}
 }
 		//{
