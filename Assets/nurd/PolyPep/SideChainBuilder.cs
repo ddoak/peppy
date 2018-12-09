@@ -20,6 +20,22 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
+	public void DeleteSideChain(GameObject ppb_go, int resid)
+	{
+		PolyPepBuilder ppb_cs = ppb_go.GetComponent<PolyPepBuilder>();
+		Residue residue_cs = ppb_cs.chainArr[resid].GetComponent<Residue>();
+		if ( residue_cs.sideChainList.Count > 0)
+		{
+			foreach (GameObject _go in residue_cs.sideChainList)
+			{
+				Destroy(_go);
+			}
+			residue_cs.sideChainList.Clear();
+			residue_cs.EnableProxySideChain();	
+		}
+		
+	}
+
 	public void BuildSideChain(GameObject ppb_go, int resid, string type)
 	{
 		PolyPepBuilder ppb_cs = ppb_go.GetComponent<PolyPepBuilder>();

@@ -34,6 +34,8 @@ public class PolyPepManager : MonoBehaviour {
 	public bool allResLabelsOn = false;
 	public bool showPeptidePlanes = false;
 
+	public int UISelectedAminoAcid { get; set; }
+
 	public float toonRenderScale = 0.002f;
 
 	public Slider phiSliderUI;
@@ -44,6 +46,8 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider phiPsiDriveSliderUI;
 	public Slider spawnLengthSliderUI;
 	public Slider jiggleStrengthSliderUI;
+
+	private int testCount = 0;
 
 	void Awake()
 	{
@@ -336,6 +340,99 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateShowPeptidePlanesOnFromUI(bool value)
 	{
 		 showPeptidePlanes= value;
+	}
+
+	public void UpdateTestToggleFromUI(bool value)
+	{
+		Debug.Log("Click from UI: " + value);
+
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			foreach (GameObject _residueGo in _ppb.chainArr)
+			{
+				if (_residueGo.GetComponent<Residue>().residueSelected == true)
+				{
+
+					if (value == true)
+						
+					{
+						_ppb.sideChainBuilder.DeleteSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid);
+						if (UISelectedAminoAcid > 0)
+						{
+							string selectedAminoAcid = "XXX";
+							switch (UISelectedAminoAcid)
+							{
+								case 0:
+									// not defined
+
+									break;
+
+								case 1:
+									// GLY
+									selectedAminoAcid = "GLY";
+									break;
+
+								case 2:
+									// ALA
+									selectedAminoAcid = "ALA";
+									break;
+
+								case 3:
+									// VAL
+									selectedAminoAcid = "VAL";
+									break;
+
+								case 4:
+									//
+									selectedAminoAcid = "LEU";
+									break;
+
+								case 5:
+									//
+									selectedAminoAcid = "ILE";
+									break;
+
+								case 6:
+									//
+									selectedAminoAcid = "MET";
+									break;
+
+								case 7:
+									//
+									selectedAminoAcid = "PHE";
+									break;
+
+							}
+							if (selectedAminoAcid == "XXX")
+							{
+
+							}
+							{ 
+								_ppb.sideChainBuilder.BuildSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid, selectedAminoAcid);
+							}
+								
+						}
+					}
+					else
+					{
+						
+					}
+
+				}
+			}
+			//push update of scale and colliders
+			_ppb.ScaleVDW(vdwScale);
+			_ppb.SetAllColliderIsTrigger(!collidersOn);
+		}
+
+	}
+
+	public void UpdateAminoAcidSelFromUI()
+	{
+
+		Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+
+
 	}
 
 	public void ResetLevel()

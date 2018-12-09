@@ -175,6 +175,28 @@ public class Residue : MonoBehaviour {
 		}
 	}
 
+	public void EnableProxySideChain()
+	{
+		// switch off the proxy sidechain renderer
+		foreach (Renderer renderer in calpha_pf.GetComponentsInChildren<Renderer>())
+		{
+			//Debug.Log(renderer);
+			if (renderer.name == "R_sidechain" || renderer.name == "bond_CA_R")
+			{
+				renderer.enabled = true;
+			}
+		}
+		// switch off the proxy sidechain collider
+		foreach (Collider collider in calpha_pf.GetComponentsInChildren<Collider>())
+		{
+			//Debug.Log(collider);
+			if (collider.name == "R_sidechain" || collider.name == "bond_CA_R")
+			{
+				collider.enabled = true;
+			}
+		}
+	}
+
 	private void UpdateShowResLabels()
 	{
 		if (myPolyPepManager.GetComponent<PolyPepManager>().allResLabelsOn)
