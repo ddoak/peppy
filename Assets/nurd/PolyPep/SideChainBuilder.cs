@@ -30,10 +30,9 @@ public class SideChainBuilder : MonoBehaviour {
 			{
 				Destroy(_go);
 			}
-			residue_cs.sideChainList.Clear();
-			residue_cs.EnableProxySideChain();	
 		}
-		
+		residue_cs.sideChainList.Clear();
+		//residue_cs.EnableProxySideChain();	
 	}
 
 	public void BuildSideChain(GameObject ppb_go, int resid, string type)
@@ -46,73 +45,85 @@ public class SideChainBuilder : MonoBehaviour {
 		residue_cs.sidechain = new GameObject(resid + "_" + type);
 		residue_cs.sidechain.transform.parent = residue_cs.transform;
 
+		DeleteSideChain(ppb_go, resid);
+
+
 		// set default atom type to sp3 - used in Awake() when instantiated
 		Csp3_pf.GetComponent<Csp3>().atomType = "sp3";
 
-		switch (type)
+		if (type == "XXX")
 		{
-			case "ALA":
-				Build_ALA(residue_cs);
-				break;
-			case "VAL":
-				Build_VAL(residue_cs);
-				break;
-			case "LEU":
-				Build_LEU(residue_cs);
-				break;
-			case "ILE":
-				Build_ILE(residue_cs);
-				break;
-			case "MET":
-				Build_MET(residue_cs);
-				break;
-			case "CYS":
-				Build_CYS(residue_cs);
-				break;
-			case "SER":
-				Build_SER(residue_cs);
-				break;
-			case "THR":
-				Build_THR(residue_cs);
-				break;
-			case "LYS":
-				Build_LYS(residue_cs);
-				break;
-			case "ASP":
-				Build_ASP(residue_cs);
-				break;
-			case "GLU":
-				Build_GLU(residue_cs);
-				break;
-			case "ASN":
-				Build_ASN(residue_cs);
-				break;
-			case "GLN":
-				Build_GLN(residue_cs);
-				break;
-			case "ARG":
-				Build_ARG(residue_cs);
-				break;
-			case "PHE":
-				Build_PHEorTYR(residue_cs, false);
-				break;
-			case "TYR":
-				Build_PHEorTYR(residue_cs, true);
-				break;
-			case "PRO":
-				Build_PRO(residue_cs);
-				break;
-			case "TEST":
-				Build_TEST(residue_cs);
-				break;
-			case "DEV":
-				Build_DEV(residue_cs);
-				break;
-			default:
-				break;
+			residue_cs.EnableProxySideChain();
+		}
+		else
+		{
+			residue_cs.DisableProxySideChain();
+
+			switch (type)
+			{
+				case "ALA":
+					Build_ALA(residue_cs);
+					break;
+				case "VAL":
+					Build_VAL(residue_cs);
+					break;
+				case "LEU":
+					Build_LEU(residue_cs);
+					break;
+				case "ILE":
+					Build_ILE(residue_cs);
+					break;
+				case "MET":
+					Build_MET(residue_cs);
+					break;
+				case "CYS":
+					Build_CYS(residue_cs);
+					break;
+				case "SER":
+					Build_SER(residue_cs);
+					break;
+				case "THR":
+					Build_THR(residue_cs);
+					break;
+				case "LYS":
+					Build_LYS(residue_cs);
+					break;
+				case "ASP":
+					Build_ASP(residue_cs);
+					break;
+				case "GLU":
+					Build_GLU(residue_cs);
+					break;
+				case "ASN":
+					Build_ASN(residue_cs);
+					break;
+				case "GLN":
+					Build_GLN(residue_cs);
+					break;
+				case "ARG":
+					Build_ARG(residue_cs);
+					break;
+				case "PHE":
+					Build_PHEorTYR(residue_cs, false);
+					break;
+				case "TYR":
+					Build_PHEorTYR(residue_cs, true);
+					break;
+				case "PRO":
+					Build_PRO(residue_cs);
+					break;
+				case "TEST":
+					Build_TEST(residue_cs);
+					break;
+				case "DEV":
+					Build_DEV(residue_cs);
+					break;
+				default:
+					break;
+			}
 		}
 
-		residue_cs.DisableProxySideChain();
+
 	}
 
 	void Build_ALA(Residue residue_cs)
