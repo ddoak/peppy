@@ -285,49 +285,63 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		{
 			float scaleVDW = scale;
+			// relative atom radii
 			float radiusN = 1.0f;
 			float radiusC = 1.0f;
 			float radiusO = 1.0f;
 			float radiusH = 0.75f;
 			float radiusS = 1.1f;
-
-			float radiusR = 1.0f;
+			float radiusR = 1.1f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
 			foreach (Transform child in allChildren)
 			{
-				float atomScale;
+				//float atomDisplayScale = 1.0f;
 				switch (child.tag)
 				{
 					case "N":
-						atomScale = radiusN * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusN * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusN);
 						break;
 					case "C":
-						atomScale = radiusC * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusC * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusC);
 						break;
 					case "O":
-						atomScale = radiusO * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusO * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusO);
 						break;
 					case "H":
-						atomScale = radiusH * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusH * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusH);
 						break;
 					case "R":
-						atomScale = radiusR * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusR * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusR);
 						break;
 					case "S":
-						atomScale = radiusS * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusS * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusS);
 						break;
 				}
-
+				
 			}
 		}
 	}
+
+	private void ScaleAtom(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
+	{
+		// CPK / VDW slider changes rendering
+		float atomDisplayScale = relativeRadiusAtomType * scaleVDW;
+		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
+		// physics collider should be independent of rendering scale
+		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
+		// SO apply inverse
+		myAtom.GetComponent<SphereCollider>().radius = 1.1f * relativeRadiusAtomType / scaleVDW; 
+		// 1.1f is magic number DGD
+
+	}
+
 
 	public void UpdateAllDrag()
 	{
