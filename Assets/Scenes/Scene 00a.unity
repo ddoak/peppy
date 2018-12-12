@@ -3285,7 +3285,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -5, y: -30.000002, z: 0}
 --- !u!1 &170691172
 GameObject:
@@ -6783,7 +6783,7 @@ Transform:
   - {fileID: 2097814362}
   - {fileID: 726488693}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!1 &357834194
 GameObject:
@@ -14230,7 +14230,7 @@ Transform:
   - {fileID: 1464600537}
   - {fileID: 479121102}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!1 &790204600
 GameObject:
@@ -15945,7 +15945,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4559994606984972, guid: d5df425c1cf8bf54a9b9354cf884e192, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114209824442362866, guid: d5df425c1cf8bf54a9b9354cf884e192,
         type: 2}
@@ -18899,7 +18899,7 @@ Transform:
   m_Children:
   - {fileID: 1762794663}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1092504356
 GameObject:
@@ -21900,7 +21900,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4496047190489048, guid: be5cfe1926cf4d24bb8c219702f2b5be, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1106350776754678, guid: be5cfe1926cf4d24bb8c219702f2b5be, type: 2}
       propertyPath: m_IsActive
@@ -23832,7 +23832,7 @@ Transform:
   m_LocalScale: {x: 4, y: 1, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1330885237
 GameObject:
@@ -25903,7 +25903,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4836243021114472, guid: 64ad9cd3a6de52a48a6072900fcf4797, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1424276724713092, guid: 64ad9cd3a6de52a48a6072900fcf4797, type: 2}
       propertyPath: m_IsActive
@@ -32027,7 +32027,7 @@ Transform:
   - {fileID: 15311221}
   - {fileID: 243465823}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!65 &1722166618
 BoxCollider:
@@ -32467,7 +32467,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '"Peppy" v0.3
+  m_Text: '"Peppy" v0.4
 
 '
 --- !u!222 &1747272132
@@ -35700,7 +35700,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1919213147
 MonoBehaviour:
@@ -37027,7 +37027,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (18/10/18)
+  m_Text: (12/12/18)
 --- !u!222 &2026089958
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -38839,7 +38839,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4133244637169608, guid: 381c4086d12e20d448df3a5306010e7d, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114947278032151842, guid: 381c4086d12e20d448df3a5306010e7d,
         type: 2}
@@ -39364,7 +39364,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100010, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 2}
       propertyPath: m_TagString

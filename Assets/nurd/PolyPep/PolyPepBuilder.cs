@@ -342,7 +342,6 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	}
 
-
 	public void UpdateAllDrag()
 	{
 		for (int resid = 0; resid < numResidues; resid++)
