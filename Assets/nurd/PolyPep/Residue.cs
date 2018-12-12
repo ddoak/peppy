@@ -202,7 +202,15 @@ public class Residue : MonoBehaviour {
 		if (myPolyPepManager.GetComponent<PolyPepManager>().allResLabelsOn)
 		{
 
-			label = (resid+1).ToString() + ": " + type;
+			string displayType = "";
+
+			if (type != "XXX")
+			{
+				displayType = type;
+			}
+
+			label = (resid+1).ToString() + ": " + displayType;
+	
 			myLabel.SetActive(true);
 			myLabel.GetComponent<TextMesh>().text = label;
 			myLabel.transform.position = calpha_pf.transform.position;

@@ -352,140 +352,135 @@ public class PolyPepManager : MonoBehaviour {
 			{
 				if (_residueGo.GetComponent<Residue>().residueSelected == true)
 				{
-
-					
-					//_ppb.sideChainBuilder.DeleteSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid);
-					//if (UISelectedAminoAcid > 0)
+					string selectedAminoAcidStr = "-";
+					switch (UISelectedAminoAcid)
 					{
-						string selectedAminoAcidStr = "-";
-						switch (UISelectedAminoAcid)
-						{
-							case 0:
-								// not defined
-								selectedAminoAcidStr = "XXX"; 
-								break;
+						// TODO use enumeration
+						case 0:
+							// not defined
+							selectedAminoAcidStr = "XXX"; 
+							break;
 									
-							case 1:
-								// GLY
-								selectedAminoAcidStr = "XXX"; //  "GLY";
-								break;
+						case 1:
+							// GLY
+							selectedAminoAcidStr = "XXX"; //  "GLY";
+							break;
 
-							case 2:
-								// ALA
-								selectedAminoAcidStr = "ALA";
-								break;
+						case 2:
+							// ALA
+							selectedAminoAcidStr = "ALA";
+							break;
 
-							case 3:
-								// VAL
-								selectedAminoAcidStr = "VAL";
-								break;
+						case 3:
+							// VAL
+							selectedAminoAcidStr = "VAL";
+							break;
 
-							case 4:
-								//
-								selectedAminoAcidStr = "LEU";
-								break;
+						case 4:
+							//
+							selectedAminoAcidStr = "LEU";
+							break;
 
-							case 5:
-								//
-								selectedAminoAcidStr = "ILE";
-								break;
+						case 5:
+							//
+							selectedAminoAcidStr = "ILE";
+							break;
 
-							case 6:
-								//
-								selectedAminoAcidStr = "MET";
-								break;
+						case 6:
+							//
+							selectedAminoAcidStr = "MET";
+							break;
 
-							case 7:
-								//
-								selectedAminoAcidStr = "PHE";
-								break;
+						case 7:
+							//
+							selectedAminoAcidStr = "PHE";
+							break;
 
-							case 8:
-								//
-								selectedAminoAcidStr = "XXX"; // "TRP";
-								break;
+						case 8:
+							//
+							selectedAminoAcidStr = "XXX"; // "TRP";
+							break;
 
-							case 9:
-								//
-								selectedAminoAcidStr = "XXX"; // "PRO";
-								break;
+						case 9:
+							//
+							selectedAminoAcidStr = "XXX"; // "PRO";
+							break;
 
-							case 10:
-								// GLY
-								selectedAminoAcidStr = "SER";
-								break;
+						case 10:
+							// GLY
+							selectedAminoAcidStr = "SER";
+							break;
 
-							case 11:
-								// ALA
-								selectedAminoAcidStr = "THR";
-								break;
+						case 11:
+							// ALA
+							selectedAminoAcidStr = "THR";
+							break;
 
-							case 12:
-								// VAL
-								selectedAminoAcidStr = "CYS";
-								break;
+						case 12:
+							// VAL
+							selectedAminoAcidStr = "CYS";
+							break;
 
-							case 13:
-								//
-								selectedAminoAcidStr = "TYR";
-								break;
+						case 13:
+							//
+							selectedAminoAcidStr = "TYR";
+							break;
 
-							case 14:
-								//
-								selectedAminoAcidStr = "ASN";
-								break;
+						case 14:
+							//
+							selectedAminoAcidStr = "ASN";
+							break;
 
-							case 15:
-								//
-								selectedAminoAcidStr = "GLN";
-								break;
+						case 15:
+							//
+							selectedAminoAcidStr = "GLN";
+							break;
 
-							case 16:
-								//
-								selectedAminoAcidStr = "ASP";
-								break;
+						case 16:
+							//
+							selectedAminoAcidStr = "ASP";
+							break;
 
-							case 17:
-								//
-								selectedAminoAcidStr = "GLU";
-								break;
+						case 17:
+							//
+							selectedAminoAcidStr = "GLU";
+							break;
 
-							case 18:
-								//
-								selectedAminoAcidStr = "LYS";
-								break;
+						case 18:
+							//
+							selectedAminoAcidStr = "LYS";
+							break;
 
-							case 19:
-								//
-								selectedAminoAcidStr = "ARG";
-								break;
+						case 19:
+							//
+							selectedAminoAcidStr = "ARG";
+							break;
 
-							case 20:
-								//
-								selectedAminoAcidStr = "XXX"; // "HIS";
-								break;
-						}
+						case 20:
+							//
+							selectedAminoAcidStr = "XXX"; // "HIS";
+							break;
 
-						if (_residueGo.GetComponent<Residue>().type != selectedAminoAcidStr)
-						{
-							//replace sidechain
-							Debug.Log ("Click from UI: " + UISelectedAminoAcid + " " + selectedAminoAcidStr);
-							_ppb.sideChainBuilder.BuildSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid, selectedAminoAcidStr);
-						}
-						else
-						{
-							//don't replace sidechain as the type is unchanged
-						}
-
-						if (selectedAminoAcidStr == "-")
-						{
-							// shouldn't happen!
-						}
-
+						default:
+							break;
 
 					}
-					
 
+					if (_residueGo.GetComponent<Residue>().type != selectedAminoAcidStr)
+					{
+						// selected residue type is different => replace sidechain
+						Debug.Log ("Click from UI: " + UISelectedAminoAcid + " " + selectedAminoAcidStr);
+						_ppb.sideChainBuilder.BuildSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid, selectedAminoAcidStr);
+					}
+					else
+					{
+						//don't replace sidechain as the type is unchanged
+					}
+
+					if (selectedAminoAcidStr == "-")
+					{
+						// shouldn't happen!
+					}
 
 				}
 			}
