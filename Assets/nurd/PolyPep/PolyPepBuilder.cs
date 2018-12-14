@@ -90,7 +90,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		if (false && numResidues > 9)
+		if (true && numResidues > 9)
 		{
 
 			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
@@ -334,11 +334,11 @@ public class PolyPepBuilder : MonoBehaviour {
 		// CPK / VDW slider changes rendering
 		float atomDisplayScale = relativeRadiusAtomType * scaleVDW;
 		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
-		// physics collider should be independent of rendering scale
+		// physics collider should be constant radius and independent of rendering scale
 		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
-		// SO apply inverse
+		// SO apply inverse scaling to SphereCollider to compensate
 		myAtom.GetComponent<SphereCollider>().radius = 1.1f * relativeRadiusAtomType / scaleVDW; 
-		// 1.1f is magic number DGD
+		// 1.1f is magic number
 
 	}
 

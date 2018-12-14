@@ -121,6 +121,14 @@ public class Csp3 : MonoBehaviour {
 		CollidersOff();
 	}
 
+	private void SetHAtomUnused(Transform _H)
+	{
+		_H.GetComponent<Renderer>().enabled = false;
+		_H.GetComponent<Collider>().enabled = false;
+		_H.tag = "UnusedAtom";
+	}
+
+
 	public void ConvertToCH3()
 	{
 		foreach (Transform _H in HtfList)
@@ -128,8 +136,7 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 				case "H_2":
@@ -178,8 +185,9 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_3":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 				case "H_2":
@@ -231,8 +239,9 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_2":
 				case "H_3":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 					_H.transform.position += _H.transform.forward * 0.05f;
@@ -284,8 +293,9 @@ public class Csp3 : MonoBehaviour {
 				case "H_1":
 				case "H_2":
 				case "H_3":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				default:
 					break;
@@ -334,8 +344,9 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_3":
 					_H.transform.position += _H.transform.forward * 0.05f;
@@ -394,8 +405,9 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_3":
 					_H.transform.position += _H.transform.forward * 0.05f;
@@ -451,8 +463,9 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 				case "H_2":
@@ -508,8 +521,9 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 				case "H_2":
@@ -560,8 +574,9 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 					_H.name = "O_1";
@@ -614,8 +629,9 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				default:
 					break;
@@ -660,8 +676,9 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 				case "H_2":
@@ -719,8 +736,9 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 					_H.transform.position += _H.transform.forward * 0.05f;
@@ -780,8 +798,9 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					_H.GetComponent<Renderer>().enabled = false;
-					_H.GetComponent<Collider>().enabled = false;
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
 					break;
 				case "H_1":
 					_H.transform.position += _H.transform.forward * 0.05f;
@@ -830,7 +849,7 @@ public class Csp3 : MonoBehaviour {
 
 		foreach (Transform child in GetComponentsInChildren<Transform>())
 		{
-			//  generate tetrahedral sp3 positions from cube vertices
+			//  generate sp2 positions at 120 degree rotations
 			//Debug.Log(child);
 			float _scale = 0.146f; //  C-C bond will be 1.46
 			bool addSocketOffset = true;
@@ -855,8 +874,9 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "H_3":
 					//HtfList.Add(child);
-					child.GetComponent<Renderer>().enabled = false;
-					child.GetComponent<Collider>().enabled = false;
+					//child.GetComponent<Renderer>().enabled = false;
+					//child.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(child);
 					addSocketOffset = false;
 					break;
 

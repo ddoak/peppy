@@ -114,7 +114,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 
 		// dev: test always spawn pp on startup
-		//SpawnPolypeptide(transform);
+		SpawnPolypeptide(transform);
 
 	}
 
@@ -494,6 +494,20 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateAminoAcidSelFromUI()
 	{
 		Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+	}
+
+	public void UpdateShowHAtomsFromUI(bool value)
+	{
+		//Debug.Log("Click from UI: " + value);
+		// TODO - store value, bond rendering
+		{
+			GameObject[] gos;
+			gos = GameObject.FindGameObjectsWithTag("H");
+			foreach (GameObject _H in gos)
+			{
+				_H.GetComponent<Renderer>().enabled = value;
+			}
+		}
 	}
 
 	public void UpdateTestToggleFromUI(bool value)
