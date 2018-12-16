@@ -16,6 +16,12 @@ public class Residue : MonoBehaviour {
 	public string type;
 	public string label;
 
+	public Transform N;
+	public Transform HN;
+	public Transform C;
+	public Transform O;
+
+	public List<Transform> backboneAtomsList = new List<Transform>();
 	public List<GameObject> sideChainList = new List<GameObject>();
 
 	public float phiTarget;
@@ -46,6 +52,8 @@ public class Residue : MonoBehaviour {
 
 	public bool drivePhiPsiOn;
 	public float drivePhiPsiTorqValue;
+
+
 
 	// Use this for initialization
 	private void Awake()
@@ -80,7 +88,7 @@ public class Residue : MonoBehaviour {
 
 		myPeptidePlane = carbonyl_pf.transform.Find("tf_bond_C_N/bond_CO_N/PeptidePlane").gameObject;
 
-
+		// is terminal residue ?
 		if (resid == 0)
 		{
 			isNTerminal = true;
@@ -89,8 +97,19 @@ public class Residue : MonoBehaviour {
 		{
 			isCTerminal = true;
 		}
+
+		// store references to backbone atom transforms
+		N = amide_pf.transform.Find("N_amide");
+		HN = amide_pf.transform.Find("tf_H/H_amide");
+		C = carbonyl_pf.transform.Find("C_carbonyl");
+		O = carbonyl_pf.transform.Find("tf_O/O_carbonyl");
+
+		backboneAtomsList.Add(N);
+		backboneAtomsList.Add(HN);
+		backboneAtomsList.Add(C);
+		backboneAtomsList.Add(O);
 	}
-	
+
 	void MeasurePhiPsi()
 	{
 		phiCurrent = 180.0f - Vector3.SignedAngle(amide_pf.transform.up, calpha_pf.transform.up, amide_pf.transform.right);

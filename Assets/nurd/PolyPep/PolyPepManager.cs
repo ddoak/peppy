@@ -190,13 +190,17 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
 		hbondsOn = value;
+		PushHbondStrengthUpdate();
+	}
+
+	private void PushHbondStrengthUpdate()
+	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateHBondSprings();
 		}
 	}
-
 	public void UpdateShowDrivenBondsOnFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
@@ -212,6 +216,8 @@ public class PolyPepManager : MonoBehaviour {
 
 		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
 		hbondStrength = hbondStrengthFromUI * hbondScale;
+		//
+		PushHbondStrengthUpdate();
 	}
 
 	public void UpdatePhiPsiDriveFromUI(float phiPsiDriveFromUI)
