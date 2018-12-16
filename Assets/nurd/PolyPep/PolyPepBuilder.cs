@@ -28,6 +28,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	float bondLengthAmideCalpha = 1.46f;
 	float bondLengthCalphaCarbonyl = 1.51f;
 
+	// used in dynamic hbond configurable joints
+	// highly empirical magic numbers
+	float hBondModelInnerLength = 1.2f;
+	float hBondModelOuterLength = 3.5f;
+
+
 	public int secondaryStructure { get; set; } // = 0;
 
 	public int numResidues = 0;
@@ -90,7 +96,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		if (true && numResidues > 9)
+		if (false && numResidues > 9)
 		{
 
 			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
@@ -527,7 +533,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 1.0f;
+			float HBondLength = hBondModelInnerLength;
 
 			sjHbond.minDistance = HBondLength * scale;
 			sjHbond.maxDistance = HBondLength * scale;
@@ -562,7 +568,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 3.5f;
+			float HBondLength = hBondModelOuterLength;
 
 			sjHbond2.minDistance = HBondLength * scale;
 			sjHbond2.maxDistance = HBondLength * scale;
@@ -597,7 +603,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 3.5f;
+			float HBondLength = hBondModelOuterLength;
 
 			sjHbond3.minDistance = HBondLength * scale;
 			sjHbond3.maxDistance = HBondLength * scale;
