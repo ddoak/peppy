@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 136650453113078456}
   m_Layer: 0
   m_Name: bond_N_H
-  m_TagString: Untagged
+  m_TagString: bondToH
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
