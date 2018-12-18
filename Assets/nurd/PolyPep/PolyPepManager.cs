@@ -517,6 +517,11 @@ public class PolyPepManager : MonoBehaviour {
 			{
 				_H.GetComponent<Renderer>().enabled = value;
 			}
+			gos = GameObject.FindGameObjectsWithTag("bondToH");
+			foreach (GameObject _bondToH in gos)
+			{
+				_bondToH.GetComponent<Renderer>().enabled = value;
+			}
 		}
 	}
 

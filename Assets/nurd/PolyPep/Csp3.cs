@@ -128,6 +128,15 @@ public class Csp3 : MonoBehaviour {
 		_H.tag = "UnusedAtom";
 	}
 
+	private void SetAsBondToH(Transform _bond)
+	{
+		// moves, scales and recolours template bond -H
+		// adds tag which is used in UI (show Hydrogen Atoms)
+		_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
+		_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
+		_bond.GetComponent<Renderer>().material.color = Color.grey;
+		_bond.tag = "bondToH";
+	}
 
 	public void ConvertToCH3()
 	{
@@ -165,11 +174,7 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H1":
 				case "tf_bond_H2":
 				case "tf_bond_H3":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -185,8 +190,6 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_3":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -218,11 +221,7 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -239,8 +238,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_2":
 				case "H_3":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -271,11 +268,7 @@ public class Csp3 : MonoBehaviour {
 					_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H1":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -376,9 +369,10 @@ public class Csp3 : MonoBehaviour {
 					_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H3":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
+					//_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
+					//_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
+					//_bond.GetComponent<Renderer>().material.color = Color.grey;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -405,8 +399,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_3":
@@ -437,9 +429,7 @@ public class Csp3 : MonoBehaviour {
 					_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H3":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -463,8 +453,6 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -494,11 +482,7 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H1":
 				case "tf_bond_H2":
 				case "tf_bond_H3":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -521,8 +505,6 @@ public class Csp3 : MonoBehaviour {
 			switch (_H.name)
 			{
 				case "H_0":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -554,6 +536,7 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
+					// DGD correct? this is the same as for -H?
 					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
 					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
 					_bond.GetComponent<Renderer>().material.color = Color.grey;
@@ -705,11 +688,7 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				default:
 					break;
@@ -736,8 +715,6 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -763,11 +740,7 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H1":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				case "tf_bond_H2":
 					_bond.GetComponent<Renderer>().enabled = false;
@@ -798,8 +771,6 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -825,11 +796,7 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H1":
-					_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					_bond.GetComponent<Renderer>().material.color = Color.grey;
-					//Debug.Log(_bond.name + " pos " + _bond.transform.localPosition.z); // = 0.5f;
-					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
+					SetAsBondToH(_bond);
 					break;
 				case "tf_bond_H2":
 					_bond.GetComponent<Renderer>().enabled = false;
