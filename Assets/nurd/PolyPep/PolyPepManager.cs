@@ -48,6 +48,8 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider jiggleStrengthSliderUI;
 
 	private int testCount = 0;
+	public GameObject snapshotCamera_pf;
+	public GameObject mySnapshotCamera;
 
 	void Awake()
 	{
@@ -115,6 +117,8 @@ public class PolyPepManager : MonoBehaviour {
 
 		// dev: test always spawn pp on startup
 		// SpawnPolypeptide(transform);
+
+		mySnapshotCamera = Instantiate(snapshotCamera_pf);
 
 	}
 
@@ -519,6 +523,11 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateTestToggleFromUI(bool value)
 	{
 		Debug.Log("Click from UI: " + value);
+		if (value == true)
+		{
+			mySnapshotCamera.GetComponent<SnapshotCamera>().CamCapture();
+		}
+
 	}
 
 	public void ResetLevel()

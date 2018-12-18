@@ -7744,6 +7744,9 @@ MonoBehaviour:
   phiPsiDriveSliderUI: {fileID: 0}
   spawnLengthSliderUI: {fileID: 0}
   jiggleStrengthSliderUI: {fileID: 0}
+  snapshotCamera_pf: {fileID: 1426770735757682, guid: 4b3c8b379c73fb846a8d0b588e46afb2,
+    type: 2}
+  mySnapshotCamera: {fileID: 0}
 --- !u!4 &382481195
 Transform:
   m_ObjectHideFlags: 0
@@ -17674,6 +17677,52 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!1001 &990862426
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 3.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.535
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -2.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426770735757682, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &995992286
 GameObject:
   m_ObjectHideFlags: 0
@@ -39739,6 +39788,10 @@ Prefab:
     - target: {fileID: 14300000, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015248, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 2}
+      propertyPath: m_TargetTexture
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 2}
