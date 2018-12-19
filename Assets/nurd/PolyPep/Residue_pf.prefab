@@ -48,6 +48,11 @@ MonoBehaviour:
   resid: 0
   type: 
   label: 
+  N: {fileID: 0}
+  HN: {fileID: 0}
+  C: {fileID: 0}
+  O: {fileID: 0}
+  backboneAtomsList: []
   sideChainList: []
   phiTarget: 0
   psiTarget: 0

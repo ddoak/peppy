@@ -29,8 +29,22 @@ public class SnapshotCamera : MonoBehaviour {
 		var Bytes = Image.EncodeToPNG();
 		Destroy(Image);
 
-		File.WriteAllBytes(Application.dataPath + "/Snapshots/" + FileCounter + ".png", Bytes);
+		string directoryPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/PeppySnapshots";
+
+		//check if directory doesn't exit
+		if (!Directory.Exists(directoryPath))
+		{
+			//if it doesn't, create it
+			Directory.CreateDirectory(directoryPath);
+
+		}
+	
+		//File.WriteAllBytes(Application.dataPath + "/Snapshots/" + FileCounter + ".png", Bytes);
+		File.WriteAllBytes(directoryPath + "/PeppySnapshot_" + FileCounter + ".png", Bytes);
+
 		FileCounter++;
+
+		
 	}
 
 	// Update is called once per frame
