@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
+using System.Globalization;
 
 public class SnapshotCamera : MonoBehaviour {
 
-	public int FileCounter = 0;
+	public int imageCount = 0;
+	private TextMesh overlayTextTop;
+	private TextMesh overlayTextBottom;
+
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
+		overlayTextTop = gameObject.transform.Find("OverlayTextTop").GetComponent<TextMesh>();
+		overlayTextBottom = gameObject.transform.Find("OverlayTextBottom").GetComponent<TextMesh>();
 	}
 
 	public void CamCapture()
@@ -40,16 +47,25 @@ public class SnapshotCamera : MonoBehaviour {
 		}
 	
 		//File.WriteAllBytes(Application.dataPath + "/Snapshots/" + FileCounter + ".png", Bytes);
-		File.WriteAllBytes(directoryPath + "/PeppySnapshot_" + FileCounter + ".png", Bytes);
+		File.WriteAllBytes(directoryPath + "/PeppySnapshot_" + imageCount + ".png", Bytes);
 
-		FileCounter++;
+		imageCount++;
 
 		
 	}
 
+	private void UpdateOverlay()
+	{
+		overlayTextTop.text = "Snapshot: " + imageCount.ToString();
+		overlayTextBottom.text = DateTime.Now.ToString();
+			
+			//ToShortTimeString();
+	}
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+	{
+		UpdateOverlay();	
 	}
 }
 

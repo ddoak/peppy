@@ -524,13 +524,17 @@ public class PolyPepManager : MonoBehaviour {
 			}
 		}
 	}
+	public void TakeSnapshotFromUI()
+	{
+		mySnapshotCamera.GetComponent<SnapshotCamera>().CamCapture();
+	}
 
 	public void UpdateTestToggleFromUI(bool value)
 	{
 		Debug.Log("Click from UI: " + value);
 		if (value == true)
 		{
-			mySnapshotCamera.GetComponent<SnapshotCamera>().CamCapture();
+			
 		}
 
 	}
