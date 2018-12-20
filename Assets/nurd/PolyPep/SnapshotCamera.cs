@@ -10,6 +10,7 @@ public class SnapshotCamera : MonoBehaviour {
 	public int imageCount = 0;
 	private TextMesh overlayTextTop;
 	private TextMesh overlayTextBottom;
+	private string userName;
 
 
 	// Use this for initialization
@@ -17,6 +18,17 @@ public class SnapshotCamera : MonoBehaviour {
 	{
 		overlayTextTop = gameObject.transform.Find("OverlayTextTop").GetComponent<TextMesh>();
 		overlayTextBottom = gameObject.transform.Find("OverlayTextBottom").GetComponent<TextMesh>();
+
+		userName = Environment.UserName;
+		//userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+		userName = userName.Replace(@"\", "_");
+		//
+		// NOTE: in networked multiuser environment may be necessary to use:
+		// System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+		// https://stackoverflow.com/questions/1240373/how-do-i-get-the-current-username-in-net-using-c
+		//
+		Debug.Log(userName);
+
 	}
 
 	public void CamCapture()
@@ -47,7 +59,7 @@ public class SnapshotCamera : MonoBehaviour {
 		}
 	
 		//File.WriteAllBytes(Application.dataPath + "/Snapshots/" + FileCounter + ".png", Bytes);
-		File.WriteAllBytes(directoryPath + "/PeppySnapshot_" + imageCount + ".png", Bytes);
+		File.WriteAllBytes(directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount + ".png", Bytes);
 
 		imageCount++;
 
@@ -57,9 +69,14 @@ public class SnapshotCamera : MonoBehaviour {
 	private void UpdateOverlay()
 	{
 		overlayTextTop.text = "Snapshot: " + imageCount.ToString();
-		overlayTextBottom.text = DateTime.Now.ToString();
-			
-			//ToShortTimeString();
+		overlayTextBottom.text = userName + " " + DateTime.Now.ToString();
+
+
+
+		
+
+
+		//ToShortTimeString();
 	}
 
 	// Update is called once per frame

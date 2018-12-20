@@ -32388,6 +32388,7 @@ MonoBehaviour:
   m_snapOffset: {fileID: 0}
   m_grabPoints:
   - {fileID: 1722166616}
+  - {fileID: 1722166618}
 --- !u!54 &1722166615
 Rigidbody:
   m_ObjectHideFlags: 0
