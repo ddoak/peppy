@@ -20,11 +20,9 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	public void DeleteSideChain(GameObject ppb_go, int resid)
+	private void DeleteSideChain(Residue residue_cs)
 	{
-		PolyPepBuilder ppb_cs = ppb_go.GetComponent<PolyPepBuilder>();
-		Residue residue_cs = ppb_cs.chainArr[resid].GetComponent<Residue>();
-		if ( residue_cs.sideChainList.Count > 0)
+		if (residue_cs.sideChainList.Count > 0)
 		{
 			foreach (GameObject _go in residue_cs.sideChainList)
 			{
@@ -32,7 +30,7 @@ public class SideChainBuilder : MonoBehaviour {
 			}
 		}
 		residue_cs.sideChainList.Clear();
-		//residue_cs.EnableProxySideChain();	
+		Destroy(residue_cs.sidechain);
 	}
 
 	public void BuildSideChain(GameObject ppb_go, int resid, string type)
@@ -40,12 +38,18 @@ public class SideChainBuilder : MonoBehaviour {
 		PolyPepBuilder ppb_cs = ppb_go.GetComponent<PolyPepBuilder>();
 		Residue residue_cs = ppb_cs.chainArr[resid].GetComponent<Residue>();
 
+		if (residue_cs.sidechain)
+		{
+			DeleteSideChain(residue_cs);
+		}
+		
+
 		// ought to do this in residue.cs ?
 		residue_cs.type = type;
 		residue_cs.sidechain = new GameObject(resid + "_" + type);
 		residue_cs.sidechain.transform.parent = residue_cs.transform;
 
-		DeleteSideChain(ppb_go, resid);
+		
 
 
 		// set default atom type to sp3 - used in Awake() when instantiated

@@ -54,9 +54,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public float hbondStrength = 0f; // updated by PolyPepManager
 
-	public float drivePhiPsiMaxForce = 200.0f; // 100.0f
-	public float drivePhiPsiPosSpring = 200.0f; // 100.0f
 	public int drivePhiPsiPosDamper = 1;
+	public int drivePhiPsiPosDamperPassive = 0;
 
 	private Slider hbondSliderUI;
 
@@ -1081,28 +1080,21 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCarbonyl.WakeUp();
 	}
 
-	public void UpdatePhiPsiDrives()
+	public void UpdatePhiPsiDriveTorques(bool selectedResiduesOnly)
 	{
-		// Note that 'Position' is actually a rotation ;)
-		//
-		// values are empirical
-		//
-
-		//int drivePhiPsiPosDamper = 1;
-		int drivePhiPsiPosDamperPassive = 0;
-
+		// selectedResiduesOnly == true default behaviour
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			Residue residue = chainArr[resid].GetComponent<Residue>();
 
-			if (residue.IsResidueSelected())
+			if (residue.IsResidueSelected() || !selectedResiduesOnly)
 			{
-				residue.drivePhiPsiTorqValue = drivePhiPsiMaxForce; // placeholder tracking value
+				residue.drivePhiPsiTorqValue = myPolyPepManager.phiPsiDriveTorqueFromUI;
 			}
 
-
 			if (residue.drivePhiPsiOn)
+			// DGD - currently (2019.1.2) this is always true - interface for switching is disabled in UI
 			//on
 			{
 				// active
@@ -1129,42 +1121,23 @@ public class PolyPepBuilder : MonoBehaviour {
 				//Debug.Log("PhiPsi Drive = OFF ");
 			}
 
-
-
-
-			//if (residue.drivePhiPsiOn)
-			////on
-			//{
-			//	// active
-			//	chainPhiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
-			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-			//	chainPhiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
-
-			//	chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
-			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-			//	chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
-			//	//Debug.Log("PhiPsi Drive = ON ");
-			//}
-			//else
-			////off
-			//{
-			//	//passive
-			//	chainPhiJointDrives[resid].maximumForce = 0.0f;
-			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
-			//	chainPhiJointDrives[resid].positionSpring = 0.0f;
-
-			//	chainPsiJointDrives[resid].maximumForce = 0.0f;
-			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
-			//	chainPsiJointDrives[resid].positionSpring = 0.0f;
-			//	//Debug.Log("PhiPsi Drive = OFF ");
-			//}
-
 			UpdatePhiPsiDriveParamForResidue(resid);
 
 		}
 
 	}
 
+	public void UpdatePhiPsiDrives()
+	{
+		bool selectionOnly = true;
+		UpdatePhiPsiDriveTorques(selectionOnly);
+	}
+
+	public void UpdatePhiPsiDrivesForceAll()
+	{
+		bool selectionOnly = false;
+		UpdatePhiPsiDriveTorques(selectionOnly);
+	}
 
 	public void UpdateHBondSprings()
 	{

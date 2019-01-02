@@ -26,7 +26,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public float phiTarget = 0f;
 	public float psiTarget = 0f;
-	public float phiPsiDrive = 100.0f;
+	public float phiPsiDriveTorqueFromUI = 100.0f;
 
 	public bool showDrivenBondsOn = true;
 	public bool doCartoonBondRendering = true;
@@ -224,16 +224,27 @@ public class PolyPepManager : MonoBehaviour {
 		PushHbondStrengthUpdate();
 	}
 
-	public void UpdatePhiPsiDriveFromUI(float phiPsiDriveFromUI)
+	public void UpdatePhiPsiDriveFromUI(float phiPsiTorqueSliderValueFromUI)
 	{
 
 		//Debug.Log("hello PhiPsi Drive from the manager! ---> " + phiPsiDrive);
-		phiPsiDrive = phiPsiDriveFromUI;
+		phiPsiDriveTorqueFromUI = phiPsiTorqueSliderValueFromUI;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
-			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
+			//_ppb.drivePhiPsiMaxForce = phiPsiDriveTorqueFromUI;
+			//_ppb.drivePhiPsiPosSpring = phiPsiDriveTorqueFromUI;
 			_ppb.UpdatePhiPsiDrives();
+			_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
+	public void ZeroAllPhiPsiTorqueFromUI()
+	{
+		phiPsiDriveSliderUI.value = 0;
+		phiPsiDriveTorqueFromUI = phiPsiDriveSliderUI.value;
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.UpdatePhiPsiDrivesForceAll();
 			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
