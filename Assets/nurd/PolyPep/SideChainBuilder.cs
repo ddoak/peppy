@@ -872,39 +872,36 @@ public class SideChainBuilder : MonoBehaviour {
 			_CB.transform.LookAt(CA_tf.position);
 			AddConfigJointBond(_CB, residue_cs.calpha_pf);
 		}
-
-		//{
-		//	_CG.transform.position = _CB.transform.Find("H_3").position;
-		//	_CG.transform.LookAt(_CB.transform.position);
-		//	AddConfigJointBond(_CG, _CB);
-		//}
-
-		// build ring without attaching to CB - to maintain planar geometry
 		{
-			_CD1.transform.position = _CG.transform.Find("H_2").position; //build on H_1 position -> sp2!
-			_CD1.transform.LookAt(_CG.transform.position);
-			AddConfigJointBond(_CD1, _CG);
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD1.transform.position = _CG.transform.Find("H_1").position; //build on H_1 position -> sp2!
+			_CD1.transform.rotation = _CG.transform.Find("H_1").rotation;
+			AddFixedJointBond(_CD1, _CG);
 		}
 		{
 			_CE1.transform.position = _CD1.transform.Find("H_2").position; //build on H_2 position -> sp2!
-			_CE1.transform.LookAt(_CD1.transform.position);
-			AddConfigJointBond(_CE1, _CD1);
+			_CE1.transform.rotation = _CD1.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CE1, _CD1);
 		}
 		{
 			_CZ.transform.position = _CE1.transform.Find("H_2").position; //build on H_2 position -> sp2!
-			_CZ.transform.LookAt(_CE1.transform.position);
-			AddConfigJointBond(_CZ, _CE1);
+			_CZ.transform.rotation = _CE1.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CZ, _CE1);
 		}
 		{
 			_CE2.transform.position = _CZ.transform.Find("H_2").position; //build on H_2 position -> sp2!
-			_CE2.transform.LookAt(_CZ.transform.position);
-			AddConfigJointBond(_CE2, _CZ);
+			_CE2.transform.rotation = _CZ.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CE2, _CZ);
 		}
 		{
 			_CD2.transform.position = _CE2.transform.Find("H_2").position; //build on H_2 position -> sp2!
-			_CD2.transform.LookAt(_CE2.transform.position);
-			AddConfigJointBond(_CD2, _CE2);
-			AddConfigJointBond(_CG, _CD2);
+			_CD2.transform.rotation = _CE2.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CD2, _CE2);
+			AddFixedJointBond(_CG, _CD2);
 		}
 
 		if (makeTYR)
@@ -923,42 +920,30 @@ public class SideChainBuilder : MonoBehaviour {
 			_OH.GetComponent<Csp3>().ConvertToOH();
 		}
 
-		{
-			_CG.transform.position = _CB.transform.Find("H_3").position;
-			//_CG.transform.LookAt(_CB.transform.position);
 
-			//{
-			//	Vector3 v = B - A;
-			//	Quaternion q = Quaternion.FromToRotation(transform.right, v);
-			//	transform.rotation = q * transform.rotation;
-			//}
-			{
-				// this is the general solution for aligning atoms along bonds
-				// took until making PHE to work it out properly
+		//	{
+		//		// general solution for aligning atoms along bonds ?
+		//		Vector3 CGtoCB = _CB.transform.position - _CG.transform.position;
+		//		Vector3 CGbond = _CG.transform.Find("H_1").position - _CG.transform.position;
+		//		Quaternion q = Quaternion.FromToRotation(CGbond, CGtoCB);
+		//		_CG.transform.rotation = q * _CG.transform.rotation; // not commutative
 
-				Vector3 CGtoCB = _CB.transform.position - _CG.transform.position;
-				Vector3 CGbond = _CG.transform.Find("H_1").position - _CG.transform.position;
-				Quaternion q = Quaternion.FromToRotation(CGbond, CGtoCB);
+		//	}
 
-				_CG.transform.rotation = q * _CG.transform.rotation; // not commutative
-
-			}
-			AddConfigJointBond(_CG, _CB);
-		}
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
-		_CG.GetComponent<Csp3>().ConvertSp2ToC(true, false);
+		_CG.GetComponent<Csp3>().ConvertSp2ToC(true, true);
 		_CD1.GetComponent<Csp3>().ConvertSp2ToCH();
 		_CE1.GetComponent<Csp3>().ConvertSp2ToCH();
 		if (makeTYR)
 		{
-			_CZ.GetComponent<Csp3>().ConvertSp2ToC(false, false); 
+			_CZ.GetComponent<Csp3>().ConvertSp2ToC(false, false);
 		}
 		else
 		{
 			_CZ.GetComponent<Csp3>().ConvertSp2ToCH();
 		}
-		
+
 		_CE2.GetComponent<Csp3>().ConvertSp2ToCH();
 		_CD2.GetComponent<Csp3>().ConvertSp2ToCH();
 
@@ -1206,7 +1191,6 @@ public class SideChainBuilder : MonoBehaviour {
 		_CE3.GetComponent<Csp3>().ConvertSp2ToCH();
 	}
 
-
 	void Build_HIS(Residue residue_cs)
 	{
 		sideChainLength = 6;
@@ -1365,19 +1349,6 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 		GameObject _CB = residue_cs.sideChainList[0];
 		_CB.name = "CB";
-
-		//{
-		//	// Get CBeta position => R group
-		//	Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
-		//	// Get CAlpha position
-		//	Transform CA_tf = residue_cs.calpha_pf.transform;
-
-		//	// Place and orient CBeta
-		//	_CB.transform.position = CB_tf.position;
-		//	_CB.transform.LookAt(CA_tf.position);
-		//	AddConfigJointBond(_CB, residue_cs.calpha_pf);
-		//}
-		//_CB.GetComponent<Csp3>().ConvertToCH3();
 	}
 
 	void AddConfigJointBond(GameObject go1, GameObject go2)
