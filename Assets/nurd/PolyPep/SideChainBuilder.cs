@@ -793,22 +793,26 @@ public class SideChainBuilder : MonoBehaviour {
 			_NE.transform.LookAt(_CD.transform.position);
 			AddConfigJointBond(_NE, _CD);
 		}
+
+
 		{
 			_CZ.transform.position = _NE.transform.Find("H_2").position;
-			_CZ.transform.LookAt(_NE.transform.position);
-			AddConfigJointBond(_CZ, _NE);
+			_CZ.transform.rotation = _NE.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CZ, _NE);
 		}
+
 		{
 			_NH1.transform.position = _CZ.transform.Find("H_1").position;
-			_NH1.transform.LookAt(_CZ.transform.position);
+			_NH1.transform.rotation = _CZ.transform.Find("H_1").rotation;
+			//AddFixedJointBond(_NH1, _CZ);
 			AddConfigJointBond(_NH1, _CZ);
 		}
 		{
 			_NH2.transform.position = _CZ.transform.Find("H_2").position;
-			_NH2.transform.LookAt(_CZ.transform.position);
+			_NH2.transform.rotation = _CZ.transform.Find("H_2").rotation;
+			//AddFixedJointBond(_NH2, _CZ);
 			AddConfigJointBond(_NH2, _CZ);
 		}
-
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
 		_CG.GetComponent<Csp3>().ConvertToCH2();
@@ -817,6 +821,7 @@ public class SideChainBuilder : MonoBehaviour {
 		_CZ.GetComponent<Csp3>().ConvertSp2ToC(false);
 		_NH1.GetComponent<Csp3>().ConvertSp2ToNH2();
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
+
 	}
 
 	void Build_PHEorTYR(Residue residue_cs, bool makeTYR)
@@ -1151,6 +1156,12 @@ public class SideChainBuilder : MonoBehaviour {
 		cj.angularYMotion = ConfigurableJointMotion.Free;
 		cj.angularZMotion = ConfigurableJointMotion.Locked;
 
+	}
+
+	void AddFixedJointBond(GameObject go1, GameObject go2)
+	{
+		FixedJoint fj = go1.AddComponent(typeof(FixedJoint)) as FixedJoint;
+		fj.connectedBody = go2.GetComponent<Rigidbody>();
 	}
 
 	void OnDrawGizmos()
