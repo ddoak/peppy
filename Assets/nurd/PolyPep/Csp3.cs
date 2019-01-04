@@ -12,6 +12,8 @@ public class Csp3 : MonoBehaviour {
 	public List<Transform> BtfList = new List<Transform>();
 
 	public string atomType = "sp3";
+	public float sp2ThetaH1 = 120f;
+	public float sp2ThetaH2 = 120f;
 
 	// dev: keep prefab dev colours for atoms
 	private bool keepDebugAtomMaterial;
@@ -603,7 +605,7 @@ public class Csp3 : MonoBehaviour {
 		}
 	}
 
-	public void ConvertSp2ToC(bool keepH1Bond)
+	public void ConvertSp2ToC(bool keepH1Bond, bool keepH2Bond)
 	{
 		foreach (Transform _H in HtfList)
 		{
@@ -643,8 +645,15 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					if (keepH2Bond) // trp indole
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					else
+					{
+						_bond.GetComponent<Renderer>().enabled = false;
+						_bond.GetComponent<Collider>().enabled = false;
+					}
 					break;
 				default:
 					break;
@@ -820,7 +829,7 @@ public class Csp3 : MonoBehaviour {
 			//Debug.Log(child);
 			float _scale = 0.146f; //  C-C bond will be 1.46
 			bool addSocketOffset = true;
-			float theta = 120.0f * Mathf.Deg2Rad;
+			//float theta = 120.0f * Mathf.Deg2Rad;
 			switch (child.name)
 			{
 				case "H_0":
@@ -833,11 +842,11 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "H_1":
 					HtfList.Add(child);
-					socketPos = new Vector3(Mathf.Cos(theta), 0, Mathf.Sin(theta));
+					socketPos = new Vector3(Mathf.Cos(sp2ThetaH1 * Mathf.Deg2Rad), 0, Mathf.Sin(sp2ThetaH1 * Mathf.Deg2Rad));
 					break;
 				case "H_2":
 					HtfList.Add(child);
-					socketPos = new Vector3(Mathf.Cos(2f * theta), 0, Mathf.Sin(2f * theta));
+					socketPos = new Vector3(Mathf.Cos((sp2ThetaH1 + sp2ThetaH2) * Mathf.Deg2Rad), 0, Mathf.Sin((sp2ThetaH1 + sp2ThetaH2) * Mathf.Deg2Rad));
 					break;
 				case "H_3":
 					//HtfList.Add(child);

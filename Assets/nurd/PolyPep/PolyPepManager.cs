@@ -91,7 +91,7 @@ public class PolyPepManager : MonoBehaviour {
 			vdwSliderUI.GetComponent<Slider>().value = 10;
 			hbondSliderUI.GetComponent<Slider>().value = 50;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
-			spawnLengthSliderUI.GetComponent<Slider>().value = 18; //10
+			spawnLengthSliderUI.GetComponent<Slider>().value = 4; //10
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			//temp = GameObject.Find("Slider_ResStart");
@@ -116,7 +116,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 
 		// dev: test always spawn pp on startup
-		// SpawnPolypeptide(transform);
+		//SpawnPolypeptide(transform);
 
 		mySnapshotCamera = Instantiate(snapshotCamera_pf);
 
