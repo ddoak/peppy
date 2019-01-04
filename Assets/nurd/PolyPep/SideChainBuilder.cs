@@ -119,6 +119,9 @@ public class SideChainBuilder : MonoBehaviour {
 				case "TRP":
 					Build_TRP(residue_cs);
 					break;
+				case "HIS":
+					Build_HIS(residue_cs);
+					break;
 				case "TEST":
 					Build_TEST(residue_cs);
 					break;
@@ -1202,6 +1205,130 @@ public class SideChainBuilder : MonoBehaviour {
 		_CZ3.GetComponent<Csp3>().ConvertSp2ToCH();
 		_CE3.GetComponent<Csp3>().ConvertSp2ToCH();
 	}
+
+
+	void Build_HIS(Residue residue_cs)
+	{
+		sideChainLength = 6;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			if (i == 0)
+			{
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp3";
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			if (i > 0)
+			{
+				// all atoms in ring are sp2
+				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
+				{
+					switch (i)
+					{
+						case 1:
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 126.0f;
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 108.0f;
+							break;
+						case 2:
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 126.5f;
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 126.5f;
+							break;
+						case 3:
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 126.5f;
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 126.5f;
+							break;
+						case 4:
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 126.0f;
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 126.0f;
+							break;
+						case 5:
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 125.0f;
+							Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 125.0f;
+							break;
+					}
+
+				}
+				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+			}
+			// reset sp2Theta angles to trigonal symmetry
+			Csp3_pf.GetComponent<Csp3>().sp2ThetaH1 = 120.0f;
+			Csp3_pf.GetComponent<Csp3>().sp2ThetaH2 = 120.0f;
+		}
+
+		GameObject _CB = residue_cs.sideChainList[0];
+		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _CD2 = residue_cs.sideChainList[2];
+		GameObject _NE2 = residue_cs.sideChainList[3];
+		GameObject _CE1 = residue_cs.sideChainList[4];
+		GameObject _ND1 = residue_cs.sideChainList[5];
+
+
+		_CB.name = "CB";
+		_CG.name = "CG";
+		_CD2.name = "CD2";
+		_NE2.name = "NE2";
+		_CE1.name = "CE1";
+		_ND1.name = "ND1";
+
+
+
+		//       |             HD1      HE1
+		//  HN - N              |      /
+		//       |   HB1       5ND1--4CE1
+		//       |    |       /       |
+		//  HA - CA--0CB----1CG       |
+		//       |    |       \\      |
+		//       |   HB2       2CD2--3NE2
+		//   O = C              |      \
+		//       |             HD2      HE2
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
+
+		{
+			_CG.transform.position = _CB.transform.Find("H_3").position;
+			_CG.transform.LookAt(_CB.transform.position);
+			AddConfigJointBond(_CG, _CB);
+		}
+		{
+			_CD2.transform.position = _CG.transform.Find("H_1").position;
+			_CD2.transform.rotation = _CG.transform.Find("H_1").rotation;
+			AddFixedJointBond(_CD2, _CG);
+		}
+		{
+			_NE2.transform.position = _CD2.transform.Find("H_2").position;
+			_NE2.transform.rotation = _CD2.transform.Find("H_2").rotation;
+			AddFixedJointBond(_NE2, _CD2);
+		}
+		{
+			_CE1.transform.position = _NE2.transform.Find("H_2").position;
+			_CE1.transform.rotation = _NE2.transform.Find("H_2").rotation;
+			AddFixedJointBond(_CE1, _NE2);
+		}
+		{
+			_ND1.transform.position = _CE1.transform.Find("H_2").position;
+			_ND1.transform.rotation = _CE1.transform.Find("H_2").rotation;
+			AddFixedJointBond(_ND1, _CE1);
+			AddFixedJointBond(_ND1, _CG);
+		}
+
+		_CB.GetComponent<Csp3>().ConvertToCH2();
+		_CG.GetComponent<Csp3>().ConvertSp2ToC(false, true);
+		_CD2.GetComponent<Csp3>().ConvertSp2ToCH();
+		_NE2.GetComponent<Csp3>().ConvertSp2ToNH();
+		_CE1.GetComponent<Csp3>().ConvertSp2ToCH();
+		_ND1.GetComponent<Csp3>().ConvertSp2ToNH();
+
+	}
+
 
 	void Build_TEST(Residue residue_cs)
 	{
