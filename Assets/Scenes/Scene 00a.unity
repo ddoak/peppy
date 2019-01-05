@@ -13848,7 +13848,7 @@ GameObject:
   - component: {fileID: 762256688}
   - component: {fileID: 762256692}
   - component: {fileID: 762256691}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13862,8 +13862,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 762256686}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.115, y: 2, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalPosition: {x: 2.5, y: 1.1, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.5, z: 0.25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 19
@@ -13946,8 +13946,8 @@ Rigidbody:
   m_GameObject: {fileID: 762256686}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 1
+  m_Drag: 20
+  m_AngularDrag: 10
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -36546,7 +36546,7 @@ MonoBehaviour:
   bDown: {fileID: 0}
   myHitPos: {x: 0, y: 0, z: 0}
   remoteGrab: {fileID: 0}
-  remoteGrabDistance: 0
+  remoteGrabTargetDistance: 0
   activeController: 0
 --- !u!114 &1919213148
 MonoBehaviour:

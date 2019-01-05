@@ -80,7 +80,7 @@ namespace ControllerSelection {
 		public Vector3 myHitPos;
 
 		public Transform remoteGrab = null;
-		public float remoteGrabDistance;
+		public float remoteGrabTargetDistance;
 		
 
 		private Vector3 remoteGrabStartPos = new Vector3(0f, 0f, 0f);
@@ -94,15 +94,17 @@ namespace ControllerSelection {
 		private Transform centreEyeAnchor;
 
 		private bool tractorBeaming = false;
-		private int tractorTime = 0;
-		private int tractorDelay = 3; // frames before tractorbeam begins
+		private float tractorTime = 0.0f;
+		private float tractorDelay = 0.08f; // secs before tractorbeam begins
 		private float tractorLerp = 0.01f;
 		private float tractorAxisInputFiltered = 0.0f;
 
 		private Ray prevPointer;
 		private float remoteGrabPoke;
-		private int remoteGrabTime = 0;
+		private float remoteGrabTime = 0.0f;
+		private float remoteGrabDelay = 0.08f; // secs before tractorbeam begins
 		private float approxMovingAvgPoke;
+
 
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
@@ -276,12 +278,12 @@ namespace ControllerSelection {
 					if (!tractorBeaming)
 					{
 						tractorBeaming = true;
-						tractorTime = 0;
+						tractorTime = 0.0f;
 						tractorAxisInputFiltered = 0.0f;
 					}
 					else
 					{
-						tractorTime++;
+						tractorTime += Time.deltaTime;
 						if (tractorTime > tractorDelay)
 						{
 							float axisValue = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, activeController);
@@ -297,7 +299,7 @@ namespace ControllerSelection {
 					if (!tractorBeaming)
 					{
 						tractorBeaming = true;
-						tractorTime = 0;
+						tractorTime += Time.deltaTime;
 						tractorAxisInputFiltered = 0.0f;
 					}
 					else
@@ -349,12 +351,13 @@ namespace ControllerSelection {
 								// START remote grabbing
 								//Debug.Log(lastHit + " is candidate for remoteGrab");
 								remoteGrab = lastHit;
-								remoteGrabDistance = hit.distance;
+								// initially set remoteGrabTargetDistance to hit.distance
+								remoteGrabTargetDistance = hit.distance;
 								remoteGrabHitOffset = remoteGrab.position - hit.point;
 								//Debug.Log("   --->" + hit.distance);
 								remoteGrabStartPos = hit.point;
 								approxMovingAvgPoke = 0f;
-								remoteGrabTime = 0;
+								remoteGrabTime = 0.0f;
 
 								remoteGrabObjectStartQ = remoteGrab.gameObject.transform.rotation;
 								remoteGrabControllerStartQ = OVRInput.GetLocalControllerRotation(activeController);
@@ -400,43 +403,40 @@ namespace ControllerSelection {
 				if ( (OVRInput.Get(primaryButton, activeController)) && (OVRInput.Get(secondaryButton, activeController)))
 				{
 					// still remote grabbing
-
+					remoteGrabTime += Time.deltaTime;
 
 					// poke (detecting sustained controller movement along pointer axis)
-					// TODO: this is counting ticks - should be framerate independent
-					remoteGrabTime++;
-
+					// poke is projection of controller movement along pointer ray
+					// TODO: would be nice to filter out player movement
 					Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
-
 					float poke = Vector3.Dot(deltaPointer, pointer.direction);
 
-					approxMovingAvgPoke -= approxMovingAvgPoke / 5;
-					approxMovingAvgPoke += poke / 5;
+					//// approximate moving average over 5 frame window
+					//// possibly useful info - currently not used
+					//approxMovingAvgPoke -= approxMovingAvgPoke / 5;
+					//approxMovingAvgPoke += poke / 5;
 
-					//if (Mathf.Abs(poke) > 0.001f)
-					//{
-					//	Debug.Log("poke = " + poke);
-					//}
-
-					// TODO: this is counting ticks - should be framerate independent
-					if (remoteGrabTime > 5)
+					if (remoteGrabTime > remoteGrabDelay)
 					{
-						// scale remoteGrabDistance 
-						remoteGrabDistance *= (1.0f + (poke * 5.0f));
+						remoteGrabTargetDistance *= (1.0f + (poke * 5.0f));
+						// magic number
+						//Debug.Log("remoteGrabTime = " + remoteGrabTime);
 					}
 					
 					prevPointer = pointer;
 
-					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction)) + remoteGrabHitOffset;
+					// calc new remoteGrabTarget
+					remoteGrabTargetPos = (pointer.origin + (remoteGrabTargetDistance * pointer.direction)) + remoteGrabHitOffset;
 
-					// tractor beam to destination (mostly tangential to pointer axis (pitch / yaw movement)
+					// tractor beam to remoteGrabTarget destination (mostly tangential to pointer axis (pitch / yaw movement)
 					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
 
 
 					BackboneUnit bu = (remoteGrab.gameObject.GetComponent("BackboneUnit") as BackboneUnit);
 					if (bu != null)
 					{
-						//add ROLL - torque from wrist twist
+						// attempt to measure player's intent to roll gameobject - not sure this is useful
+						// calculate ROLL - torque from wrist twist
 						Quaternion remoteGrabControllerCurrentQ = OVRInput.GetLocalControllerRotation(activeController);
 						Quaternion remoteGrabControllerDeltaQ =   remoteGrabControllerCurrentQ * Quaternion.Inverse(remoteGrabControllerStartQ);
 						remoteGrabObjectTargetQ =   remoteGrabControllerDeltaQ * remoteGrabObjectStartQ;
