@@ -12,6 +12,7 @@ public class Csp3 : MonoBehaviour {
 	public List<Transform> BtfList = new List<Transform>();
 
 	public string atomType = "sp3";
+	// angles used for sp2 bond rotations (3rd angle is remaining part of 360)
 	public float sp2ThetaH1 = 120f;
 	public float sp2ThetaH2 = 120f;
 
@@ -46,6 +47,7 @@ public class Csp3 : MonoBehaviour {
 	void SetupSp3Atom()
 	{
 
+		//set up the atom and bonds as sp3 tetrahedral template
 		Vector3 socketPos = new Vector3(0f, 0f, 0f);
 
 		foreach (Transform child in GetComponentsInChildren<Transform>())
@@ -820,12 +822,12 @@ public class Csp3 : MonoBehaviour {
 
 	void SetupSp2Atom()
 	{
-
+		//set up the atom and bonds as sp2 trigonal template
 		Vector3 socketPos = new Vector3(0f, 0f, 0f);
 
 		foreach (Transform child in GetComponentsInChildren<Transform>())
 		{
-			//  generate sp2 positions at 120 degree rotations
+			//  generate sp2 positions at trigonal 120 degree rotations
 			//Debug.Log(child);
 			float _scale = 0.146f; //  C-C bond will be 1.46
 			bool addSocketOffset = true;

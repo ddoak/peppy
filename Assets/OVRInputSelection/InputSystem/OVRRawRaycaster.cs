@@ -81,10 +81,12 @@ namespace ControllerSelection {
 
 		public Transform remoteGrab = null;
 		public float remoteGrabDistance;
-		//public Vector3 remoteGrabOffset;
+		
 
 		private Vector3 remoteGrabStartPos = new Vector3(0f, 0f, 0f);
 		private Vector3 remoteGrabTargetPos = new Vector3(0f, 0f, 0f);
+		private Vector3 remoteGrabHitOffset = new Vector3(0f, 0f, 0f);
+
 		private Quaternion remoteGrabObjectStartQ = Quaternion.identity;
 		private Quaternion remoteGrabObjectTargetQ = Quaternion.identity;
 		private Quaternion remoteGrabControllerStartQ = Quaternion.identity;
@@ -112,7 +114,7 @@ namespace ControllerSelection {
 				
             }
 			centreEyeAnchor =  trackingSpace.transform.Find("CenterEyeAnchor");
-        }
+		}
 
         void OnEnable() {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -139,6 +141,8 @@ namespace ControllerSelection {
 			{
 				Gizmos.color = Color.black;
 				Gizmos.DrawWireSphere(myHitPos, 0.04f);
+				Gizmos.color = Color.red;
+				Gizmos.DrawWireSphere(lastHit.transform.position, 0.04f);
 			}
 
 		}
@@ -346,6 +350,7 @@ namespace ControllerSelection {
 								//Debug.Log(lastHit + " is candidate for remoteGrab");
 								remoteGrab = lastHit;
 								remoteGrabDistance = hit.distance;
+								remoteGrabHitOffset = remoteGrab.position - hit.point;
 								//Debug.Log("   --->" + hit.distance);
 								remoteGrabStartPos = hit.point;
 								approxMovingAvgPoke = 0f;
@@ -398,6 +403,7 @@ namespace ControllerSelection {
 
 
 					// poke (detecting sustained controller movement along pointer axis)
+					// TODO: this is counting ticks - should be framerate independent
 					remoteGrabTime++;
 
 					Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
@@ -412,7 +418,7 @@ namespace ControllerSelection {
 					//	Debug.Log("poke = " + poke);
 					//}
 
-
+					// TODO: this is counting ticks - should be framerate independent
 					if (remoteGrabTime > 5)
 					{
 						// scale remoteGrabDistance 
@@ -421,7 +427,7 @@ namespace ControllerSelection {
 					
 					prevPointer = pointer;
 
-					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction));
+					remoteGrabTargetPos = (pointer.origin + (remoteGrabDistance * pointer.direction)) + remoteGrabHitOffset;
 
 					// tractor beam to destination (mostly tangential to pointer axis (pitch / yaw movement)
 					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
@@ -465,7 +471,7 @@ namespace ControllerSelection {
 						{
 							
 							// UI - make the 'front' face the pointer
-							// flipped because go was initially set up with z facing away
+							// flipped because UI GO was initially set up with z facing away
 
 							//Use pointer position
 							//Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
@@ -473,7 +479,14 @@ namespace ControllerSelection {
 							//Use HMD (possibly better - maybe a bit queasy)
 							Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + centreEyeAnchor.forward;
 
-							remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+							// use the transform of the GO this script is attached to (RawInteraction) as proxy for storing target rotation :)
+							transform.position = remoteGrab.position;
+							transform.LookAt(lookAwayPos, Vector3.up);
+
+							// lerp to target
+							remoteGrab.gameObject.transform.rotation = Quaternion.Lerp(remoteGrab.gameObject.transform.rotation, transform.rotation, Time.deltaTime * 10.0f);
+							//remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+
 						}
 
 
