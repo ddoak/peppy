@@ -33,6 +33,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public bool allResLabelsOn = false;
 	public bool showPeptidePlanes = false;
+	public bool showHydrogenAtoms = true;
 
 	public int UISelectedAminoAcid { get; set; }
 
@@ -508,6 +509,9 @@ public class PolyPepManager : MonoBehaviour {
 			//push update of scale and colliders
 			_ppb.ScaleVDW(vdwScale);
 			_ppb.SetAllColliderIsTrigger(!collidersOn);
+			
+			//force update of H Atom rendering
+			UpdateShowHAtomsFromUI(showHydrogenAtoms);
 		}
 
 	}
@@ -521,6 +525,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		//Debug.Log("Click from UI: " + value);
 		// TODO - store value, bond rendering
+		showHydrogenAtoms = value;
 		{
 			GameObject[] gos;
 			gos = GameObject.FindGameObjectsWithTag("H");

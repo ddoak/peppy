@@ -20,8 +20,42 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
+	private void ToggleAmideHN(Residue residue_cs, bool enableValue)
+	{
+			
+		GameObject amide = residue_cs.amide_pf;
+		Transform HN = amide.transform.Find("tf_H/H_amide");
+		Transform HNBond = amide.transform.Find("tf_H/tf_bond_N_H/bond_N_H");
+
+		Vector3 NtoH = HN.position - amide.transform.position;
+
+		HN.GetComponent<Renderer>().enabled = enableValue;
+		HN.GetComponent<Collider>().enabled = enableValue;
+	
+		HNBond.GetComponent<Renderer>().enabled = enableValue;
+		HNBond.GetComponent<Collider>().enabled = enableValue;
+
+		if (enableValue == true)
+		{
+			HN.tag = "H";
+			HNBond.tag = "bondToH";
+		}
+		else
+		{
+			HN.tag = "UnusedAtom";
+			HNBond.tag = "Untagged";
+		}
+	}
+
+
 	private void DeleteSideChain(Residue residue_cs)
 	{
+		if (residue_cs.type == "PRO")
+		{
+			//re-enable amide HN
+			ToggleAmideHN(residue_cs, true);
+		}
+
 		if (residue_cs.sideChainList.Count > 0)
 		{
 			foreach (GameObject _go in residue_cs.sideChainList)
@@ -995,12 +1029,11 @@ public class SideChainBuilder : MonoBehaviour {
 			GameObject amide = residue_cs.amide_pf;
 			Transform HN = amide.transform.Find("tf_H/H_amide");
 
+			//Diable amide HN
+			ToggleAmideHN(residue_cs, false);
+
+			// H-CD bond is longer than N-H	
 			Vector3 NtoH = HN.position - amide.transform.position;
-
-			// placeholder - turns off HN - but will be overridden by e.g. H atom visibility toggle in UI 
-			HN.GetComponent<Renderer>().enabled = false;
-			HN.GetComponent<Collider>().enabled = false;
-
 			_CD.transform.position = amide.transform.position + (1.6f * NtoH);
 
 			{
