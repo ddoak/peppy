@@ -974,7 +974,10 @@ public class SideChainBuilder : MonoBehaviour {
 
 			// Place and orient CBeta
 			_CB.transform.position = CB_tf.position;
-			_CB.transform.LookAt(CA_tf.position);
+			_CB.transform.rotation = CB_tf.rotation;
+
+			//_CB.transform.LookAt(CA_tf.position);
+
 			AddConfigJointBond(_CB, residue_cs.calpha_pf);
 		}
 		{
@@ -994,15 +997,14 @@ public class SideChainBuilder : MonoBehaviour {
 
 			Vector3 NtoH = HN.position - amide.transform.position;
 
+			// placeholder - turns off HN - but will be overridden by e.g. H atom visibility toggle in UI 
 			HN.GetComponent<Renderer>().enabled = false;
 			HN.GetComponent<Collider>().enabled = false;
 
-			_CD.transform.position = amide.transform.position + (1.6f * NtoH); 
+			_CD.transform.position = amide.transform.position + (1.6f * NtoH);
 
 			{
-				// this is the general solution for aligning atoms along bonds
-				// took until making PHE to work it out properly
-
+				// align along bond
 				Vector3 CDtoAmideN = amide.transform.position - _CD.transform.position;
 				Vector3 CDNbond = _CD.transform.Find("H_3").position - _CD.transform.position;
 				Quaternion q = Quaternion.FromToRotation(CDNbond, CDtoAmideN);
@@ -1011,10 +1013,10 @@ public class SideChainBuilder : MonoBehaviour {
 
 			}
 
-			AddConfigJointBondSlack(_CD, residue_cs.amide_pf);
+			AddConfigJointBond(_CD, residue_cs.amide_pf);
 
 		}
-		
+
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
 		_CG.GetComponent<Csp3>().ConvertToCH2();

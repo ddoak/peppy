@@ -91,7 +91,7 @@ public class PolyPepManager : MonoBehaviour {
 			vdwSliderUI.GetComponent<Slider>().value = 10;
 			hbondSliderUI.GetComponent<Slider>().value = 50;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
-			spawnLengthSliderUI.GetComponent<Slider>().value = 4; //10
+			spawnLengthSliderUI.GetComponent<Slider>().value = 6; //10
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			//temp = GameObject.Find("Slider_ResStart");
@@ -424,7 +424,7 @@ public class PolyPepManager : MonoBehaviour {
 
 						case 9:
 							//
-							selectedAminoAcidStr = "XXX"; // "PRO";
+							selectedAminoAcidStr = "PRO";
 							break;
 
 						case 10:
@@ -479,7 +479,7 @@ public class PolyPepManager : MonoBehaviour {
 
 						case 20:
 							//
-							selectedAminoAcidStr = "HIS"; // "HIS";
+							selectedAminoAcidStr = "HIS";
 							break;
 
 						default:
