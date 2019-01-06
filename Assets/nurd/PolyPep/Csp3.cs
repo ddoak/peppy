@@ -233,6 +233,52 @@ public class Csp3 : MonoBehaviour {
 		}
 	}
 
+	public void ConvertToCH2KeepH3Bond()
+	{
+		// PRO CD
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_3":
+					SetHAtomUnused(_H);
+					break;
+				case "H_1":
+				case "H_2":
+					_H.transform.position += _H.transform.forward * 0.05f;
+					if (!keepDebugAtomMaterial)
+					{
+						_H.GetComponent<Renderer>().material.color = Color.white;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+				case "tf_bond_H3":
+					if (!keepDebugAtomMaterial)
+					{
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+					SetAsBondToH(_bond);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+
 	public void ConvertToCH1()
 	{
 		foreach (Transform _H in HtfList)

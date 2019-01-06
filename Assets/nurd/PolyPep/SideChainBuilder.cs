@@ -1053,7 +1053,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
 		_CG.GetComponent<Csp3>().ConvertToCH2();
-		_CD.GetComponent<Csp3>().ConvertToCH2();
+		_CD.GetComponent<Csp3>().ConvertToCH2KeepH3Bond();
 
 	}
 
