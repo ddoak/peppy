@@ -7737,6 +7737,7 @@ MonoBehaviour:
   doCartoonBondRendering: 1
   allResLabelsOn: 0
   showPeptidePlanes: 0
+  showHydrogenAtoms: 1
   toonRenderScale: 0.002
   phiSliderUI: {fileID: 0}
   psiSliderUI: {fileID: 0}
@@ -33021,7 +33022,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '"Peppy" v0.41
+  m_Text: '"Peppy" v0.42
 
 '
 --- !u!222 &1747272132
@@ -37782,7 +37783,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (2/01/19)
+  m_Text: (6/01/19)
 --- !u!222 &2026089958
 CanvasRenderer:
   m_ObjectHideFlags: 0
