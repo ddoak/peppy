@@ -74,6 +74,11 @@ public class Residue : MonoBehaviour {
 		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
 		myPlotCube.transform.position = ramaPlot.transform.position;
 
+		Renderer myRenderer = myPlotCube.GetComponent<Renderer>();
+		myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+		myRenderer.receiveShadows = false;
+
+
 		myLabel = Instantiate(Label_pf, transform);
 		myLabel.name = "residueLabel";
 

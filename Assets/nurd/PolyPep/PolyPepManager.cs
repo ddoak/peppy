@@ -52,6 +52,13 @@ public class PolyPepManager : MonoBehaviour {
 	public GameObject snapshotCamera_pf;
 	public GameObject mySnapshotCamera;
 
+	public GameObject UI;
+	public GameObject UIPanel02;
+	public bool UIPanel02Activate = false;
+
+	public GameObject UIPanel03;
+	public bool UIPanel03Activate = false;
+
 	void Awake()
 	{
 			GameObject temp = GameObject.Find("Slider_Phi");
@@ -78,6 +85,11 @@ public class PolyPepManager : MonoBehaviour {
 			temp = GameObject.Find("SideChainBuilder");
 			sideChainBuilder = temp.GetComponent<SideChainBuilder>();
 
+			UI = GameObject.Find("UI");
+			UIPanel02 = GameObject.Find("UI_Panel02");
+			InitPanel02State(false);
+			UIPanel03 = GameObject.Find("UI_Panel03");
+			InitPanel03State(false);
 	}
 
 	void Start()
@@ -555,6 +567,60 @@ public class PolyPepManager : MonoBehaviour {
 
 	}
 
+	public void TogglePanel02FromUI(bool value)
+	{
+		Debug.Log("Click from UI test2: " + value);
+		UIPanel02Activate = value;
+		UIPanel02.SetActive(value);
+		//UIPanel02.transform.Translate(Vector3.right * 0.1f);
+		
+	}
+
+	private void InitPanel02State(bool value)
+	{
+		UIPanel02Activate = value;
+		UIPanel02.SetActive(value);
+	}
+
+	private void UpdatePanel02Pos()
+	{
+		if (UIPanel02.activeSelf == true)
+		{
+			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * 1.75f)), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanel02.activeSelf == false)
+		{
+			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanel03FromUI(bool value)
+	{
+		Debug.Log("Click from UI test2: " + value);
+		UIPanel03Activate = value;
+		UIPanel03.SetActive(value);
+		//UIPanel02.transform.Translate(Vector3.right * 0.1f);
+
+	}
+
+	private void InitPanel03State(bool value)
+	{
+		UIPanel03Activate = value;
+		UIPanel03.SetActive(value);
+	}
+
+	private void UpdatePanel03Pos()
+	{
+		if (UIPanel03.activeSelf == true)
+		{
+			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * -1.75f)), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanel03.activeSelf == false)
+		{
+			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
 	public void ResetLevel()
 	{
 		Scene m_Scene = SceneManager.GetActiveScene();
@@ -563,7 +629,9 @@ public class PolyPepManager : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+	{
+		UpdatePanel02Pos();
+		UpdatePanel03Pos();
 	}
 }
