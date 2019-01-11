@@ -132,6 +132,7 @@ public class PolyPepManager : MonoBehaviour {
 		//SpawnPolypeptide(transform);
 
 		mySnapshotCamera = Instantiate(snapshotCamera_pf);
+		mySnapshotCamera.SetActive(false);
 
 	}
 
@@ -585,7 +586,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		if (UIPanel02.activeSelf == true)
 		{
-			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * 1.75f)), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * 1.36f)), ((Time.deltaTime / 0.01f) * 0.05f));
 		}
 		if (UIPanel02.activeSelf == false)
 		{
@@ -598,6 +599,7 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("Click from TogglePanel03FromUI: " + value);
 		UIPanel03Activate = value;
 		UIPanel03.SetActive(value);
+		mySnapshotCamera.SetActive(value);
 	}
 
 	private void InitPanel03State(bool value)
@@ -610,7 +612,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		if (UIPanel03.activeSelf == true)
 		{
-			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * -1.75f)), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * -1.15f)), ((Time.deltaTime / 0.01f) * 0.05f));
 		}
 		if (UIPanel03.activeSelf == false)
 		{
