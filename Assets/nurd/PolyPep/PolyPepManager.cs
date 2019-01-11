@@ -569,10 +569,9 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void TogglePanel02FromUI(bool value)
 	{
-		Debug.Log("Click from UI test2: " + value);
+		//Debug.Log("Click from TogglePanel02FromUI: " + value);
 		UIPanel02Activate = value;
 		UIPanel02.SetActive(value);
-		//UIPanel02.transform.Translate(Vector3.right * 0.1f);
 		
 	}
 
@@ -596,11 +595,9 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void TogglePanel03FromUI(bool value)
 	{
-		Debug.Log("Click from UI test2: " + value);
+		//Debug.Log("Click from TogglePanel03FromUI: " + value);
 		UIPanel03Activate = value;
 		UIPanel03.SetActive(value);
-		//UIPanel02.transform.Translate(Vector3.right * 0.1f);
-
 	}
 
 	private void InitPanel03State(bool value)
