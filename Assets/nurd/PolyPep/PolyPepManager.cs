@@ -51,6 +51,7 @@ public class PolyPepManager : MonoBehaviour {
 	private int testCount = 0;
 	public GameObject snapshotCamera_pf;
 	public GameObject mySnapshotCamera;
+	private Transform snapshotCameraResetTransform;
 
 	public GameObject UI;
 	public GameObject UIPanel02;
@@ -90,6 +91,8 @@ public class PolyPepManager : MonoBehaviour {
 			InitPanel02State(false);
 			UIPanel03 = GameObject.Find("UI_Panel03");
 			InitPanel03State(false);
+
+			snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
 	}
 
 	void Start()
@@ -599,6 +602,12 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("Click from TogglePanel03FromUI: " + value);
 		UIPanel03Activate = value;
 		UIPanel03.SetActive(value);
+
+		mySnapshotCamera.transform.position = snapshotCameraResetTransform.position;
+		//mySnapshotCamera.transform.rotation = snapshotCameraResetTransform.rotation;
+
+		mySnapshotCamera.transform.rotation = Quaternion.Euler(0, UI.transform.rotation.y, UI.transform.rotation.z);
+
 		mySnapshotCamera.SetActive(value);
 	}
 
