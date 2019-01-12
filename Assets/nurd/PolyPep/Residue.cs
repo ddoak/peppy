@@ -34,7 +34,7 @@ public class Residue : MonoBehaviour {
 	public float ramaPlotScale = 0.0012f; //  set visually against UI
 
 	public GameObject myPlotCube;
-	private Vector3 myPlotCubeBaseScale = new Vector3(0.01f, 0.01f, 0.01f);
+	private Vector3 myPlotCubeBaseScale = new Vector3(0.018f, 0.018f, 0.01f);
 	float deltaScale = 1.0f;
 
 	public GameObject Label_pf;
@@ -86,7 +86,7 @@ public class Residue : MonoBehaviour {
 		myPlotCubeLabel.name = "plotCubeLabel";
 
 		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
-		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0005f;
+		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0008f;
 		myPlotCubeLabel.GetComponent<TextMesh>().fontSize = 300;
 		myPlotCubeLabel.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
 		myPlotCubeLabel.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
