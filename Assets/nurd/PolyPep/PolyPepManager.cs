@@ -55,44 +55,62 @@ public class PolyPepManager : MonoBehaviour {
 
 	public GameObject UI;
 	public GameObject UIPanel02;
-	public bool UIPanel02Activate = false;
-
 	public GameObject UIPanel03;
-	public bool UIPanel03Activate = false;
+	public GameObject UIPanelInfo;
+	private Transform UIInfoActiveTf;
+	private Transform UIInfoNotActiveTf;
+	public GameObject UIPanelControls;
+	private Transform UIControlsActiveTf;
+	private Transform UIControlsNotActiveTf;
+
+
 
 	void Awake()
 	{
-			GameObject temp = GameObject.Find("Slider_Phi");
-			phiSliderUI = temp.GetComponent<Slider>();
+		GameObject temp = GameObject.Find("Slider_Phi");
+		phiSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_Psi");
-			psiSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_Psi");
+		psiSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_Vdw");
-			vdwSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_Vdw");
+		vdwSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_HbondStrength");
-			hbondSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_HbondStrength");
+		hbondSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_PhiPsiDrive");
-			phiPsiDriveSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_PhiPsiDrive");
+		phiPsiDriveSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_SpawnLength");
-			spawnLengthSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_SpawnLength");
+		spawnLengthSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_JiggleStrength");
-			jiggleStrengthSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_JiggleStrength");
+		jiggleStrengthSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("SideChainBuilder");
-			sideChainBuilder = temp.GetComponent<SideChainBuilder>();
+		temp = GameObject.Find("SideChainBuilder");
+		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
 
-			UI = GameObject.Find("UI");
-			UIPanel02 = GameObject.Find("UI_Panel02");
-			InitPanel02State(false);
-			UIPanel03 = GameObject.Find("UI_Panel03");
-			InitPanel03State(false);
+		UI = GameObject.Find("UI");
 
-			snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
+		UIPanel02 = GameObject.Find("UI_Panel02");
+		UIPanel02.SetActive(false);
+
+		UIPanel03 = GameObject.Find("UI_Panel03");
+		UIPanel03.SetActive(false);
+
+		UIPanelInfo = GameObject.Find("UI_PanelInfo");
+		UIInfoActiveTf = GameObject.Find("InfoActivePos").transform;
+		UIInfoNotActiveTf = GameObject.Find("InfoNotActivePos").transform;
+		UIPanelInfo.SetActive(false);
+
+		UIPanelControls = GameObject.Find("UI_PanelControls");
+		UIControlsActiveTf = GameObject.Find("ControlsActivePos").transform;
+		UIControlsNotActiveTf = GameObject.Find("ControlsNotActivePos").transform;
+		UIPanelControls.SetActive(false);
+
+
+		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
 	}
 
 	void Start()
@@ -571,18 +589,14 @@ public class PolyPepManager : MonoBehaviour {
 
 	}
 
+
+	// TODO refactor duplicated code for UI panel activation / transitions
+
 	public void TogglePanel02FromUI(bool value)
 	{
 		//Debug.Log("Click from TogglePanel02FromUI: " + value);
-		UIPanel02Activate = value;
 		UIPanel02.SetActive(value);
 		
-	}
-
-	private void InitPanel02State(bool value)
-	{
-		UIPanel02Activate = value;
-		UIPanel02.SetActive(value);
 	}
 
 	private void UpdatePanel02Pos()
@@ -600,21 +614,17 @@ public class PolyPepManager : MonoBehaviour {
 	public void TogglePanel03FromUI(bool value)
 	{
 		//Debug.Log("Click from TogglePanel03FromUI: " + value);
-		UIPanel03Activate = value;
 		UIPanel03.SetActive(value);
 
 		mySnapshotCamera.transform.position = snapshotCameraResetTransform.position;
-		//mySnapshotCamera.transform.rotation = snapshotCameraResetTransform.rotation;
-
-		mySnapshotCamera.transform.rotation = Quaternion.Euler(0, UI.transform.rotation.y, UI.transform.rotation.z);
+		mySnapshotCamera.transform.rotation = snapshotCameraResetTransform.rotation; 
+		
+		// TODO
+		// camera reset rotation should probably not have any pitch (X rot)
+		// but this doesn't work:
+		//mySnapshotCamera.transform.rotation = Quaternion.Euler(0, UI.transform.rotation.y, UI.transform.rotation.z);
 
 		mySnapshotCamera.SetActive(value);
-	}
-
-	private void InitPanel03State(bool value)
-	{
-		UIPanel03Activate = value;
-		UIPanel03.SetActive(value);
 	}
 
 	private void UpdatePanel03Pos()
@@ -626,6 +636,52 @@ public class PolyPepManager : MonoBehaviour {
 		if (UIPanel03.activeSelf == false)
 		{
 			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanelInfoFromUI(bool value)
+	{
+		UIPanelInfo.SetActive(value);
+	}
+
+	private void UpdatePanelInfoPos()
+	{
+		if (UIPanelInfo.activeSelf == true)
+		{
+			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanelInfo.activeSelf == false)
+		{
+			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanelControlsFromUI(bool value)
+	{
+		UIPanelControls.SetActive(value);
+	}
+
+	private void UpdatePanelControlsPos()
+	{
+		if (UIPanelControls.activeSelf == true)
+		{
+			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanelControls.activeSelf == false)
+		{
+			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	private void UpdateKeepGameObjectAccessible(GameObject go, float minY)
+	{
+		// hacky repositioning lerp to keep things from getting lost...
+		// TODO - bounding box for play area?
+		if (go.transform.position.y <minY)
+		{
+			Vector3 target = new Vector3(go.transform.position.x, minY, go.transform.position.z);
+			
+			go.transform.position = Vector3.Lerp(go.transform.position, target, ((Time.deltaTime / 0.01f) * 0.05f));
 		}
 	}
 
@@ -641,5 +697,9 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		UpdatePanel02Pos();
 		UpdatePanel03Pos();
+		UpdatePanelInfoPos();
+		UpdatePanelControlsPos();
+		UpdateKeepGameObjectAccessible(UI, 0.5f);
+		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f);
 	}
 }

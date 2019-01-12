@@ -483,7 +483,7 @@ namespace ControllerSelection {
 							transform.position = remoteGrab.position;
 							transform.LookAt(lookAwayPos, Vector3.up);
 
-							// lerp to target
+							// lerp to target - eases the rotation of the UI - useful when remote grab just initiated
 							remoteGrab.gameObject.transform.rotation = Quaternion.Lerp(remoteGrab.gameObject.transform.rotation, transform.rotation, Time.deltaTime * 10.0f);
 							//remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
 
