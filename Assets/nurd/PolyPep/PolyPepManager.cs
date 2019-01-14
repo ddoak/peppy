@@ -150,7 +150,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 
 		// dev: test always spawn pp on startup
-		SpawnPolypeptide(transform);
+		//SpawnPolypeptide(transform);
 
 		mySnapshotCamera = Instantiate(snapshotCamera_pf);
 		mySnapshotCamera.SetActive(false);

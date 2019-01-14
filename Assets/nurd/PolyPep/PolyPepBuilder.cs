@@ -95,9 +95,9 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		sideChainBuilder.BuildSideChain(gameObject, 1, "LYS");
-		sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
-		sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
+		//sideChainBuilder.BuildSideChain(gameObject, 1, "LYS");
+		//sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
+		//sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
 
 		if (false && numResidues > 9)
 		{
