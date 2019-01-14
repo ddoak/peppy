@@ -15,9 +15,18 @@ public class SideChainBuilder : MonoBehaviour {
 	public Vector3 posB = new Vector3(0f, 0f, 0f);
 	public Vector3 posC = new Vector3(0f, 0f, 0f);
 
-	// Use this for initialization
-	void Start () {
+	// electrostatics
+	public ElectrostaticsManager myElectrostaticsManager;
+	// script for electrostatics
+	private System.Type movingChargedParticleScriptType;
 
+	// Use this for initialization
+	void Start ()
+	{
+		myElectrostaticsManager = GameObject.Find("ElectrostaticsManager").GetComponent<ElectrostaticsManager>();
+
+		string ScriptName = "MovingChargedParticle";
+		movingChargedParticleScriptType = System.Type.GetType(ScriptName + ",Assembly-CSharp");
 	}
 
 	private void ToggleAmideHN(Residue residue_cs, bool enableValue)
@@ -60,6 +69,11 @@ public class SideChainBuilder : MonoBehaviour {
 		{
 			foreach (GameObject _go in residue_cs.sideChainList)
 			{
+				// If this has a mcp then unregister from myElectrostaticsManager
+				if (_go.GetComponent<MovingChargedParticle>())
+				{
+					myElectrostaticsManager.UnRegisterMovingChargedParticle(_go.GetComponent<MovingChargedParticle>());
+				}
 				Destroy(_go);
 			}
 		}
@@ -524,13 +538,13 @@ public class SideChainBuilder : MonoBehaviour {
 		GameObject _CG = residue_cs.sideChainList[1];
 		GameObject _CD = residue_cs.sideChainList[2];
 		GameObject _CE = residue_cs.sideChainList[3];
-		GameObject _NF = residue_cs.sideChainList[4];
+		GameObject _NZ = residue_cs.sideChainList[4];
 
 		_CB.name = "CB";
 		_CG.name = "CG";
 		_CD.name = "CD";
 		_CE.name = "CE";
-		_NF.name = "NF";
+		_NZ.name = "NZ";
 
 		{
 			// Get CBeta position => R group
@@ -559,28 +573,34 @@ public class SideChainBuilder : MonoBehaviour {
 			AddConfigJointBond(_CE, _CD);
 		}
 		{
-			_NF.transform.position = _CE.transform.Find("H_3").position;
-			_NF.transform.LookAt(_CE.transform.position);
-			AddConfigJointBond(_NF, _CE);
+			_NZ.transform.position = _CE.transform.Find("H_3").position;
+			_NZ.transform.LookAt(_CE.transform.position);
+			AddConfigJointBond(_NZ, _CE);
 		}
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
 		_CG.GetComponent<Csp3>().ConvertToCH2();
 		_CD.GetComponent<Csp3>().ConvertToCH2();
 		_CE.GetComponent<Csp3>().ConvertToCH2();
-		_NF.GetComponent<Csp3>().ConvertToNH3();
+		_NZ.GetComponent<Csp3>().ConvertToNH3();
+
+		// add electrostatics moving charged particle script	
+		_NZ.AddComponent(movingChargedParticleScriptType);
+		_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
+
+		myElectrostaticsManager.RegisterMovingChargedParticle(_NZ.GetComponent<MovingChargedParticle>());
 	}
 
 	void Build_ASP(Residue residue_cs)
 	{
-		sideChainLength = 2;
+		sideChainLength = 4;
 		for (int i = 0; i < sideChainLength; i++)
 		{
 			if (i == 0)
 			{
 				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
 			}
-			if (i == 1)
+			if (i >= 1)
 			{
 				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
 				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
@@ -588,9 +608,13 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 		GameObject _CB = residue_cs.sideChainList[0];
 		GameObject _CG = residue_cs.sideChainList[1];
+		GameObject _OD1 = residue_cs.sideChainList[2];
+		GameObject _OD2 = residue_cs.sideChainList[3];
 
 		_CB.name = "CB";
 		_CG.name = "CG";
+		_OD1.name = "OD1";
+		_OD2.name = "OD2";
 
 		{
 			// Get CBeta position => R group
@@ -608,22 +632,52 @@ public class SideChainBuilder : MonoBehaviour {
 			_CG.transform.LookAt(_CB.transform.position);
 			AddConfigJointBond(_CG, _CB);
 		}
+		{
+			_OD1.transform.position = _CG.transform.Find("H_1").position;
+			_OD1.transform.LookAt(_CG.transform.position);
+			//OC bond should be 1.25 vs 1.5 (approx - from CHARRM toppar)
+			Vector3 OCBond = _CG.transform.position - _OD1.transform.position;
+			_OD1.transform.position += OCBond * ((1.5f - 1.25f) / 1.5f);
+
+			AddConfigJointBond(_OD1, _CG);
+		}
+		{
+			_OD2.transform.position = _CG.transform.Find("H_2").position;
+			_OD2.transform.LookAt(_CG.transform.position);
+			//OC bond should be 1.25 vs 1.5
+			Vector3 OCBond = _CG.transform.position - _OD2.transform.position;
+			_OD2.transform.position += OCBond * ((1.5f - 1.25f) / 1.5f);
+
+			AddConfigJointBond(_OD2, _CG);
+		}
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
-		_CG.GetComponent<Csp3>().ConvertSp2ToCOO();
+		_CG.GetComponent<Csp3>().ConvertSp2ToC(false, false);
 
+		_OD1.GetComponent<Csp3>().ConvertSp2ToO();
+		_OD2.GetComponent<Csp3>().ConvertSp2ToO();
+
+		// add electrostatics moving charged particle script	
+		_OD1.AddComponent(movingChargedParticleScriptType);
+		_OD1.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		_OD2.AddComponent(movingChargedParticleScriptType);
+		_OD2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		myElectrostaticsManager.RegisterMovingChargedParticle(_OD1.GetComponent<MovingChargedParticle>());
+		myElectrostaticsManager.RegisterMovingChargedParticle(_OD2.GetComponent<MovingChargedParticle>());
 	}
 
 	void Build_GLU(Residue residue_cs)
 	{
-		sideChainLength = 3;
+		sideChainLength = 5;
 		for (int i = 0; i < sideChainLength; i++)
 		{
 			if (i == 0 || i == 1)
 			{
 				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
 			}
-			if (i == 2)
+			if (i >= 2)
 			{
 				Csp3_pf.GetComponent<Csp3>().atomType = "sp2";
 				residue_cs.sideChainList.Add(Instantiate(Csp3_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
@@ -632,10 +686,14 @@ public class SideChainBuilder : MonoBehaviour {
 		GameObject _CB = residue_cs.sideChainList[0];
 		GameObject _CG = residue_cs.sideChainList[1];
 		GameObject _CD = residue_cs.sideChainList[2];
+		GameObject _OE1 = residue_cs.sideChainList[3];
+		GameObject _OE2 = residue_cs.sideChainList[4];
 
 		_CB.name = "CB";
 		_CG.name = "CG";
 		_CD.name = "CD";
+		_OE1.name = "OE1";
+		_OE2.name = "OE2";
 
 		{
 			// Get CBeta position => R group
@@ -658,10 +716,45 @@ public class SideChainBuilder : MonoBehaviour {
 			_CD.transform.LookAt(_CG.transform.position);
 			AddConfigJointBond(_CD, _CG);
 		}
+		{
+			_OE1.transform.position = _CD.transform.Find("H_1").position;
+			_OE1.transform.LookAt(_CD.transform.position);
+			//OC bond should be 1.25 vs 1.5 (approx - from CHARRM toppar)
+			Vector3 OCBond = _CD.transform.position - _OE1.transform.position;
+			_OE1.transform.position += OCBond * (( 1.5f - 1.25f) / 1.5f);
+
+			AddConfigJointBond(_OE1, _CD);
+		}
+		{
+			_OE2.transform.position = _CD.transform.Find("H_2").position;
+			_OE2.transform.LookAt(_CD.transform.position);
+			//OC bond should be 1.25 vs 1.5
+			Vector3 OCBond = _CD.transform.position - _OE2.transform.position;
+			_OE2.transform.position += OCBond * ((1.5f - 1.25f) / 1.5f);
+
+			AddConfigJointBond(_OE2, _CD);
+		}
 
 		_CB.GetComponent<Csp3>().ConvertToCH2();
 		_CG.GetComponent<Csp3>().ConvertToCH2();
-		_CD.GetComponent<Csp3>().ConvertSp2ToCOO();
+		_CD.GetComponent<Csp3>().ConvertSp2ToC(false, false);
+
+		//
+		_OE1.GetComponent<Csp3>().ConvertSp2ToO();
+		_OE2.GetComponent<Csp3>().ConvertSp2ToO();
+
+		// add electrostatics moving charged particle script	
+		_OE1.AddComponent(movingChargedParticleScriptType);
+		_OE1.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		_OE2.AddComponent(movingChargedParticleScriptType);
+		_OE2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		myElectrostaticsManager.RegisterMovingChargedParticle(_OE1.GetComponent<MovingChargedParticle>());
+		myElectrostaticsManager.RegisterMovingChargedParticle(_OE2.GetComponent<MovingChargedParticle>());
+
+
+
 
 	}
 

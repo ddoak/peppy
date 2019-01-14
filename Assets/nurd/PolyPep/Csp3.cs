@@ -492,6 +492,7 @@ public class Csp3 : MonoBehaviour {
 			{
 				child.name = "O";
 				child.GetComponent<Renderer>().material.color = Color.red;
+				child.tag = "O";
 			}
 		}
 	}
@@ -705,6 +706,66 @@ public class Csp3 : MonoBehaviour {
 					break;
 				default:
 					break;
+			}
+		}
+	}
+
+
+	public void ConvertSp2ToO() //ASP GLU
+	{
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_1":
+				case "H_2":
+					//_H.GetComponent<Renderer>().enabled = false;
+					//_H.GetComponent<Collider>().enabled = false;
+					SetHAtomUnused(_H);
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+					if (!keepDebugAtomMaterial)
+					{
+						// rescaling 0 bond 
+						// TODO - translation is not correct - but will do for now
+						_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - ((1.5f-1.25f)/1.5f));
+						_bond.localScale = new Vector3(0.25f, (0.75f * (1.25f/1.5f)), 0.25f);
+						_bond.GetComponent<Renderer>().material.color = Color.grey;
+					}
+					break;
+				case "tf_bond_H1":
+					{
+						_bond.GetComponent<Renderer>().enabled = false;
+						_bond.GetComponent<Collider>().enabled = false;
+					}
+					break;
+				case "tf_bond_H2":
+					{
+						_bond.GetComponent<Renderer>().enabled = false;
+						_bond.GetComponent<Collider>().enabled = false;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform child in GetComponentsInChildren<Transform>())
+		{
+			if (child.name == "C")
+			{
+				child.name = "O";
+				child.GetComponent<Renderer>().material.color = Color.red;
+				child.tag = "O";
 			}
 		}
 	}
