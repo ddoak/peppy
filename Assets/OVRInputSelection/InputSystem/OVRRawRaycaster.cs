@@ -428,9 +428,22 @@ namespace ControllerSelection {
 					// calc new remoteGrabTarget
 					remoteGrabTargetPos = (pointer.origin + (remoteGrabTargetDistance * pointer.direction)) + remoteGrabHitOffset;
 
-					// tractor beam to remoteGrabTarget destination (mostly tangential to pointer axis (pitch / yaw movement)
-					myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
 
+
+					// tractor beam to remoteGrabTarget destination (mostly tangential to pointer axis (pitch / yaw movement)
+					bool allowMove = true;
+					if (remoteGrab.tag == "UI") // 
+					{
+						if (Vector3.Distance(centreEyeAnchor.position, remoteGrab.transform.position) > 10.0f)
+						{
+							allowMove = false;
+						}
+					}
+
+					if (allowMove)
+					{
+							myRawInteraction.RemoteGrabInteraction(primaryDown, remoteGrabTargetPos);
+					}
 
 					BackboneUnit bu = (remoteGrab.gameObject.GetComponent("BackboneUnit") as BackboneUnit);
 					if (bu != null)

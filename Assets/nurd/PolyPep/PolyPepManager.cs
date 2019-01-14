@@ -63,6 +63,8 @@ public class PolyPepManager : MonoBehaviour {
 	private Transform UIControlsActiveTf;
 	private Transform UIControlsNotActiveTf;
 
+	public GameObject myPlayerController;
+
 
 
 	void Awake()
@@ -111,6 +113,7 @@ public class PolyPepManager : MonoBehaviour {
 
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
+		myPlayerController = GameObject.Find("OVRPlayerController");
 	}
 
 	void Start()
@@ -673,15 +676,43 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
-	private void UpdateKeepGameObjectAccessible(GameObject go, float minY)
+	private void UpdateKeepGameObjectAccessible(GameObject go, float minY, float maxY)
 	{
 		// hacky repositioning lerp to keep things from getting lost...
 		// TODO - bounding box for play area?
-		if (go.transform.position.y <minY)
+		if (go.transform.position.y < minY)
 		{
 			Vector3 target = new Vector3(go.transform.position.x, minY, go.transform.position.z);
 			
 			go.transform.position = Vector3.Lerp(go.transform.position, target, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+
+		if (go.transform.position.y > maxY)
+		{
+			Vector3 target = new Vector3(go.transform.position.x, maxY, go.transform.position.z);
+
+			go.transform.position = Vector3.Lerp(go.transform.position, target, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	private void UpdateKeepGameObjectCloseToPlayer(GameObject go, float maxDistance)
+	{
+		// hacky repositioning lerp to keep things from getting lost...
+		// TODO - bounding box for play area?
+		Vector3 offSet = go.transform.position - myPlayerController.transform.position;
+
+		//Debug.Log(offSet.magnitude);
+		if (offSet.magnitude > maxDistance)
+		{
+			//go.layer = LayerMask.NameToLayer("Default");
+			Vector3 targetPos = myPlayerController.transform.position + (offSet.normalized * maxDistance);
+			go.transform.position = Vector3.Lerp(go.transform.position, targetPos, ((Time.deltaTime / 0.01f) * 0.05f));
+
+			//go.transform.position = Vector3.Lerp(go.transform.position, go.transform.position - offSet.normalized, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		else
+		{
+			//go.layer = LayerMask.NameToLayer("Default");
 		}
 	}
 
@@ -699,7 +730,9 @@ public class PolyPepManager : MonoBehaviour {
 		UpdatePanel03Pos();
 		UpdatePanelInfoPos();
 		UpdatePanelControlsPos();
-		UpdateKeepGameObjectAccessible(UI, 0.5f);
-		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f);
+		UpdateKeepGameObjectAccessible(UI, 0.5f, 5.0f);
+		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
+		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
+		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
 	}
 }

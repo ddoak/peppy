@@ -6490,6 +6490,7 @@ MonoBehaviour:
   UIPanel03: {fileID: 0}
   UIPanelInfo: {fileID: 0}
   UIPanelControls: {fileID: 0}
+  myPlayerController: {fileID: 0}
 --- !u!4 &382481195
 Transform:
   m_ObjectHideFlags: 0
@@ -9149,7 +9150,7 @@ GameObject:
   - component: {fileID: 577288334}
   m_Layer: 11
   m_Name: BackplateMain
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14286,7 +14287,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 899199060}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -21729,7 +21730,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1464600536}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -26955,7 +26956,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '"Peppy" v0.42
+  m_Text: '"Peppy" v0.43
 
 '
 --- !u!222 &1747272132
@@ -30528,7 +30529,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (6/01/19)
+  m_Text: (14/01/19)
 --- !u!222 &2026089958
 CanvasRenderer:
   m_ObjectHideFlags: 0
