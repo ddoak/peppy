@@ -587,7 +587,6 @@ public class SideChainBuilder : MonoBehaviour {
 		// add electrostatics moving charged particle script	
 		_NZ.AddComponent(movingChargedParticleScriptType);
 		_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
-
 		myElectrostaticsManager.RegisterMovingChargedParticle(_NZ.GetComponent<MovingChargedParticle>());
 	}
 
@@ -752,7 +751,6 @@ public class SideChainBuilder : MonoBehaviour {
 
 		myElectrostaticsManager.RegisterMovingChargedParticle(_OE1.GetComponent<MovingChargedParticle>());
 		myElectrostaticsManager.RegisterMovingChargedParticle(_OE2.GetComponent<MovingChargedParticle>());
-
 
 
 
@@ -955,7 +953,21 @@ public class SideChainBuilder : MonoBehaviour {
 		_NH1.GetComponent<Csp3>().ConvertSp2ToNH2();
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
 
+		//SetChargeForAtom(_NE, -0.7f);
+		AssignChargeToAtom(_NH1, +0.8f);
+		AssignChargeToAtom(_NH2, +0.8f);
+		//SetChargeForAtom(_CZ, -0.64f);
+
 	}
+
+
+	void AssignChargeToAtom(GameObject atom, float charge)
+	{
+		atom.AddComponent(movingChargedParticleScriptType);
+		atom.GetComponent<MovingChargedParticle>().charge = charge;
+		myElectrostaticsManager.RegisterMovingChargedParticle(atom.GetComponent<MovingChargedParticle>());
+	}
+
 
 	void Build_PHEorTYR(Residue residue_cs, bool makeTYR)
 	{
@@ -1561,6 +1573,45 @@ public class SideChainBuilder : MonoBehaviour {
 		FixedJoint fj = go1.AddComponent(typeof(FixedJoint)) as FixedJoint;
 		fj.connectedBody = go2.GetComponent<Rigidbody>();
 	}
+
+	public void MakeDisulphide(GameObject ppb1_go, int resid1, GameObject ppb2_go, int resid2)
+	{
+		// TODO - resids valid?
+		PolyPepBuilder ppb1_cs = ppb1_go.GetComponent<PolyPepBuilder>();
+		Residue residue1_cs = ppb1_cs.chainArr[resid1].GetComponent<Residue>();
+
+		PolyPepBuilder ppb2_cs = ppb2_go.GetComponent<PolyPepBuilder>();
+		Residue residue2_cs = ppb2_cs.chainArr[resid2].GetComponent<Residue>();
+
+		// TODO - residues CYS?
+
+		Debug.Log(residue1_cs.sideChainList[1]);
+		Debug.Log(residue2_cs.sideChainList[1]);
+
+		var SG1 = residue1_cs.sideChainList[1];
+		var SG2 = residue2_cs.sideChainList[1];
+
+		var sg1 = residue1_cs.sideChainList[1].GetComponent<Csp3>();
+		var sg2 = residue2_cs.sideChainList[1].GetComponent<Csp3>();
+
+
+		//residue2_cs.sideChainList[1].transform.position = residue1_cs.sideChainList[1].transform.Find("H_3").position;
+
+		SG2.transform.position = SG1.transform.position;
+
+		SG2.transform.LookAt(SG1.transform.position - SG1.transform.forward);
+
+		Vector3 disulphideBond = (SG2.transform.Find("H_3").position - SG2.transform.position) * 1.5f;
+
+		SG1.transform.position = SG2.transform.position + disulphideBond;
+
+		//SG1.transform.LookAt(sg2.transform.position);
+		AddFixedJointBond(SG1, SG2);
+
+		sg1.ConvertToDisulphide(false);
+		sg2.ConvertToDisulphide(true);
+	}
+
 
 	void OnDrawGizmos()
 	{

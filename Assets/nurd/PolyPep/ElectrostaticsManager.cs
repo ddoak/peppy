@@ -22,7 +22,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 	
 	public IEnumerator Cycle(MovingChargedParticle mcp)
 	{
-		while(false)
+		while(false) // false disables ES
 		{
 			ApplyElectrostaticForce(mcp);
 			yield return new WaitForSeconds(cycleInterval);

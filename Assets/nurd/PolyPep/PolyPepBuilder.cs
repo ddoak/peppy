@@ -99,25 +99,41 @@ public class PolyPepBuilder : MonoBehaviour {
 		//sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
 		//sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
 
+		if (false)
+		{
+		//oxytocin
+		sideChainBuilder.BuildSideChain(gameObject, 0, "CYS");
+		sideChainBuilder.BuildSideChain(gameObject, 1, "TYR");
+		sideChainBuilder.BuildSideChain(gameObject, 2, "ILE");
+		sideChainBuilder.BuildSideChain(gameObject, 3, "GLN");
+		sideChainBuilder.BuildSideChain(gameObject, 4, "ASN");
+		sideChainBuilder.BuildSideChain(gameObject, 5, "CYS");
+		sideChainBuilder.BuildSideChain(gameObject, 6, "PRO");
+		sideChainBuilder.BuildSideChain(gameObject, 7, "LEU");
+		sideChainBuilder.BuildSideChain(gameObject, 8, "GLY");
+
+		sideChainBuilder.MakeDisulphide(gameObject, 0, gameObject, 5);
+		}
+
 		if (false && numResidues > 9)
 		{
 
-			sideChainBuilder.BuildSideChain(gameObject, 1, "ALA");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "VAL");
-			sideChainBuilder.BuildSideChain(gameObject, 3, "LEU");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "ILE");
-			sideChainBuilder.BuildSideChain(gameObject, 5, "MET");
+			sideChainBuilder.BuildSideChain(gameObject, 1, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "TYR");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "GLN");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "ASN");
 			sideChainBuilder.BuildSideChain(gameObject, 6, "CYS");
-			sideChainBuilder.BuildSideChain(gameObject, 7, "SER");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "THR");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "ASP");
-			sideChainBuilder.BuildSideChain(gameObject, 10, "ASN");
-			sideChainBuilder.BuildSideChain(gameObject, 11, "GLU");
-			sideChainBuilder.BuildSideChain(gameObject, 12, "GLN");
-			sideChainBuilder.BuildSideChain(gameObject, 13, "ARG");
-			sideChainBuilder.BuildSideChain(gameObject, 14, "LYS");
-			sideChainBuilder.BuildSideChain(gameObject, 15, "PHE");
-			sideChainBuilder.BuildSideChain(gameObject, 16, "TYR");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "PRO");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "GLY");
+			//sideChainBuilder.BuildSideChain(gameObject, 10, "ASN");
+			//sideChainBuilder.BuildSideChain(gameObject, 11, "GLU");
+			//sideChainBuilder.BuildSideChain(gameObject, 12, "GLN");
+			//sideChainBuilder.BuildSideChain(gameObject, 13, "ARG");
+			//sideChainBuilder.BuildSideChain(gameObject, 14, "LYS");
+			//sideChainBuilder.BuildSideChain(gameObject, 15, "PHE");
+			//sideChainBuilder.BuildSideChain(gameObject, 16, "TYR");
 			
 
 		}
