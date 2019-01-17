@@ -10,6 +10,8 @@ public class PolyPepManager : MonoBehaviour {
 	public GameObject polyPepBuilder_pf;
 	public List<PolyPepBuilder> allPolyPepBuilders = new List<PolyPepBuilder>();
 
+	public SideChainBuilder sideChainBuilder;
+
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
 
@@ -24,10 +26,16 @@ public class PolyPepManager : MonoBehaviour {
 
 	public float phiTarget = 0f;
 	public float psiTarget = 0f;
-	public float phiPsiDrive = 100.0f;
+	public float phiPsiDriveTorqueFromUI = 100.0f;
 
 	public bool showDrivenBondsOn = true;
 	public bool doCartoonBondRendering = true;
+
+	public bool allResLabelsOn = false;
+	public bool showPeptidePlanes = false;
+	public bool showHydrogenAtoms = true;
+
+	public int UISelectedAminoAcid { get; set; }
 
 	public float toonRenderScale = 0.002f;
 
@@ -40,29 +48,72 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider spawnLengthSliderUI;
 	public Slider jiggleStrengthSliderUI;
 
+	private int testCount = 0;
+	public GameObject snapshotCamera_pf;
+	public GameObject mySnapshotCamera;
+	private Transform snapshotCameraResetTransform;
+
+	public GameObject UI;
+	public GameObject UIPanel02;
+	public GameObject UIPanel03;
+	public GameObject UIPanelInfo;
+	private Transform UIInfoActiveTf;
+	private Transform UIInfoNotActiveTf;
+	public GameObject UIPanelControls;
+	private Transform UIControlsActiveTf;
+	private Transform UIControlsNotActiveTf;
+
+	public GameObject myPlayerController;
+
+
+
 	void Awake()
 	{
-			GameObject temp = GameObject.Find("Slider_Phi");
-			phiSliderUI = temp.GetComponent<Slider>();
+		GameObject temp = GameObject.Find("Slider_Phi");
+		phiSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_Psi");
-			psiSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_Psi");
+		psiSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_Vdw");
-			vdwSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_Vdw");
+		vdwSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_HbondStrength");
-			hbondSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_HbondStrength");
+		hbondSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_PhiPsiDrive");
-			phiPsiDriveSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_PhiPsiDrive");
+		phiPsiDriveSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_SpawnLength");
-			spawnLengthSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_SpawnLength");
+		spawnLengthSliderUI = temp.GetComponent<Slider>();
 
-			temp = GameObject.Find("Slider_JiggleStrength");
-			jiggleStrengthSliderUI = temp.GetComponent<Slider>();
+		temp = GameObject.Find("Slider_JiggleStrength");
+		jiggleStrengthSliderUI = temp.GetComponent<Slider>();
 
+		temp = GameObject.Find("SideChainBuilder");
+		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
+
+		UI = GameObject.Find("UI");
+
+		UIPanel02 = GameObject.Find("UI_Panel02");
+		UIPanel02.SetActive(false);
+
+		UIPanel03 = GameObject.Find("UI_Panel03");
+		UIPanel03.SetActive(false);
+
+		UIPanelInfo = GameObject.Find("UI_PanelInfo");
+		UIInfoActiveTf = GameObject.Find("InfoActivePos").transform;
+		UIInfoNotActiveTf = GameObject.Find("InfoNotActivePos").transform;
+		UIPanelInfo.SetActive(false);
+
+		UIPanelControls = GameObject.Find("UI_PanelControls");
+		UIControlsActiveTf = GameObject.Find("ControlsActivePos").transform;
+		UIControlsNotActiveTf = GameObject.Find("ControlsNotActivePos").transform;
+		UIPanelControls.SetActive(false);
+
+
+		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
+		myPlayerController = GameObject.Find("OVRPlayerController");
 	}
 
 	void Start()
@@ -77,7 +128,7 @@ public class PolyPepManager : MonoBehaviour {
 			vdwSliderUI.GetComponent<Slider>().value = 10;
 			hbondSliderUI.GetComponent<Slider>().value = 50;
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
-			spawnLengthSliderUI.GetComponent<Slider>().value = 10;
+			spawnLengthSliderUI.GetComponent<Slider>().value = 9; //10
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			//temp = GameObject.Find("Slider_ResStart");
@@ -101,26 +152,11 @@ public class PolyPepManager : MonoBehaviour {
 
 		}
 
-		//{
-		//	// create chains - hard coded for the moment
+		// dev: test always spawn pp on startup
+		//SpawnPolypeptide(transform);
 
-		//	for (int i = 0; i < 6; i++)
-		//	{
-		//		GameObject pp = Instantiate(polyPepBuilder_pf, new Vector3(0f, 0f + (i*1), 0f), Quaternion.identity);
-		//		PolyPepBuilder pp_cs = pp.GetComponent<PolyPepBuilder>();
-		//		pp_cs.numResidues = 14;
-		//		pp.name = "polyPep_" + (i).ToString();
-		//	}
-		//}
-
-		//foreach (PolyPepBuilder polyPep in FindObjectsOfType<PolyPepBuilder>() )
-		//{
-		//	//Debug.Log("------------------->" + polyPep);
-		//	allPolyPepBuilders.Add(polyPep);
-
-		//}
-
-		SpawnPolypeptide(transform);
+		mySnapshotCamera = Instantiate(snapshotCamera_pf);
+		mySnapshotCamera.SetActive(false);
 
 	}
 
@@ -141,7 +177,10 @@ public class PolyPepManager : MonoBehaviour {
 			ppb_cs.myPolyPepManager = GetComponent<PolyPepManager>();
 			ppb.name = "polyPep_" + allPolyPepBuilders.Count;
 			allPolyPepBuilders.Add(ppb_cs);
+
+			ppb_cs.sideChainBuilder = sideChainBuilder;
 		}
+		
 	}
 
 	void OnDrawGizmos()
@@ -193,13 +232,17 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
 		hbondsOn = value;
+		PushHbondStrengthUpdate();
+	}
+
+	private void PushHbondStrengthUpdate()
+	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateHBondSprings();
 		}
 	}
-
 	public void UpdateShowDrivenBondsOnFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
@@ -215,18 +258,31 @@ public class PolyPepManager : MonoBehaviour {
 
 		//Debug.Log("hello Hbond Strength from the manager! ---> " + hbondStrength);
 		hbondStrength = hbondStrengthFromUI * hbondScale;
+		//
+		PushHbondStrengthUpdate();
 	}
 
-	public void UpdatePhiPsiDriveFromUI(float phiPsiDriveFromUI)
+	public void UpdatePhiPsiDriveFromUI(float phiPsiTorqueSliderValueFromUI)
 	{
 
 		//Debug.Log("hello PhiPsi Drive from the manager! ---> " + phiPsiDrive);
-		phiPsiDrive = phiPsiDriveFromUI;
+		phiPsiDriveTorqueFromUI = phiPsiTorqueSliderValueFromUI;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.drivePhiPsiMaxForce = phiPsiDrive;
-			_ppb.drivePhiPsiPosSpring = phiPsiDrive;
+			//_ppb.drivePhiPsiMaxForce = phiPsiDriveTorqueFromUI;
+			//_ppb.drivePhiPsiPosSpring = phiPsiDriveTorqueFromUI;
 			_ppb.UpdatePhiPsiDrives();
+			_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
+	public void ZeroAllPhiPsiTorqueFromUI()
+	{
+		phiPsiDriveSliderUI.value = 0;
+		phiPsiDriveTorqueFromUI = phiPsiDriveSliderUI.value;
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.UpdatePhiPsiDrivesForceAll();
 			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
@@ -335,6 +391,331 @@ public class PolyPepManager : MonoBehaviour {
 		jiggleStrength = jiggleFromUI;
 	}
 
+	public void UpdateAllResidueLabelsOnFromUI(bool value)
+	{
+		allResLabelsOn = value;
+	}
+
+	public void UpdateShowPeptidePlanesOnFromUI(bool value)
+	{
+		 showPeptidePlanes= value;
+	}
+
+	public void MutateSelectedResiduesFromUI()
+	{
+		Debug.Log("Mutate: " + UISelectedAminoAcid);
+
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			foreach (GameObject _residueGo in _ppb.chainArr)
+			{
+				if (_residueGo.GetComponent<Residue>().residueSelected == true)
+				{
+					string selectedAminoAcidStr = "-";
+					switch (UISelectedAminoAcid)
+					{
+						// TODO use enumeration
+						case 0:
+							// not defined
+							selectedAminoAcidStr = "XXX"; 
+							break;
+									
+						case 1:
+							// GLY
+							selectedAminoAcidStr = "XXX"; //  "GLY";
+							break;
+
+						case 2:
+							// ALA
+							selectedAminoAcidStr = "ALA";
+							break;
+
+						case 3:
+							// VAL
+							selectedAminoAcidStr = "VAL";
+							break;
+
+						case 4:
+							//
+							selectedAminoAcidStr = "LEU";
+							break;
+
+						case 5:
+							//
+							selectedAminoAcidStr = "ILE";
+							break;
+
+						case 6:
+							//
+							selectedAminoAcidStr = "MET";
+							break;
+
+						case 7:
+							//
+							selectedAminoAcidStr = "PHE";
+							break;
+
+						case 8:
+							//
+							selectedAminoAcidStr = "TRP";
+							break;
+
+						case 9:
+							//
+							selectedAminoAcidStr = "PRO";
+							break;
+
+						case 10:
+							// GLY
+							selectedAminoAcidStr = "SER";
+							break;
+
+						case 11:
+							// ALA
+							selectedAminoAcidStr = "THR";
+							break;
+
+						case 12:
+							// VAL
+							selectedAminoAcidStr = "CYS";
+							break;
+
+						case 13:
+							//
+							selectedAminoAcidStr = "TYR";
+							break;
+
+						case 14:
+							//
+							selectedAminoAcidStr = "ASN";
+							break;
+
+						case 15:
+							//
+							selectedAminoAcidStr = "GLN";
+							break;
+
+						case 16:
+							//
+							selectedAminoAcidStr = "ASP";
+							break;
+
+						case 17:
+							//
+							selectedAminoAcidStr = "GLU";
+							break;
+
+						case 18:
+							//
+							selectedAminoAcidStr = "LYS";
+							break;
+
+						case 19:
+							//
+							selectedAminoAcidStr = "ARG";
+							break;
+
+						case 20:
+							//
+							selectedAminoAcidStr = "HIS";
+							break;
+
+						default:
+							break;
+
+					}
+
+					if (_residueGo.GetComponent<Residue>().type != selectedAminoAcidStr)
+					{
+						// selected residue type is different => replace sidechain
+						Debug.Log ("Click from UI: " + UISelectedAminoAcid + " " + selectedAminoAcidStr);
+						_ppb.sideChainBuilder.BuildSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid, selectedAminoAcidStr);
+					}
+					else
+					{
+						//don't replace sidechain as the type is unchanged
+					}
+
+					if (selectedAminoAcidStr == "-")
+					{
+						// shouldn't happen!
+					}
+
+				}
+			}
+			//push update of scale and colliders
+			_ppb.ScaleVDW(vdwScale);
+			_ppb.SetAllColliderIsTrigger(!collidersOn);
+			
+			//force update of H Atom rendering
+			UpdateShowHAtomsFromUI(showHydrogenAtoms);
+		}
+
+	}
+
+	public void UpdateAminoAcidSelFromUI()
+	{
+		Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+	}
+
+	public void UpdateShowHAtomsFromUI(bool value)
+	{
+		//Debug.Log("Click from UI: " + value);
+		// TODO - store value, bond rendering
+		showHydrogenAtoms = value;
+		{
+			GameObject[] gos;
+			gos = GameObject.FindGameObjectsWithTag("H");
+			foreach (GameObject _H in gos)
+			{
+				_H.GetComponent<Renderer>().enabled = value;
+			}
+			gos = GameObject.FindGameObjectsWithTag("bondToH");
+			foreach (GameObject _bondToH in gos)
+			{
+				_bondToH.GetComponent<Renderer>().enabled = value;
+			}
+		}
+	}
+	public void TakeSnapshotFromUI()
+	{
+		mySnapshotCamera.GetComponent<SnapshotCamera>().CamCapture();
+	}
+
+	public void UpdateTestToggleFromUI(bool value)
+	{
+		Debug.Log("Click from UI: " + value);
+		if (value == true)
+		{
+			
+		}
+
+	}
+
+
+	// TODO refactor duplicated code for UI panel activation / transitions
+
+	public void TogglePanel02FromUI(bool value)
+	{
+		//Debug.Log("Click from TogglePanel02FromUI: " + value);
+		UIPanel02.SetActive(value);
+		
+	}
+
+	private void UpdatePanel02Pos()
+	{
+		if (UIPanel02.activeSelf == true)
+		{
+			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * 1.36f)), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanel02.activeSelf == false)
+		{
+			UIPanel02.transform.position = Vector3.Lerp(UIPanel02.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanel03FromUI(bool value)
+	{
+		//Debug.Log("Click from TogglePanel03FromUI: " + value);
+		UIPanel03.SetActive(value);
+
+		mySnapshotCamera.transform.position = snapshotCameraResetTransform.position;
+		mySnapshotCamera.transform.rotation = snapshotCameraResetTransform.rotation; 
+		
+		// TODO
+		// camera reset rotation should probably not have any pitch (X rot)
+		// but this doesn't work:
+		//mySnapshotCamera.transform.rotation = Quaternion.Euler(0, UI.transform.rotation.y, UI.transform.rotation.z);
+
+		mySnapshotCamera.SetActive(value);
+	}
+
+	private void UpdatePanel03Pos()
+	{
+		if (UIPanel03.activeSelf == true)
+		{
+			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * -1.15f)), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanel03.activeSelf == false)
+		{
+			UIPanel03.transform.position = Vector3.Lerp(UIPanel03.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanelInfoFromUI(bool value)
+	{
+		UIPanelInfo.SetActive(value);
+	}
+
+	private void UpdatePanelInfoPos()
+	{
+		if (UIPanelInfo.activeSelf == true)
+		{
+			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanelInfo.activeSelf == false)
+		{
+			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	public void TogglePanelControlsFromUI(bool value)
+	{
+		UIPanelControls.SetActive(value);
+	}
+
+	private void UpdatePanelControlsPos()
+	{
+		if (UIPanelControls.activeSelf == true)
+		{
+			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		if (UIPanelControls.activeSelf == false)
+		{
+			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	private void UpdateKeepGameObjectAccessible(GameObject go, float minY, float maxY)
+	{
+		// hacky repositioning lerp to keep things from getting lost...
+		// TODO - bounding box for play area?
+		if (go.transform.position.y < minY)
+		{
+			Vector3 target = new Vector3(go.transform.position.x, minY, go.transform.position.z);
+			
+			go.transform.position = Vector3.Lerp(go.transform.position, target, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+
+		if (go.transform.position.y > maxY)
+		{
+			Vector3 target = new Vector3(go.transform.position.x, maxY, go.transform.position.z);
+
+			go.transform.position = Vector3.Lerp(go.transform.position, target, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+	}
+
+	private void UpdateKeepGameObjectCloseToPlayer(GameObject go, float maxDistance)
+	{
+		// hacky repositioning lerp to keep things from getting lost...
+		// TODO - bounding box for play area?
+		Vector3 offSet = go.transform.position - myPlayerController.transform.position;
+
+		//Debug.Log(offSet.magnitude);
+		if (offSet.magnitude > maxDistance)
+		{
+			//go.layer = LayerMask.NameToLayer("Default");
+			Vector3 targetPos = myPlayerController.transform.position + (offSet.normalized * maxDistance);
+			go.transform.position = Vector3.Lerp(go.transform.position, targetPos, ((Time.deltaTime / 0.01f) * 0.05f));
+
+			//go.transform.position = Vector3.Lerp(go.transform.position, go.transform.position - offSet.normalized, ((Time.deltaTime / 0.01f) * 0.05f));
+		}
+		else
+		{
+			//go.layer = LayerMask.NameToLayer("Default");
+		}
+	}
+
 	public void ResetLevel()
 	{
 		Scene m_Scene = SceneManager.GetActiveScene();
@@ -343,7 +724,15 @@ public class PolyPepManager : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+	{
+		UpdatePanel02Pos();
+		UpdatePanel03Pos();
+		UpdatePanelInfoPos();
+		UpdatePanelControlsPos();
+		UpdateKeepGameObjectAccessible(UI, 0.5f, 5.0f);
+		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
+		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
+		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
 	}
 }

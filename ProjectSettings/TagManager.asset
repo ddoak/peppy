@@ -16,6 +16,10 @@ TagManager:
   - R
   - C
   - O
+  - UI
+  - S
+  - UnusedAtom
+  - bondToH
   layers:
   - Default
   - TransparentFX
@@ -29,7 +33,7 @@ TagManager:
   - Hbond
   - Atom
   - InteractableUI
-  - 
+  - SnapshotRender
   - 
   - 
   - 

@@ -84,9 +84,6 @@ public class BackboneUnit : MonoBehaviour {
 		myPolyPepBuilder.SetAllColliderIsTrigger(!myPolyPepManager.collidersOn);
 
 		myPolyPepBuilder.UpdateHBondSprings();
-
-		myPolyPepBuilder.drivePhiPsiMaxForce = myPolyPepManager.phiPsiDrive;
-		myPolyPepBuilder.drivePhiPsiPosSpring = myPolyPepManager.phiPsiDrive;
 		myPolyPepBuilder.UpdatePhiPsiDrives();
 
 		UpdateRenderMode();
@@ -192,11 +189,15 @@ public class BackboneUnit : MonoBehaviour {
 		//bool doBondCartoonRendering = true;
 		if (myPolyPepManager.doCartoonBondRendering)
 		{
-			//float bondToonRenderScale = (myPolyPepManager.phiPsiDrive / 400.0f) * 3.0f;
-			float bondToonRenderScale = (myResidue.drivePhiPsiTorqValue / 400.0f) * 5.0f;
+			float bondToonRenderScale = 0.0f;
+			if (myResidue.drivePhiPsiTorqValue > 0)
+			{
+					bondToonRenderScale = 2.0f + ((myResidue.drivePhiPsiTorqValue / 400.0f) * 5.0f);
+			}
+			
 			if (rendererPhi)
 			{
-				if (myPolyPepManager.showDrivenBondsOn && myResidue.drivePhiPsiOn)
+				if (myPolyPepManager.showDrivenBondsOn)
 				{
 					rendererPhi.material.shader = shaderToonOutline;
 					rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
@@ -210,7 +211,7 @@ public class BackboneUnit : MonoBehaviour {
 
 			if (rendererPsi)
 			{
-				if (myPolyPepManager.showDrivenBondsOn && myResidue.drivePhiPsiOn)
+				if (myPolyPepManager.showDrivenBondsOn)
 				{
 					rendererPsi.material.shader = shaderToonOutline;
 					rendererPsi.material.SetColor("_OutlineColor", Color.magenta);

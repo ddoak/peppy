@@ -18,6 +18,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public PolyPepManager myPolyPepManager;
 
+	public SideChainBuilder sideChainBuilder;
+
 	public Transform buildTransform;
 
 	// bond lengths used in backbone configurable joints
@@ -25,6 +27,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	float bondLengthPeptide = 1.33f;
 	float bondLengthAmideCalpha = 1.46f;
 	float bondLengthCalphaCarbonyl = 1.51f;
+
+	// used in dynamic hbond configurable joints
+	// highly empirical magic numbers
+	float hBondModelInnerLength = 1.2f;
+	float hBondModelOuterLength = 3.5f;
+
 
 	public int secondaryStructure { get; set; } // = 0;
 
@@ -46,9 +54,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public float hbondStrength = 0f; // updated by PolyPepManager
 
-	public float drivePhiPsiMaxForce = 200.0f; // 100.0f
-	public float drivePhiPsiPosSpring = 200.0f; // 100.0f
 	public int drivePhiPsiPosDamper = 1;
+	public int drivePhiPsiPosDamperPassive = 0;
 
 	private Slider hbondSliderUI;
 
@@ -82,6 +89,54 @@ public class PolyPepBuilder : MonoBehaviour {
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 
 		buildPolypeptideChain();
+
+		//for (int resid = 0; resid < numResidues; resid++)
+		//{
+		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
+		//}
+
+		//sideChainBuilder.BuildSideChain(gameObject, 1, "LYS");
+		//sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
+		//sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
+
+		if (false)
+		{
+		//oxytocin
+		sideChainBuilder.BuildSideChain(gameObject, 0, "CYS");
+		sideChainBuilder.BuildSideChain(gameObject, 1, "TYR");
+		sideChainBuilder.BuildSideChain(gameObject, 2, "ILE");
+		sideChainBuilder.BuildSideChain(gameObject, 3, "GLN");
+		sideChainBuilder.BuildSideChain(gameObject, 4, "ASN");
+		sideChainBuilder.BuildSideChain(gameObject, 5, "CYS");
+		sideChainBuilder.BuildSideChain(gameObject, 6, "PRO");
+		sideChainBuilder.BuildSideChain(gameObject, 7, "LEU");
+		sideChainBuilder.BuildSideChain(gameObject, 8, "GLY");
+
+		sideChainBuilder.MakeDisulphide(gameObject, 0, gameObject, 5);
+		}
+
+		if (false && numResidues > 9)
+		{
+
+			sideChainBuilder.BuildSideChain(gameObject, 1, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 2, "TYR");
+			sideChainBuilder.BuildSideChain(gameObject, 3, "ILE");
+			sideChainBuilder.BuildSideChain(gameObject, 4, "GLN");
+			sideChainBuilder.BuildSideChain(gameObject, 5, "ASN");
+			sideChainBuilder.BuildSideChain(gameObject, 6, "CYS");
+			sideChainBuilder.BuildSideChain(gameObject, 7, "PRO");
+			sideChainBuilder.BuildSideChain(gameObject, 8, "LEU");
+			sideChainBuilder.BuildSideChain(gameObject, 9, "GLY");
+			//sideChainBuilder.BuildSideChain(gameObject, 10, "ASN");
+			//sideChainBuilder.BuildSideChain(gameObject, 11, "GLU");
+			//sideChainBuilder.BuildSideChain(gameObject, 12, "GLN");
+			//sideChainBuilder.BuildSideChain(gameObject, 13, "ARG");
+			//sideChainBuilder.BuildSideChain(gameObject, 14, "LYS");
+			//sideChainBuilder.BuildSideChain(gameObject, 15, "PHE");
+			//sideChainBuilder.BuildSideChain(gameObject, 16, "TYR");
+			
+
+		}
 
 		// test: add arbitrary distance constraints
 		//AddDistanceConstraint(polyArr[2], polyArr[12], 0.6f, 20);
@@ -246,49 +301,70 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		chainArr[index] = Instantiate(residuePf, transform);
 		chainArr[index].name = "Residue_" + (index).ToString();
+		chainArr[index].GetComponent<Residue>().resid = index;
+		chainArr[index].GetComponent<Residue>().myPolyPepBuilder = gameObject.GetComponent<PolyPepBuilder>();
+		chainArr[index].GetComponent<Residue>().myPolyPepManager = myPolyPepManager;
 	}
 
 	public void ScaleVDW(float scale)
 	{
 		{
 			float scaleVDW = scale;
+			// relative atom radii
 			float radiusN = 1.0f;
 			float radiusC = 1.0f;
 			float radiusO = 1.0f;
 			float radiusH = 0.75f;
-
-			float radiusR = 1.25f;
+			float radiusS = 1.1f;
+			float radiusR = 1.1f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
 			foreach (Transform child in allChildren)
 			{
-				float atomScale;
+				//float atomDisplayScale = 1.0f;
 				switch (child.tag)
 				{
 					case "N":
-						atomScale = radiusN * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusN * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusN);
 						break;
 					case "C":
-						atomScale = radiusC * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusC * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusC);
 						break;
 					case "O":
-						atomScale = radiusO * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusO * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusO);
 						break;
 					case "H":
-						atomScale = radiusH * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusH * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusH);
 						break;
 					case "R":
-						atomScale = radiusR * scaleVDW;
-						child.transform.localScale = new Vector3(atomScale, atomScale, atomScale);
+						//atomDisplayScale = radiusR * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusR);
+						break;
+					case "S":
+						//atomDisplayScale = radiusS * scaleVDW;
+						ScaleAtom(child, scaleVDW, radiusS);
 						break;
 				}
-
+				
 			}
 		}
+	}
+
+	private void ScaleAtom(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
+	{
+		// CPK / VDW slider changes rendering
+		float atomDisplayScale = relativeRadiusAtomType * scaleVDW;
+		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
+		// physics collider should be constant radius and independent of rendering scale
+		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
+		// SO apply inverse scaling to SphereCollider to compensate
+		myAtom.GetComponent<SphereCollider>().radius = 1.1f * relativeRadiusAtomType / scaleVDW; 
+		// 1.1f is magic number
+
 	}
 
 	public void UpdateAllDrag()
@@ -298,6 +374,12 @@ public class PolyPepBuilder : MonoBehaviour {
 			SetRbDrag(GetAmideForResidue(resid));
 			SetRbDrag(GetCalphaForResidue(resid));
 			SetRbDrag(GetCarbonylForResidue(resid));
+
+			//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
+			foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+			{
+				SetRbDrag(_sidechainGO);
+			}
 		}
 	}
 
@@ -314,19 +396,25 @@ public class PolyPepBuilder : MonoBehaviour {
 		// empirical values which seem to behave well
 		go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
-		go.GetComponent<Rigidbody>().angularDrag = 1;
+		go.GetComponent<Rigidbody>().angularDrag = 5;
 		}
 	}
 
 	public void SetAllColliderIsTrigger(bool value)
 	{
-		for (int i = 0; i < polyLength; i++)
+		//for (int i = 0; i < polyLength; i++)
+		//{
+		//	var colliders = polyArr[i].GetComponentsInChildren<Collider>();
+		//	foreach (var col in colliders)
+		//	{
+		//		col.isTrigger = value;
+		//	}
+		//}
+
+		Collider[] allChildren = GetComponentsInChildren<Collider>();
+		foreach (Collider childCollider in allChildren)
 		{
-			var colliders = polyArr[i].GetComponentsInChildren<Collider>();
-			foreach (var col in colliders)
-			{
-				col.isTrigger = value;
-			}
+			childCollider.isTrigger = value;
 		}
 	}
 
@@ -464,7 +552,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 1.0f;
+			float HBondLength = hBondModelInnerLength;
 
 			sjHbond.minDistance = HBondLength * scale;
 			sjHbond.maxDistance = HBondLength * scale;
@@ -499,7 +587,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 3.5f;
+			float HBondLength = hBondModelOuterLength;
 
 			sjHbond2.minDistance = HBondLength * scale;
 			sjHbond2.maxDistance = HBondLength * scale;
@@ -534,7 +622,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			// scale joint parameters to PolyPepBuilder and Amide_pf
 
 			float scale = gameObject.transform.localScale.x * donorGO.transform.localScale.x;
-			float HBondLength = 3.5f;
+			float HBondLength = hBondModelOuterLength;
 
 			sjHbond3.minDistance = HBondLength * scale;
 			sjHbond3.maxDistance = HBondLength * scale;
@@ -616,9 +704,14 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-			if (myPolyPepManager.hbondsOn)
+
+			string resType = chainArr[resid].GetComponent<Residue>().type;
+			//Debug.Log(resType);
+
+			if ((myPolyPepManager.hbondsOn) && (chainArr[resid].GetComponent<Residue>().type != "PRO")) // DGD dirty hack to disable PRO HN hbond
 			{
 				GameObject donorGO = GetAmideForResidue(resid);
+
 				var hbond_sj = hbondBackboneSj_HO[resid];
 				var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
 
@@ -870,17 +963,17 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
-	GameObject GetAmideForResidue(int residue)
+	public GameObject GetAmideForResidue(int residue)
 	{
 		return (polyArr[residue * 3]);
 	}
 
-	GameObject GetCalphaForResidue(int residue)
+	public GameObject GetCalphaForResidue(int residue)
 	{
 		return (polyArr[(residue * 3) + 1]);
 	}
 
-	GameObject GetCarbonylForResidue(int residue)
+	public GameObject GetCarbonylForResidue(int residue)
 	{
 		return (polyArr[(residue * 3) + 2]);
 	}
@@ -1007,28 +1100,21 @@ public class PolyPepBuilder : MonoBehaviour {
 		RbCarbonyl.WakeUp();
 	}
 
-	public void UpdatePhiPsiDrives()
+	public void UpdatePhiPsiDriveTorques(bool selectedResiduesOnly)
 	{
-		// Note that 'Position' is actually a rotation ;)
-		//
-		// values are empirical
-		//
-
-		//int drivePhiPsiPosDamper = 1;
-		int drivePhiPsiPosDamperPassive = 0;
-
+		// selectedResiduesOnly == true default behaviour
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 			Residue residue = chainArr[resid].GetComponent<Residue>();
 
-			if (residue.IsResidueSelected())
+			if (residue.IsResidueSelected() || !selectedResiduesOnly)
 			{
-				residue.drivePhiPsiTorqValue = drivePhiPsiMaxForce; // placeholder tracking value
+				residue.drivePhiPsiTorqValue = myPolyPepManager.phiPsiDriveTorqueFromUI;
 			}
 
-
 			if (residue.drivePhiPsiOn)
+			// DGD - currently (2019.1.2) this is always true - interface for switching is disabled in UI
 			//on
 			{
 				// active
@@ -1055,42 +1141,23 @@ public class PolyPepBuilder : MonoBehaviour {
 				//Debug.Log("PhiPsi Drive = OFF ");
 			}
 
-
-
-
-			//if (residue.drivePhiPsiOn)
-			////on
-			//{
-			//	// active
-			//	chainPhiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
-			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-			//	chainPhiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
-
-			//	chainPsiJointDrives[resid].maximumForce = drivePhiPsiMaxForce;
-			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamper;
-			//	chainPsiJointDrives[resid].positionSpring = drivePhiPsiPosSpring;
-			//	//Debug.Log("PhiPsi Drive = ON ");
-			//}
-			//else
-			////off
-			//{
-			//	//passive
-			//	chainPhiJointDrives[resid].maximumForce = 0.0f;
-			//	chainPhiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
-			//	chainPhiJointDrives[resid].positionSpring = 0.0f;
-
-			//	chainPsiJointDrives[resid].maximumForce = 0.0f;
-			//	chainPsiJointDrives[resid].positionDamper = drivePhiPsiPosDamperPassive;
-			//	chainPsiJointDrives[resid].positionSpring = 0.0f;
-			//	//Debug.Log("PhiPsi Drive = OFF ");
-			//}
-
 			UpdatePhiPsiDriveParamForResidue(resid);
 
 		}
 
 	}
 
+	public void UpdatePhiPsiDrives()
+	{
+		bool selectionOnly = true;
+		UpdatePhiPsiDriveTorques(selectionOnly);
+	}
+
+	public void UpdatePhiPsiDrivesForceAll()
+	{
+		bool selectionOnly = false;
+		UpdatePhiPsiDriveTorques(selectionOnly);
+	}
 
 	public void UpdateHBondSprings()
 	{
@@ -1360,10 +1427,20 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		if (myPolyPepManager.jiggleStrength > 0.0f)
 		{
+			//backbone
 			for (int i = 0; i < polyLength; i++)
 			{
 				Rigidbody rb = polyArr[i].GetComponent<Rigidbody>();
 				rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+			}
+			//sidechains
+			for (int resid = 0; resid < numResidues; resid++)
+			{ 
+				foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+				{
+					Rigidbody rb = _sidechainGO.GetComponent<Rigidbody>();
+					rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+				}
 			}
 		}
 
