@@ -11,6 +11,7 @@ public class PolyPepManager : MonoBehaviour {
 	public List<PolyPepBuilder> allPolyPepBuilders = new List<PolyPepBuilder>();
 
 	public SideChainBuilder sideChainBuilder;
+	public ElectrostaticsManager electrostaticsManager;
 
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
@@ -93,6 +94,9 @@ public class PolyPepManager : MonoBehaviour {
 		temp = GameObject.Find("SideChainBuilder");
 		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
 
+		temp = GameObject.Find("ElectrostaticsManager");
+		electrostaticsManager = temp.GetComponent<ElectrostaticsManager>();
+
 		UI = GameObject.Find("UI");
 
 		UIPanelSideChains = GameObject.Find("UI_PanelSideChains");
@@ -167,7 +171,7 @@ public class PolyPepManager : MonoBehaviour {
 			int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
 			//Debug.Log(spawnTransform.position);
 
-			Vector3 offset = -spawnTransform.transform.right * (numResidues-1) * 0.2f;
+			Vector3 offset = -spawnTransform.transform.right * (numResidues - 1) * 0.2f;
 			// offset to try to keep new pp in sensible position
 			// working solution - no scale, centre of mass / springs ...
 			//spawnTransform.transform.position += offset; // NO! this is a reference not a copy!
@@ -180,7 +184,7 @@ public class PolyPepManager : MonoBehaviour {
 
 			ppb_cs.sideChainBuilder = sideChainBuilder;
 		}
-		
+
 	}
 
 	void OnDrawGizmos()
@@ -296,6 +300,16 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void SelectionInvertFromUI()
+	{
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.InvertSelection();
+		}
+	}
+
+
+
 	public void SetSelectionDriveFromUI (bool value)
 	{
 		//Debug.Log("hello from the manager! ---> SetSelectionDriveOffFromUI");
@@ -303,6 +317,14 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.SetPhiPsiDriveForSelection(value);
 			_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
+	public void UpdateElectroStaticsOnOnFromUI(bool value)
+	{
+		if (electrostaticsManager.ElectrostaticsOn != value)
+		{
+			electrostaticsManager.SwitchElectrostatics();
 		}
 	}
 
@@ -403,7 +425,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void MutateSelectedResiduesFromUI()
 	{
-		Debug.Log("Mutate: " + UISelectedAminoAcid);
+		//Debug.Log("Mutate: " + UISelectedAminoAcid);
 
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
@@ -528,7 +550,7 @@ public class PolyPepManager : MonoBehaviour {
 					if (_residueGo.GetComponent<Residue>().type != selectedAminoAcidStr)
 					{
 						// selected residue type is different => replace sidechain
-						Debug.Log ("Click from UI: " + UISelectedAminoAcid + " " + selectedAminoAcidStr);
+						//Debug.Log ("Click from UI: " + UISelectedAminoAcid + " " + selectedAminoAcidStr);
 						_ppb.sideChainBuilder.BuildSideChain(_ppb.gameObject, _residueGo.GetComponent<Residue>().resid, selectedAminoAcidStr);
 					}
 					else
@@ -553,9 +575,52 @@ public class PolyPepManager : MonoBehaviour {
 
 	}
 
+	public void MakeDisulphideFromUI()
+	{
+		int numSelectedCYS = 0;
+		GameObject pp1 = gameObject;
+		GameObject pp2 = gameObject;
+		int resid1 = 0, resid2 = 0;
+
+
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			foreach (GameObject _residueGo in _ppb.chainArr)
+			{
+				if (_residueGo.GetComponent<Residue>().residueSelected == true)
+				{
+					bool notDisulphideBonded = !_residueGo.GetComponent<Residue>().disulphidePartnerResidue;
+					if ((_residueGo.GetComponent<Residue>().type == "CYS") && notDisulphideBonded)
+					{
+						if (numSelectedCYS == 0)
+						{
+							// store 1st candidate
+							pp1 = _ppb.gameObject;
+							resid1 = _residueGo.GetComponent<Residue>().resid;
+						}
+						if (numSelectedCYS == 1)
+						{
+							// store 2nd candidate
+							pp2 = _ppb.gameObject;
+							resid2 = _residueGo.GetComponent<Residue>().resid;
+						}
+						numSelectedCYS++;
+					}
+
+				}
+			}
+		}
+		//Debug.Log("Make Disulphide " + numSelectedCYS + " CYS residues selected");
+		if (numSelectedCYS == 2)
+		{
+				sideChainBuilder.MakeDisulphide(pp1, resid1, pp2, resid2);
+		}
+	}
+
+
 	public void UpdateAminoAcidSelFromUI()
 	{
-		Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+		//Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
 	}
 
 	public void UpdateShowHAtomsFromUI(bool value)
@@ -584,7 +649,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void UpdateTestToggleFromUI(bool value)
 	{
-		Debug.Log("Click from UI: " + value);
+		//Debug.Log("Click from UI: " + value);
 		if (value == true)
 		{
 			

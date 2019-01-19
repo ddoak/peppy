@@ -53,7 +53,7 @@ public class Residue : MonoBehaviour {
 	public bool drivePhiPsiOn;
 	public float drivePhiPsiTorqValue;
 
-
+	public Residue disulphidePartnerResidue = null;
 
 	// Use this for initialization
 	private void Awake()

@@ -59,11 +59,20 @@ public class SideChainBuilder : MonoBehaviour {
 
 	private void DeleteSideChain(Residue residue_cs)
 	{
+		//deal with special cases
+
 		if (residue_cs.type == "PRO")
 		{
 			//re-enable amide HN
 			ToggleAmideHN(residue_cs, true);
 		}
+
+		// CYS - disulphide bridges
+		if (residue_cs.disulphidePartnerResidue)
+		{
+			RemoveDisulphide(residue_cs);
+		}
+
 
 		if (residue_cs.sideChainList.Count > 0)
 		{
@@ -1576,17 +1585,22 @@ public class SideChainBuilder : MonoBehaviour {
 
 	public void MakeDisulphide(GameObject ppb1_go, int resid1, GameObject ppb2_go, int resid2)
 	{
-		// TODO - resids valid?
+		// No checks here 
+		// TODO - asserts? residues CYS? etc...
+		// code path to here should have checked all requiremments !
+
 		PolyPepBuilder ppb1_cs = ppb1_go.GetComponent<PolyPepBuilder>();
 		Residue residue1_cs = ppb1_cs.chainArr[resid1].GetComponent<Residue>();
 
 		PolyPepBuilder ppb2_cs = ppb2_go.GetComponent<PolyPepBuilder>();
 		Residue residue2_cs = ppb2_cs.chainArr[resid2].GetComponent<Residue>();
 
-		// TODO - residues CYS?
+		//book keeping in resid scripts
+		residue1_cs.disulphidePartnerResidue = residue2_cs;
+		residue2_cs.disulphidePartnerResidue = residue1_cs;
 
-		Debug.Log(residue1_cs.sideChainList[1]);
-		Debug.Log(residue2_cs.sideChainList[1]);
+		//Debug.Log(residue1_cs.sideChainList[1]);
+		//Debug.Log(residue2_cs.sideChainList[1]);
 
 		var SG1 = residue1_cs.sideChainList[1];
 		var SG2 = residue2_cs.sideChainList[1];
@@ -1612,6 +1626,15 @@ public class SideChainBuilder : MonoBehaviour {
 		sg2.ConvertToDisulphide(true);
 	}
 
+	public void RemoveDisulphide(Residue residue1_cs)
+	{
+		// TODO		- explicitly delete the configurable joint between the S atoms
+		//			- replace H atom on the partner CYS
+
+		//book keeping in resid scripts
+		residue1_cs.disulphidePartnerResidue.disulphidePartnerResidue = null;
+		residue1_cs.disulphidePartnerResidue = null;
+	}
 
 	void OnDrawGizmos()
 	{

@@ -1412,6 +1412,23 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void InvertSelection()
+	{
+		for (int i = 0; i < polyLength; i++)
+		{
+			BackboneUnit _bbu = (polyArr[i].GetComponent("BackboneUnit") as BackboneUnit);
+			Assert.IsTrue(_bbu);
+			if (_bbu.myResidue.IsResidueSelected())
+			{
+				_bbu.SetMyResidueSelect(false);
+			}
+			else
+			{
+				_bbu.SetMyResidueSelect(true);
+			}
+		}
+	}
+
 	public void UpdateRenderModeAllBbu()
 	{
 		for (int i = 0; i < polyLength; i++)

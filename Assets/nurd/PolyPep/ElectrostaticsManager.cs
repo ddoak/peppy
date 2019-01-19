@@ -9,20 +9,22 @@ public class ElectrostaticsManager : MonoBehaviour {
 	public List<ChargedParticle> chargedParticles;
 	public List<MovingChargedParticle> movingChargedParticles;
 
+	public bool ElectrostaticsOn = false;
+
 	// Use this for initialization
 	void Start ()
 	{
 		chargedParticles = new List<ChargedParticle> (FindObjectsOfType<ChargedParticle>());
 		movingChargedParticles = new List<MovingChargedParticle>(FindObjectsOfType<MovingChargedParticle>());
 
-		foreach (MovingChargedParticle mcp in movingChargedParticles)
-			StartCoroutine (Cycle (mcp));
+		//foreach (MovingChargedParticle mcp in movingChargedParticles)
+		//	StartCoroutine (Cycle (mcp));
 		
 	}
 	
 	public IEnumerator Cycle(MovingChargedParticle mcp)
 	{
-		while(false) // false disables ES
+		while(true) // false disables ES
 		{
 			ApplyElectrostaticForce(mcp);
 			yield return new WaitForSeconds(cycleInterval);
@@ -33,7 +35,11 @@ public class ElectrostaticsManager : MonoBehaviour {
 	{
 		chargedParticles.Add(mcp);
 		movingChargedParticles.Add(mcp);
-		StartCoroutine(Cycle(mcp));
+		if (ElectrostaticsOn)
+		{
+			StartCoroutine(Cycle(mcp));
+		}
+
 	}
 
 	public void UnRegisterMovingChargedParticle(MovingChargedParticle mcp)
@@ -42,7 +48,20 @@ public class ElectrostaticsManager : MonoBehaviour {
 		chargedParticles.Remove(mcp);
 	}
 
-
+	public void SwitchElectrostatics()
+	{
+		if (ElectrostaticsOn)
+		{
+			StopAllCoroutines();
+			ElectrostaticsOn = false;
+		}
+		else
+		{
+			foreach (MovingChargedParticle mcp in movingChargedParticles)
+				StartCoroutine(Cycle(mcp));
+			ElectrostaticsOn = true;
+		}
+	}
 
 	private void ApplyElectrostaticForce(MovingChargedParticle mcp)
 	{
@@ -66,7 +85,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 					}
 
 					float distance = Vector3.Distance(mcp.transform.position, cp.transform.position);
-					float force = (0.1f * mcp.charge * cp.charge) / Mathf.Pow(distance, 2);
+					float force = (0.025f * mcp.charge * cp.charge) / Mathf.Pow(distance, 2);
 
 					Vector3 direction = mcp.transform.position - cp.transform.position;
 					direction.Normalize();
