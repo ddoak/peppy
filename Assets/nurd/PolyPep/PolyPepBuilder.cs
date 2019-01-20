@@ -82,6 +82,7 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	// Use this for initialization
 	void Start()
+
 	{
 		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/253l_phi_psi.txt"));
 
@@ -95,7 +96,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
 		//}
 
-		//sideChainBuilder.BuildSideChain(gameObject, 1, "LYS");
+		//sideChainBuilder.BuildSideChain(gameObject, 0, "PRO");
 		//sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
 		//sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
 
@@ -113,29 +114,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		sideChainBuilder.BuildSideChain(gameObject, 8, "GLY");
 
 		sideChainBuilder.MakeDisulphide(gameObject, 0, gameObject, 5);
-		}
-
-		if (false && numResidues > 9)
-		{
-
-			sideChainBuilder.BuildSideChain(gameObject, 1, "CYS");
-			sideChainBuilder.BuildSideChain(gameObject, 2, "TYR");
-			sideChainBuilder.BuildSideChain(gameObject, 3, "ILE");
-			sideChainBuilder.BuildSideChain(gameObject, 4, "GLN");
-			sideChainBuilder.BuildSideChain(gameObject, 5, "ASN");
-			sideChainBuilder.BuildSideChain(gameObject, 6, "CYS");
-			sideChainBuilder.BuildSideChain(gameObject, 7, "PRO");
-			sideChainBuilder.BuildSideChain(gameObject, 8, "LEU");
-			sideChainBuilder.BuildSideChain(gameObject, 9, "GLY");
-			//sideChainBuilder.BuildSideChain(gameObject, 10, "ASN");
-			//sideChainBuilder.BuildSideChain(gameObject, 11, "GLU");
-			//sideChainBuilder.BuildSideChain(gameObject, 12, "GLN");
-			//sideChainBuilder.BuildSideChain(gameObject, 13, "ARG");
-			//sideChainBuilder.BuildSideChain(gameObject, 14, "LYS");
-			//sideChainBuilder.BuildSideChain(gameObject, 15, "PHE");
-			//sideChainBuilder.BuildSideChain(gameObject, 16, "TYR");
-			
-
 		}
 
 		// test: add arbitrary distance constraints

@@ -44,7 +44,7 @@ public class Csp3 : MonoBehaviour {
 
 	}
 	
-	void SetupSp3Atom()
+	void LegacySetupSp3Atom()
 	{
 
 		//set up the atom and bonds as sp3 tetrahedral template
@@ -124,6 +124,96 @@ public class Csp3 : MonoBehaviour {
 		ShadowsOff();
 		CollidersOff();
 	}
+
+	void SetupSp3Atom()
+	{
+
+		// based on 1x1x1 cube
+
+		//set up the atom and bonds as sp3 tetrahedral template
+		Vector3 socketPos = new Vector3(0f, 0f, 0f);
+
+		foreach (Transform child in GetComponentsInChildren<Transform>())
+		{
+			//  generate tetrahedral sp3 positions from cube vertices
+			//Debug.Log(child);
+			float _scale = 0.1f * 1.46f / Mathf.Pow(3, 0.5f);
+			// unit cube generates bond length of 3^1/2 
+			// PolyPepBuilder.cs: float bondLengthAmideCalpha = 1.46f; 
+			bool addSocketOffset = true;
+			switch (child.name)
+			{
+				case "H_0":
+					//Debug.Log("----> Found a H_0");
+					HtfList.Add(child);
+					socketPos = new Vector3(1, 1, 1);
+					// orient forward (Z) along direction of first sp3 bond using LookAt
+					// essential to retain sanity later when building molecule
+					transform.LookAt(transform.position + socketPos);
+					break;
+				case "H_1":
+					HtfList.Add(child);
+					socketPos = new Vector3(-1, 1, -1);
+					break;
+				case "H_2":
+					HtfList.Add(child);
+					socketPos = new Vector3(-1, -1, 1);
+					break;
+				case "H_3":
+					HtfList.Add(child);
+					socketPos = new Vector3(1, -1, -1);
+					break;
+
+				case "tf_bond_H0":
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+				case "tf_bond_H3":
+					BtfList.Add(child);
+					addSocketOffset = false;
+					break;
+
+				default:
+					addSocketOffset = false;
+					break;
+			}
+			if (addSocketOffset)
+			{
+				child.transform.position += socketPos * _scale;
+			}
+
+		}
+
+
+		int j = 0;
+		foreach (Transform _H in HtfList)
+		{
+			//Debug.Log("H List ---> " + _H.name + " " + BtfList[j]);
+			// use LookAt to align bonds to sp3 atom positions
+
+			posA = transform.position;
+			posB = _H.transform.position; //  HtfList[j].position;
+			Vector3 relativePos = posB - posA;
+			//Debug.Log(" dist = " + Vector3.Magnitude(relativePos));
+			Quaternion rotation = Quaternion.LookRotation(relativePos);
+			BtfList[j].transform.LookAt(posB);// (HtfList[j].position);
+
+			// point the sp3 atoms at the central atom
+			_H.transform.LookAt(posA);
+
+			//Debug.Log(Vector3.Distance(posA, posB));
+
+			j++;
+		}
+
+		// dev: set random rotation to try to avoid axis aligned bugs
+		transform.rotation = Random.rotation;
+
+		ShadowsOff();
+		CollidersOff();
+	}
+
+
+
 
 	private void SetHAtomUnused(Transform _H)
 	{

@@ -1143,12 +1143,12 @@ public class SideChainBuilder : MonoBehaviour {
 			GameObject amide = residue_cs.amide_pf;
 			Transform HN = amide.transform.Find("tf_H/H_amide");
 
-			//Diable amide HN
+			//Disable amide HN
 			ToggleAmideHN(residue_cs, false);
 
 			// H-CD bond is longer than N-H	
 			Vector3 NtoH = HN.position - amide.transform.position;
-			_CD.transform.position = amide.transform.position + (1.6f * NtoH);
+			_CD.transform.position = amide.transform.position + (1.5f * NtoH);
 
 			{
 				// align along bond
@@ -1159,6 +1159,7 @@ public class SideChainBuilder : MonoBehaviour {
 				_CD.transform.rotation = q * _CD.transform.rotation; // not commutative
 
 			}
+
 
 			AddConfigJointBond(_CD, residue_cs.amide_pf);
 
