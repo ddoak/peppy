@@ -361,6 +361,21 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void UpdateAllDragStrength(float dragStrength)
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			SetRbDragStrength(GetAmideForResidue(resid), dragStrength);
+			SetRbDragStrength(GetCalphaForResidue(resid), dragStrength);
+			SetRbDragStrength(GetCarbonylForResidue(resid), dragStrength);
+
+			//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
+			foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+			{
+				SetRbDragStrength(_sidechainGO, dragStrength);
+			}
+		}
+	}
 	void SetRbDrag(GameObject go)
 	{
 		if (myPolyPepManager.dragHigh)
@@ -376,6 +391,17 @@ public class PolyPepBuilder : MonoBehaviour {
 		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 5;
 		}
+	}
+
+	void SetRbDragStrength(GameObject go, float dragStrength)
+	{
+	
+		// use lerp to map to meaningful range
+		float value = Mathf.Lerp(5, 25, dragStrength / 100);
+
+		go.GetComponent<Rigidbody>().mass = 1;
+		go.GetComponent<Rigidbody>().drag = value;
+		go.GetComponent<Rigidbody>().angularDrag = value;
 	}
 
 	public void SetAllColliderIsTrigger(bool value)

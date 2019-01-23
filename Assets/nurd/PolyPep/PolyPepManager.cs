@@ -17,6 +17,7 @@ public class PolyPepManager : MonoBehaviour {
 	public float vdwScale = 1.0f;
 
 	public bool dragHigh = false;
+	public float dragStrength = 5.0f;
 	public float jiggleStrength = 0.0f;
 
 	public bool hbondsOn = false;
@@ -48,6 +49,8 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider phiPsiDriveSliderUI;
 	public Slider spawnLengthSliderUI;
 	public Slider jiggleStrengthSliderUI;
+	public Slider dragStrengthSliderUI;
+	public Slider electrostaticsStrengthSliderUI;
 
 	private int testCount = 0;
 	public GameObject snapshotCamera_pf;
@@ -90,6 +93,13 @@ public class PolyPepManager : MonoBehaviour {
 
 		temp = GameObject.Find("Slider_JiggleStrength");
 		jiggleStrengthSliderUI = temp.GetComponent<Slider>();
+
+		temp = GameObject.Find("Slider_DragStrength");
+		dragStrengthSliderUI = temp.GetComponent<Slider>();
+
+		temp = GameObject.Find("Slider_ElectrostaticsStrength");
+		electrostaticsStrengthSliderUI = temp.GetComponent<Slider>();
+
 
 		temp = GameObject.Find("SideChainBuilder");
 		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
@@ -134,6 +144,11 @@ public class PolyPepManager : MonoBehaviour {
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
 			spawnLengthSliderUI.GetComponent<Slider>().value = 6; //10
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
+			dragStrengthSliderUI.GetComponent<Slider>().value = 0;
+
+			electrostaticsStrengthSliderUI.GetComponent<Slider>().value = 10;
+
+			electrostaticsManager.electrostaticsStrength = electrostaticsStrengthSliderUI.GetComponent<Slider>().value;
 
 			//temp = GameObject.Find("Slider_ResStart");
 
@@ -231,6 +246,14 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void UpdateDragStrengthFromUI(float dragStrengthFromUI)
+	{
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
+			_ppb.UpdateAllDragStrength(dragStrengthFromUI);
+		}
+	}
 
 	public void UpdateHbondOnFromUI(bool value)
 	{
@@ -322,7 +345,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void UpdateElectroStaticsOnOnFromUI(bool value)
 	{
-		if (electrostaticsManager.ElectrostaticsOn != value)
+		if (electrostaticsManager.electrostaticsOn != value)
 		{
 			electrostaticsManager.SwitchElectrostatics();
 		}
@@ -411,6 +434,11 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateJiggleFromUI(float jiggleFromUI)
 	{
 		jiggleStrength = jiggleFromUI;
+	}
+
+	public void UpdateElectrostaticsStrengthFromUI(float electrostaticsStrengthFromUI)
+	{
+	    electrostaticsManager.electrostaticsStrength = electrostaticsStrengthFromUI;
 	}
 
 	public void UpdateAllResidueLabelsOnFromUI(bool value)

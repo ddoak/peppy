@@ -9,7 +9,8 @@ public class ElectrostaticsManager : MonoBehaviour {
 	public List<ChargedParticle> chargedParticles;
 	public List<MovingChargedParticle> movingChargedParticles;
 
-	public bool ElectrostaticsOn = false;
+	public bool electrostaticsOn = false;
+	public float electrostaticsStrength;
 
 	// Use this for initialization
 	void Start ()
@@ -35,7 +36,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 	{
 		chargedParticles.Add(mcp);
 		movingChargedParticles.Add(mcp);
-		if (ElectrostaticsOn)
+		if (electrostaticsOn)
 		{
 			StartCoroutine(Cycle(mcp));
 		}
@@ -50,16 +51,16 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 	public void SwitchElectrostatics()
 	{
-		if (ElectrostaticsOn)
+		if (electrostaticsOn)
 		{
 			StopAllCoroutines();
-			ElectrostaticsOn = false;
+			electrostaticsOn = false;
 		}
 		else
 		{
 			foreach (MovingChargedParticle mcp in movingChargedParticles)
 				StartCoroutine(Cycle(mcp));
-			ElectrostaticsOn = true;
+			electrostaticsOn = true;
 		}
 	}
 
@@ -81,11 +82,12 @@ public class ElectrostaticsManager : MonoBehaviour {
 				{
 					if (mcp==cp)
 					{
+						// don't act on myself
 						continue;
 					}
 
 					float distance = Vector3.Distance(mcp.transform.position, cp.transform.position);
-					float force = (0.025f * mcp.charge * cp.charge) / Mathf.Pow(distance, 2);
+					float force = (0.0025f * electrostaticsStrength * mcp.charge * cp.charge) / Mathf.Pow(distance, 2);
 
 					Vector3 direction = mcp.transform.position - cp.transform.position;
 					direction.Normalize();
