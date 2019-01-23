@@ -795,7 +795,7 @@ public class PolyPepManager : MonoBehaviour {
 		UpdatePanel03Pos();
 		UpdatePanelInfoPos();
 		UpdatePanelControlsPos();
-		UpdateKeepGameObjectAccessible(UI, 0.5f, 5.0f);
+		UpdateKeepGameObjectAccessible(UI, 0.4f, 5.0f);
 		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
 		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
 		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
