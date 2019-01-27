@@ -1163,40 +1163,17 @@ public class PolyPepBuilder : MonoBehaviour {
 		UpdatePhiPsiDriveTorques(selectionOnly);
 	}
 
-	public void UpdateHBondSprings()
+	public void NudgeHbondSprings()
 	{
-		//if (ActiveHbondSpringConstraints)
-		//{
-		//	for (int resid = 0; resid < numResidues; resid++)
-		//	{
-		//		GameObject donorGO = GetAmideForResidue(resid);
-		//		var hbond_sj = donorGO.GetComponent<SpringJoint>();
-		//		var donorHLocation = donorGO.transform.TransformPoint(hbond_sj.anchor);
-
-		//		if (hbond_sj.connectedBody != null)
-		//		{
-		//			SwitchOnBackboneHbondConstraint(resid);
-		//			WakeResidRbs(resid);
-		//		}
-		//	}
-		//	//Debug.Log("HBond Springs = ON ");
-		//}
-		//else
-		//{
-		//	for (int resid = 0; resid < numResidues; resid++)
-		//	{
-		//		GameObject donorGO = GetAmideForResidue(resid);
-		//		SwitchOffBackboneHbondConstraint(resid);
-		//	}
-		//	//Debug.Log("HBond Springs = OFF ");
-		//}
+		if (myPolyPepManager.hbondsOn)
+		{
+			for (int resid = 0; resid < numResidues; resid++)
+			{
+				WakeResidRbs(resid);
+			}
+		}
 	}
 
-	//public void UpdateHbondStrengthFromUI()
-	//{
-	//	//TODO  Update Hbonds with new strength!
-	//	UpdateHBondSprings();
-	//}
 
 	private bool LoadPhiPsiData(string fileName)
 	{

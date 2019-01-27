@@ -83,7 +83,7 @@ public class BackboneUnit : MonoBehaviour {
 		myPolyPepBuilder.ScaleVDW(myPolyPepManager.vdwScale);
 		myPolyPepBuilder.SetAllColliderIsTrigger(!myPolyPepManager.collidersOn);
 
-		myPolyPepBuilder.UpdateHBondSprings();
+		myPolyPepBuilder.NudgeHbondSprings();
 		myPolyPepBuilder.UpdatePhiPsiDrives();
 
 		UpdateRenderMode();

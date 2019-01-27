@@ -241,7 +241,6 @@ public class PolyPepManager : MonoBehaviour {
 		dragHigh = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateAllDrag();
 		}
 	}
@@ -250,7 +249,6 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
 			_ppb.UpdateAllDragStrength(dragStrengthFromUI);
 		}
 	}
@@ -266,8 +264,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			//_ppb.ActiveHbondSpringConstraints = hbondsOn;
-			_ppb.UpdateHBondSprings();
+			_ppb.NudgeHbondSprings();
 		}
 	}
 	public void UpdateShowDrivenBondsOnFromUI(bool value)
