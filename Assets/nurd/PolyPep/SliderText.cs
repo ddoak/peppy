@@ -7,11 +7,16 @@ public class SliderText : MonoBehaviour {
 
 	public Text textComponent;
 
+
 	void Awake()
 	{
-		
+
 		textComponent = gameObject.GetComponent<Text>();
 		//Debug.Log(gameObject + " " + textComponent);
+		if (textComponent == null)
+		{
+			//textComponent = gameObject.GetComponent<TextMeshProUGUI>();
+		}
 	}
 
 	private void Start()
