@@ -36,6 +36,7 @@ public class PolyPepManager : MonoBehaviour {
 	public bool allResLabelsOn = false;
 	public bool showPeptidePlanes = false;
 	public bool showHydrogenAtoms = true;
+	public bool showPhiPsiTrail = false;
 
 	public int UISelectedAminoAcid { get; set; }
 
@@ -446,6 +447,11 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateShowPeptidePlanesOnFromUI(bool value)
 	{
 		 showPeptidePlanes= value;
+	}
+
+	public void UpdateShowPhiPsiTrailOnFromUI(bool value)
+	{
+		showPhiPsiTrail = value;
 	}
 
 	public void MutateSelectedResiduesFromUI()

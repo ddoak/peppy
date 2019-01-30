@@ -60,6 +60,8 @@ MonoBehaviour:
   psiCurrent: 0
   ramaPlot: {fileID: 0}
   ramaPlotScale: 0.0012
+  plotTrail_ps: {fileID: 198071437755785812, guid: c8fd33b3af585044184a715010c69b39,
+    type: 2}
   myPlotCube: {fileID: 0}
   Label_pf: {fileID: 1168876270144662, guid: 0afd8dac3b015364faed92e309447fc8, type: 2}
   myLabel: {fileID: 0}
@@ -71,6 +73,7 @@ MonoBehaviour:
   residueGrabbed: 0
   drivePhiPsiOn: 0
   drivePhiPsiTorqValue: 0
+  disulphidePartnerResidue: {fileID: 0}
 --- !u!224 &224437380751399752
 RectTransform:
   m_ObjectHideFlags: 1

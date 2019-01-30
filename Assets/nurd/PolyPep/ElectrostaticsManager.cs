@@ -104,6 +104,11 @@ public class ElectrostaticsManager : MonoBehaviour {
 					if (mcp.rb)
 					{
 						mcp.rb.AddForce(newForce, ForceMode.Impulse);
+						var fo = mcp.myChargedParticle_ps.forceOverLifetime;
+						float _scale = 200.0f;
+						fo.x = _scale * newForce.x;
+						fo.y = _scale * newForce.y;
+						fo.z = _scale * newForce.z;
 					}
 				}
 			}

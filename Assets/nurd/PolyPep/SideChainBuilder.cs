@@ -19,6 +19,7 @@ public class SideChainBuilder : MonoBehaviour {
 	public ElectrostaticsManager myElectrostaticsManager;
 	// script for electrostatics
 	private System.Type movingChargedParticleScriptType;
+	public ParticleSystem chargedParticle_ps;
 
 	// Use this for initialization
 	void Start ()
@@ -594,9 +595,13 @@ public class SideChainBuilder : MonoBehaviour {
 		_NZ.GetComponent<Csp3>().ConvertToNH3();
 
 		// add electrostatics moving charged particle script	
-		_NZ.AddComponent(movingChargedParticleScriptType);
-		_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
-		myElectrostaticsManager.RegisterMovingChargedParticle(_NZ.GetComponent<MovingChargedParticle>());
+
+		AssignChargeToAtom(_NZ, 1.0f);
+
+		//_NZ.AddComponent(movingChargedParticleScriptType);
+		//_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
+		//myElectrostaticsManager.RegisterMovingChargedParticle(_NZ.GetComponent<MovingChargedParticle>());
+		//_NZ.GetComponent<MovingChargedParticle>().myChargedParticle_ps = Instantiate(chargedParticle_ps, _NZ.transform);
 	}
 
 	void Build_ASP(Residue residue_cs)
@@ -666,14 +671,18 @@ public class SideChainBuilder : MonoBehaviour {
 		_OD2.GetComponent<Csp3>().ConvertSp2ToO();
 
 		// add electrostatics moving charged particle script	
-		_OD1.AddComponent(movingChargedParticleScriptType);
-		_OD1.GetComponent<MovingChargedParticle>().charge = -1.0f;
 
-		_OD2.AddComponent(movingChargedParticleScriptType);
-		_OD2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+		AssignChargeToAtom(_OD1, -1.0f);
+		AssignChargeToAtom(_OD2, -1.0f);
 
-		myElectrostaticsManager.RegisterMovingChargedParticle(_OD1.GetComponent<MovingChargedParticle>());
-		myElectrostaticsManager.RegisterMovingChargedParticle(_OD2.GetComponent<MovingChargedParticle>());
+		//_OD1.AddComponent(movingChargedParticleScriptType);
+		//_OD1.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		//_OD2.AddComponent(movingChargedParticleScriptType);
+		//_OD2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		//myElectrostaticsManager.RegisterMovingChargedParticle(_OD1.GetComponent<MovingChargedParticle>());
+		//myElectrostaticsManager.RegisterMovingChargedParticle(_OD2.GetComponent<MovingChargedParticle>());
 	}
 
 	void Build_GLU(Residue residue_cs)
@@ -752,14 +761,18 @@ public class SideChainBuilder : MonoBehaviour {
 		_OE2.GetComponent<Csp3>().ConvertSp2ToO();
 
 		// add electrostatics moving charged particle script	
-		_OE1.AddComponent(movingChargedParticleScriptType);
-		_OE1.GetComponent<MovingChargedParticle>().charge = -1.0f;
 
-		_OE2.AddComponent(movingChargedParticleScriptType);
-		_OE2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+		AssignChargeToAtom(_OE1, -1.0f);
+		AssignChargeToAtom(_OE2, -1.0f);
 
-		myElectrostaticsManager.RegisterMovingChargedParticle(_OE1.GetComponent<MovingChargedParticle>());
-		myElectrostaticsManager.RegisterMovingChargedParticle(_OE2.GetComponent<MovingChargedParticle>());
+		//_OE1.AddComponent(movingChargedParticleScriptType);
+		//_OE1.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		//_OE2.AddComponent(movingChargedParticleScriptType);
+		//_OE2.GetComponent<MovingChargedParticle>().charge = -1.0f;
+
+		//myElectrostaticsManager.RegisterMovingChargedParticle(_OE1.GetComponent<MovingChargedParticle>());
+		//myElectrostaticsManager.RegisterMovingChargedParticle(_OE2.GetComponent<MovingChargedParticle>());
 
 
 
@@ -974,7 +987,21 @@ public class SideChainBuilder : MonoBehaviour {
 	{
 		atom.AddComponent(movingChargedParticleScriptType);
 		atom.GetComponent<MovingChargedParticle>().charge = charge;
+		atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps = Instantiate(chargedParticle_ps, atom.transform);
 		myElectrostaticsManager.RegisterMovingChargedParticle(atom.GetComponent<MovingChargedParticle>());
+		ParticleSystem.MainModule _psMain = atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps.main;
+
+		if (charge < 0)
+		{
+			_psMain.startColor = Color.red;
+		}
+		else if (charge > 0)
+		{
+			_psMain.startColor = Color.blue;
+		}
+		
+
+
 	}
 
 

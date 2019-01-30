@@ -33,6 +33,10 @@ public class Residue : MonoBehaviour {
 	public GameObject ramaPlot;
 	public float ramaPlotScale = 0.0012f; //  set visually against UI
 
+	public ParticleSystem plotTrail_ps;
+	private ParticleSystem myPlotTrail_ps;
+	private ParticleSystem.MainModule myTrailPsMain;
+
 	public GameObject myPlotCube;
 	private Vector3 myPlotCubeBaseScale = new Vector3(0.018f, 0.018f, 0.01f);
 	float deltaScale = 1.0f;
@@ -74,6 +78,8 @@ public class Residue : MonoBehaviour {
 		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
 		myPlotCube.transform.position = ramaPlot.transform.position;
 
+
+
 		Renderer myRenderer = myPlotCube.GetComponent<Renderer>();
 		myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		myRenderer.receiveShadows = false;
@@ -84,6 +90,15 @@ public class Residue : MonoBehaviour {
 
 		myPlotCubeLabel = Instantiate(Label_pf, transform);
 		myPlotCubeLabel.name = "plotCubeLabel";
+
+		myPlotTrail_ps = Instantiate(plotTrail_ps, myPlotCube.transform);
+		myTrailPsMain = myPlotTrail_ps.main;
+		//psMain.simulationSpace = 2;
+		myTrailPsMain.startSize = 0.02f;
+		myTrailPsMain.customSimulationSpace = ramaPlot.transform;
+
+		ParticleSystem.EmissionModule psEmission = myPlotTrail_ps.emission;
+		psEmission.rateOverTime = 200;
 
 		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
 		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0008f;
@@ -131,6 +146,14 @@ public class Residue : MonoBehaviour {
 
 	void UpdatePhiPsiPlotObj()
 	{ 
+		if (myPolyPepManager.showPhiPsiTrail && !myPlotTrail_ps.isPlaying)
+		{
+			myPlotTrail_ps.Play();
+		}
+		if (!myPolyPepManager.showPhiPsiTrail && myPlotTrail_ps.isPlaying)
+		{
+			myPlotTrail_ps.Stop();
+		}
 
 		Renderer _myPlotCubeRenderer  = myPlotCube.GetComponent<Renderer>();
 		Vector3 deltaPos = new Vector3(0.0f, 0.0f, 0.0f);
@@ -140,6 +163,8 @@ public class Residue : MonoBehaviour {
 			_myPlotCubeRenderer.material.SetColor("_Color", Color.green);
 			//deltaPos += ramaPlot.transform.forward * -0.015f;
 			targetDeltaScale = 1.6f;
+			myTrailPsMain.startColor = new Color(0f, 0.8f, 0f, 0.8f); // Color.green;
+			myTrailPsMain.startSize = 0.01f;
 		}
 		else
 		{
@@ -148,6 +173,8 @@ public class Residue : MonoBehaviour {
 				_myPlotCubeRenderer.material.SetColor("_Color", Color.red);
 				//deltaPos += ramaPlot.transform.forward * -0.01f;
 				targetDeltaScale = 1.4f;
+				myTrailPsMain.startColor = new Color(0.8f, 0f, 0f, 0.8f); //Color.red;
+				myTrailPsMain.startSize = 0.01f;
 			}
 			else
 			{
@@ -155,11 +182,15 @@ public class Residue : MonoBehaviour {
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.yellow);
 					targetDeltaScale = 1.2f;
+					myTrailPsMain.startColor = new Color(0.8f, 0.6f, 0f, 1f); // Color.yellow;
+					myTrailPsMain.startSize = 0.012f;
 				}
 				else
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
 					targetDeltaScale = 1.0f;
+					myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.2f);  //white;
+					myTrailPsMain.startSize = 0.01f;
 				}
 			}
 		}
