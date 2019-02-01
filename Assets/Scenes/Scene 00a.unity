@@ -39951,7 +39951,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1197382616
 Transform:
   m_ObjectHideFlags: 0
@@ -50110,6 +50110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charge: -1
   myChargedParticle_ps: {fileID: 0}
+  residueGO: {fileID: 0}
   rb: {fileID: 1520965490}
 --- !u!135 &1520965492
 SphereCollider:
@@ -61272,6 +61273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charge: 1
   myChargedParticle_ps: {fileID: 0}
+  residueGO: {fileID: 0}
   rb: {fileID: 1810761822}
 --- !u!135 &1810761824
 SphereCollider:

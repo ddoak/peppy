@@ -76,21 +76,73 @@ public class ElectrostaticsManager : MonoBehaviour {
 			//Debug.Log("mcp - " + mcp);
 			//Debug.Log("mcp.rb - " + mcp.rb);
 
-			foreach (ChargedParticle cp in chargedParticles)
+			foreach (MovingChargedParticle mcp2 in movingChargedParticles)
 			{
 				//Debug.Log("cp - " + cp);
-				if (cp)
+				if (mcp2)
 				{
-					if (mcp==cp)
+					// Exclusions
+
+					// don't act on myself
+					if (mcp==mcp2)
 					{
-						// don't act on myself
+						
 						continue;
 					}
 
-					float distance = Vector3.Distance(mcp.transform.position, cp.transform.position);
-					float force = (0.0025f * electrostaticsStrength * mcp.charge * cp.charge) / Mathf.Pow(distance, 2);
+					// don't act on cp in same residue
+					if (mcp.residueGO && mcp2.residueGO)
+					{
+						if (mcp.residueGO == mcp2.residueGO)
+						{ 	
+							continue;
+						}
+					}
 
-					Vector3 direction = mcp.transform.position - cp.transform.position;
+					if (mcp.rb && mcp2.rb)
+					{
+						if (mcp.rb.tag == "amide")
+						{
+							if (mcp2.rb.tag == "carbonyl")
+							{
+
+								if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
+								{
+									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
+									{
+										continue;
+									}
+								}
+
+							}
+
+						}
+						if (mcp.rb.tag == "carbonyl")
+						{
+							if (mcp2.rb.tag == "amide")
+							{
+
+								if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
+								{
+									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
+									{
+										continue;
+									}
+								}
+
+							}
+
+						}
+					}
+
+					
+
+
+
+					float distance = Vector3.Distance(mcp.transform.position, mcp2.transform.position);
+					float force = (0.0025f * electrostaticsStrength * mcp.charge * mcp2.charge) / Mathf.Pow(distance, 2);
+
+					Vector3 direction = mcp.transform.position - mcp2.transform.position;
 					direction.Normalize();
 
 					newForce += force * direction * cycleInterval;
@@ -100,28 +152,29 @@ public class ElectrostaticsManager : MonoBehaviour {
 						newForce = Vector3.zero;
 					}
 
-					//Debug.Log(mcp);
-					//Debug.Log(mcp.rb);
-					if (mcp.rb)
-					{
-						mcp.rb.AddForce(newForce, ForceMode.Impulse);
-					}
-					if (mcp.myChargedParticle_ps)
-					{
-						var fo = mcp.myChargedParticle_ps.forceOverLifetime;
-						if (showElectrostatics)
-						{
-							mcp.myChargedParticle_ps.Play();
-							float _scale = 200.0f;
-							fo.x = _scale * newForce.x;
-							fo.y = _scale * newForce.y;
-							fo.z = _scale * newForce.z;
-						}
-						else
-						{
-							mcp.myChargedParticle_ps.Stop();
-						}
-					}
+				}
+			}
+			//Debug.Log(mcp);
+			//Debug.Log(mcp.rb);
+			if (mcp.rb)
+			{
+				mcp.rb.AddForce(newForce, ForceMode.Impulse);
+			}
+
+			if (mcp.myChargedParticle_ps)
+			{
+				var fo = mcp.myChargedParticle_ps.forceOverLifetime;
+				if (showElectrostatics)
+				{
+					mcp.myChargedParticle_ps.Play();
+					float _scale = 1000.0f;
+					fo.x = _scale * newForce.x;
+					fo.y = _scale * newForce.y;
+					fo.z = _scale * newForce.z;
+				}
+				else
+				{
+					mcp.myChargedParticle_ps.Stop();
 				}
 			}
 		}

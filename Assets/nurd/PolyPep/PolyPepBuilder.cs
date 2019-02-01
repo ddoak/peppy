@@ -268,6 +268,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			residue.amide_pf = polyArr[resid * 3];
 			residue.calpha_pf = polyArr[(resid * 3) + 1];
 			residue.carbonyl_pf = polyArr[(resid * 3) + 2];
+
+			//electrostatics - WIP - with goal to model hbonds
+			//sideChainBuilder.AddBackboneElectrostatics(residue);
 		}
 
 		InitBackboneHbondConstraints();

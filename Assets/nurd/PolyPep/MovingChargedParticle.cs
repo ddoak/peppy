@@ -7,6 +7,7 @@ public class MovingChargedParticle : ChargedParticle {
 
 	public Rigidbody rb;
 
+
 	// Use this for initialization
 
 	void Start ()

@@ -6,10 +6,15 @@ public class ChargedParticle : MonoBehaviour {
 
 	public float charge = 0f;
 	public ParticleSystem myChargedParticle_ps;
+	//public Rigidbody rb;
+
+	// grotesque hack for exclusions
+	public GameObject residueGO;
 
 	// Use this for initialization
-	void Start () {
-
+	void Start ()
+	{
+		//rb = gameObject.GetComponent<Rigidbody>();
 	}
 	
 

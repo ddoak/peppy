@@ -596,7 +596,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignChargeToAtom(_NZ, 1.0f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NZ, 1.0f);
 
 		//_NZ.AddComponent(movingChargedParticleScriptType);
 		//_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
@@ -672,8 +672,8 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignChargeToAtom(_OD1, -1.0f);
-		AssignChargeToAtom(_OD2, -1.0f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD1, -1.0f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD2, -1.0f);
 
 		//_OD1.AddComponent(movingChargedParticleScriptType);
 		//_OD1.GetComponent<MovingChargedParticle>().charge = -1.0f;
@@ -762,8 +762,8 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignChargeToAtom(_OE1, -1.0f);
-		AssignChargeToAtom(_OE2, -1.0f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE1, -1.0f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE2, -1.0f);
 
 		//_OE1.AddComponent(movingChargedParticleScriptType);
 		//_OE1.GetComponent<MovingChargedParticle>().charge = -1.0f;
@@ -976,18 +976,19 @@ public class SideChainBuilder : MonoBehaviour {
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
 
 		//SetChargeForAtom(_NE, -0.7f);
-		AssignChargeToAtom(_NH1, +0.8f);
-		AssignChargeToAtom(_NH2, +0.8f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH1, +0.8f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH2, +0.8f);
 		//SetChargeForAtom(_CZ, -0.64f);
 
 	}
 
 
-	void AssignChargeToAtom(GameObject atom, float charge)
+	void AssignElectrostaticsForAtom(GameObject parentResidueGO, GameObject atom, float charge)
 	{
 		atom.AddComponent(movingChargedParticleScriptType);
 		atom.GetComponent<MovingChargedParticle>().charge = charge;
 		atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps = Instantiate(chargedParticle_ps, atom.transform);
+		atom.GetComponent<MovingChargedParticle>().residueGO = parentResidueGO;
 		myElectrostaticsManager.RegisterMovingChargedParticle(atom.GetComponent<MovingChargedParticle>());
 		ParticleSystem.MainModule _psMain = atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps.main;
 
@@ -1526,6 +1527,12 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 		GameObject _CB = residue_cs.sideChainList[0];
 		_CB.name = "CB";
+	}
+
+	public void AddBackboneElectrostatics(Residue residue_cs)
+	{
+		AssignElectrostaticsForAtom(residue_cs.gameObject, residue_cs.amide_pf, 0.8f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, residue_cs.carbonyl_pf, -0.9f);
 	}
 
 	void AddConfigJointBond(GameObject go1, GameObject go2)
