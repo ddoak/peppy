@@ -147,7 +147,7 @@ public class PolyPepManager : MonoBehaviour {
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
 			dragStrengthSliderUI.GetComponent<Slider>().value = 0;
 
-			electrostaticsStrengthSliderUI.GetComponent<Slider>().value = 10;
+			electrostaticsStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			electrostaticsManager.electrostaticsStrength = electrostaticsStrengthSliderUI.GetComponent<Slider>().value;
 
@@ -341,12 +341,12 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
-	public void UpdateElectroStaticsOnOnFromUI(bool value)
+	public void UpdateElectroStaticsOnFromUI(bool value)
 	{
-		if (electrostaticsManager.electrostaticsOn != value)
-		{
-			electrostaticsManager.SwitchElectrostatics();
-		}
+		//if (electrostaticsManager.electrostaticsOn != value)
+		//{
+		//	electrostaticsManager.SwitchElectrostatics();
+		//}
 	}
 
 	public void UpdateDefinedSecondaryStructureFromUI()
@@ -439,6 +439,11 @@ public class PolyPepManager : MonoBehaviour {
 	    electrostaticsManager.electrostaticsStrength = electrostaticsStrengthFromUI;
 	}
 
+	public void UpdateShowElectrostaticsFromUI(bool value)
+	{
+		electrostaticsManager.showElectrostatics = value;
+	}
+
 	public void UpdateAllResidueLabelsOnFromUI(bool value)
 	{
 		allResLabelsOn = value;
@@ -453,6 +458,8 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		showPhiPsiTrail = value;
 	}
+
+
 
 	public void MutateSelectedResiduesFromUI()
 	{

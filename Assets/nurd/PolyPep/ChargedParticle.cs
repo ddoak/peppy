@@ -9,9 +9,15 @@ public class ChargedParticle : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+
 	}
 	
+
+	void UpdateParticleSystem()
+	{
+
+	}
+
 	// Update is called once per frame
 	void Update () {
 		

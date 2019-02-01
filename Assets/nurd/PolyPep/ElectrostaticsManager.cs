@@ -11,6 +11,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 	public bool electrostaticsOn = false;
 	public float electrostaticsStrength;
+	public bool showElectrostatics;
 
 	// Use this for initialization
 	void Start ()
@@ -18,9 +19,9 @@ public class ElectrostaticsManager : MonoBehaviour {
 		chargedParticles = new List<ChargedParticle> (FindObjectsOfType<ChargedParticle>());
 		movingChargedParticles = new List<MovingChargedParticle>(FindObjectsOfType<MovingChargedParticle>());
 
-		//foreach (MovingChargedParticle mcp in movingChargedParticles)
-		//	StartCoroutine (Cycle (mcp));
-		
+		foreach (MovingChargedParticle mcp in movingChargedParticles)
+			StartCoroutine(Cycle(mcp));
+
 	}
 	
 	public IEnumerator Cycle(MovingChargedParticle mcp)
@@ -36,7 +37,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 	{
 		chargedParticles.Add(mcp);
 		movingChargedParticles.Add(mcp);
-		if (electrostaticsOn)
+		//if (electrostaticsOn)
 		{
 			StartCoroutine(Cycle(mcp));
 		}
@@ -53,13 +54,13 @@ public class ElectrostaticsManager : MonoBehaviour {
 	{
 		if (electrostaticsOn)
 		{
-			StopAllCoroutines();
+			//StopAllCoroutines();
 			electrostaticsOn = false;
 		}
 		else
 		{
-			foreach (MovingChargedParticle mcp in movingChargedParticles)
-				StartCoroutine(Cycle(mcp));
+			//foreach (MovingChargedParticle mcp in movingChargedParticles)
+			//	StartCoroutine(Cycle(mcp));
 			electrostaticsOn = true;
 		}
 	}
@@ -93,7 +94,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 					direction.Normalize();
 
 					newForce += force * direction * cycleInterval;
-
+					
 					if (float.IsNaN(newForce.x))
 					{
 						newForce = Vector3.zero;
@@ -104,20 +105,49 @@ public class ElectrostaticsManager : MonoBehaviour {
 					if (mcp.rb)
 					{
 						mcp.rb.AddForce(newForce, ForceMode.Impulse);
+					}
+					if (mcp.myChargedParticle_ps)
+					{
 						var fo = mcp.myChargedParticle_ps.forceOverLifetime;
-						float _scale = 200.0f;
-						fo.x = _scale * newForce.x;
-						fo.y = _scale * newForce.y;
-						fo.z = _scale * newForce.z;
+						if (showElectrostatics)
+						{
+							mcp.myChargedParticle_ps.Play();
+							float _scale = 200.0f;
+							fo.x = _scale * newForce.x;
+							fo.y = _scale * newForce.y;
+							fo.z = _scale * newForce.z;
+						}
+						else
+						{
+							mcp.myChargedParticle_ps.Stop();
+						}
 					}
 				}
 			}
 		}
 
 	}
+
+	void UpdateCheckForSwitchOnOff()
+	{
+		if (electrostaticsOn && electrostaticsStrength == 0)
+		{
+				Debug.Log("ES switched OFF");
+				//electrostaticsOn = false;
+				SwitchElectrostatics();
+		}
+		else if (!electrostaticsOn && electrostaticsStrength != 0)
+		{
+				Debug.Log("ES switched ON");
+				//electrostaticsOn = true;
+				SwitchElectrostatics();
+		}
+	}
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+	{
+		UpdateCheckForSwitchOnOff();
 	}
 }
 
