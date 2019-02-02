@@ -596,12 +596,14 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _NZ, 1.0f);
+		// simplified
 
-		//_NZ.AddComponent(movingChargedParticleScriptType);
-		//_NZ.GetComponent<MovingChargedParticle>().charge = 1.0f;
-		//myElectrostaticsManager.RegisterMovingChargedParticle(_NZ.GetComponent<MovingChargedParticle>());
-		//_NZ.GetComponent<MovingChargedParticle>().myChargedParticle_ps = Instantiate(chargedParticle_ps, _NZ.transform);
+		Rigidbody rb = _NZ.GetComponent<Rigidbody>();
+
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, _NZ.transform.Find("N").gameObject, rb, 0.5f);
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, _NZ.transform.Find("H_1").gameObject, rb, 0.25f);
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, _NZ.transform.Find("H_2").gameObject, rb, 0.25f);
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, _NZ.transform.Find("H_3").gameObject, rb, 0.25f);
 	}
 
 	void Build_ASP(Residue residue_cs)
@@ -672,17 +674,16 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD1, -1.0f);
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD2, -1.0f);
+		//GROMOS charges
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OD1, -0.635f);
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OD2, -0.635f);
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _CG, +0.27f);
 
-		//_OD1.AddComponent(movingChargedParticleScriptType);
-		//_OD1.GetComponent<MovingChargedParticle>().charge = -1.0f;
+		// simplified
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD1, -0.5f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OD2, -0.5f);
 
-		//_OD2.AddComponent(movingChargedParticleScriptType);
-		//_OD2.GetComponent<MovingChargedParticle>().charge = -1.0f;
 
-		//myElectrostaticsManager.RegisterMovingChargedParticle(_OD1.GetComponent<MovingChargedParticle>());
-		//myElectrostaticsManager.RegisterMovingChargedParticle(_OD2.GetComponent<MovingChargedParticle>());
 	}
 
 	void Build_GLU(Residue residue_cs)
@@ -762,19 +763,14 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE1, -1.0f);
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE2, -1.0f);
+		////GROMOS partical charges
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OE1, -0.635f);
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OE2, -0.635f);
+		//AssignElectrostaticsForAtom(residue_cs.gameObject, _CD, 0.27f);
 
-		//_OE1.AddComponent(movingChargedParticleScriptType);
-		//_OE1.GetComponent<MovingChargedParticle>().charge = -1.0f;
-
-		//_OE2.AddComponent(movingChargedParticleScriptType);
-		//_OE2.GetComponent<MovingChargedParticle>().charge = -1.0f;
-
-		//myElectrostaticsManager.RegisterMovingChargedParticle(_OE1.GetComponent<MovingChargedParticle>());
-		//myElectrostaticsManager.RegisterMovingChargedParticle(_OE2.GetComponent<MovingChargedParticle>());
-
-
+		//simplified
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE1, -0.5f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _OE2, -0.5f);
 
 	}
 
@@ -975,34 +971,55 @@ public class SideChainBuilder : MonoBehaviour {
 		_NH1.GetComponent<Csp3>().ConvertSp2ToNH2();
 		_NH2.GetComponent<Csp3>().ConvertSp2ToNH2();
 
-		//SetChargeForAtom(_NE, -0.7f);
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH1, +0.8f);
-		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH2, +0.8f);
-		//SetChargeForAtom(_CZ, -0.64f);
+
+
+		//GROMOS partical charges
+		// 9 atoms!
+		//NE -0.11
+		//HE 0.24
+		//CZ 0.34
+		//NH1 -0.26
+		//HH11 0.24
+		//HH12 0.24
+		//NH2 -0.26
+		//HH21 0.24
+		//HH22 0.24
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH1, +0.33f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NH2, +0.33f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _CZ, +0.34f);
 
 	}
 
 
 	void AssignElectrostaticsForAtom(GameObject parentResidueGO, GameObject atom, float charge)
 	{
+		AssignElectrostaticsForAtomRb(parentResidueGO, atom, atom.GetComponent<Rigidbody>(), charge);
+	}
+
+	void AssignElectrostaticsForAtomRb(GameObject parentResidueGO, GameObject atom, Rigidbody rb, float charge)
+	{
 		atom.AddComponent(movingChargedParticleScriptType);
 		atom.GetComponent<MovingChargedParticle>().charge = charge;
 		atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps = Instantiate(chargedParticle_ps, atom.transform);
 		atom.GetComponent<MovingChargedParticle>().residueGO = parentResidueGO;
+		atom.GetComponent<MovingChargedParticle>().rb = rb;
 		myElectrostaticsManager.RegisterMovingChargedParticle(atom.GetComponent<MovingChargedParticle>());
 		ParticleSystem.MainModule _psMain = atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps.main;
 
+		//Debug.Log("Assign Electrostatics rb tag = " + atom.GetComponent<Rigidbody>().tag);
+
+		ParticleSystem.EmissionModule em = atom.GetComponent<MovingChargedParticle>().myChargedParticle_ps.emission;
+		em.rate = Mathf.Abs(charge) * Mathf.Abs(charge) * 5000 ;
+		
+
 		if (charge < 0)
 		{
-			_psMain.startColor = Color.red;
+			_psMain.startColor = new Color(0.7f, 0.3f, 0.3f, 0.8f); //Color.red;
 		}
 		else if (charge > 0)
 		{
-			_psMain.startColor = Color.blue;
+			_psMain.startColor = new Color(0.4f, 0.4f, 1.0f, 0.8f); //Color.blue;
 		}
-		
-
-
 	}
 
 
@@ -1489,6 +1506,25 @@ public class SideChainBuilder : MonoBehaviour {
 		_CE1.GetComponent<Csp3>().ConvertSp2ToCH();
 		_ND1.GetComponent<Csp3>().ConvertSp2ToNH();
 
+		//GROMOS partial charges HISH
+		//CG -0.05
+
+		//ND1 0.38
+		//HD1 0.30
+
+		//CD2 -0.10
+		//HD2 0.10
+		//CE1 -0.34
+		//HE1 0.10
+
+		//NE2 0.31
+		//HE2 0.30
+
+		// simplification
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _ND1, +0.5f);
+		AssignElectrostaticsForAtom(residue_cs.gameObject, _NE2, +0.5f);
+
+
 	}
 
 
@@ -1531,8 +1567,24 @@ public class SideChainBuilder : MonoBehaviour {
 
 	public void AddBackboneElectrostatics(Residue residue_cs)
 	{
-		AssignElectrostaticsForAtom(residue_cs.gameObject, residue_cs.amide_pf, 0.8f);
-		AssignElectrostaticsForAtom(residue_cs.gameObject, residue_cs.carbonyl_pf, -0.9f);
+
+		//float amidePartialCharge = +0.3f;
+		//float carbonylPartialCharge = -0.45f;
+
+		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), amidePartialCharge);
+		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("tf_O/O_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), carbonylPartialCharge);
+
+
+		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("N_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), -amidePartialCharge);
+		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("C_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), -carbonylPartialCharge);
+
+		//simplified
+		float amidePartialCharge = +0.25f;
+		float carbonylPartialCharge = -0.25f;
+
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), amidePartialCharge);
+		AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("tf_O/O_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), carbonylPartialCharge);
+
 	}
 
 	void AddConfigJointBond(GameObject go1, GameObject go2)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ElectrostaticsManager : MonoBehaviour {
 
-	private float cycleInterval = 0.02f;
+	private float cycleInterval = 0.1f; 
 
 	public List<ChargedParticle> chargedParticles;
 	public List<MovingChargedParticle> movingChargedParticles;
@@ -83,14 +83,14 @@ public class ElectrostaticsManager : MonoBehaviour {
 				{
 					// Exclusions
 
-					// don't act on myself
+					// 1. don't act on myself
 					if (mcp==mcp2)
 					{
 						
 						continue;
 					}
 
-					// don't act on cp in same residue
+					// 2. don't act on mcp in same residue
 					if (mcp.residueGO && mcp2.residueGO)
 					{
 						if (mcp.residueGO == mcp2.residueGO)
@@ -99,6 +99,8 @@ public class ElectrostaticsManager : MonoBehaviour {
 						}
 					}
 
+					// 3. backbone HN OC exclusions for adjacent residues
+					// TODO written for clarity NOT performance...
 					if (mcp.rb && mcp2.rb)
 					{
 						if (mcp.rb.tag == "amide")
@@ -108,7 +110,11 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 								if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
 								{
-									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
+									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1)) 
+									{
+										continue;
+									}
+									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
 									{
 										continue;
 									}
@@ -128,6 +134,10 @@ public class ElectrostaticsManager : MonoBehaviour {
 									{
 										continue;
 									}
+									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
+									{
+										continue;
+									}
 								}
 
 							}
@@ -140,7 +150,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 
 					float distance = Vector3.Distance(mcp.transform.position, mcp2.transform.position);
-					float force = (0.0025f * electrostaticsStrength * mcp.charge * mcp2.charge) / Mathf.Pow(distance, 2);
+					float force = (2.0f * 0.0025f * electrostaticsStrength * mcp.charge * mcp2.charge) / Mathf.Pow(distance, 2);
 
 					Vector3 direction = mcp.transform.position - mcp2.transform.position;
 					direction.Normalize();
@@ -161,20 +171,39 @@ public class ElectrostaticsManager : MonoBehaviour {
 				mcp.rb.AddForce(newForce, ForceMode.Impulse);
 			}
 
+			// particle system update
 			if (mcp.myChargedParticle_ps)
 			{
-				var fo = mcp.myChargedParticle_ps.forceOverLifetime;
+
 				if (showElectrostatics)
 				{
-					mcp.myChargedParticle_ps.Play();
-					float _scale = 1000.0f;
-					fo.x = _scale * newForce.x;
-					fo.y = _scale * newForce.y;
-					fo.z = _scale * newForce.z;
+					if (!mcp.myChargedParticle_ps.isPlaying)
+					{
+						mcp.myChargedParticle_ps.Play();
+					}
+
+					// 
+					var fo = mcp.myChargedParticle_ps.forceOverLifetime;
+					var main = mcp.myChargedParticle_ps.main;
+
+					float scaleParticleForce = 10.0f * (1 / cycleInterval); // 1000.0f;
+					fo.x = scaleParticleForce * newForce.x;
+					fo.y = scaleParticleForce * newForce.y;
+					fo.z = scaleParticleForce * newForce.z;
+					//
+					main.startLifetimeMultiplier = Mathf.Clamp((1.0f-(0.5f*Vector3.Magnitude(newForce))), 0.1f, 1.0f);
+
+					//main.startSize = Mathf.Lerp(0.4f, 1.0f, (electrostaticsStrength / 100.0f));
+
+					main.startSize = Mathf.Lerp(0.4f, 2.0f, Vector3.Magnitude(newForce));
+
 				}
 				else
 				{
-					mcp.myChargedParticle_ps.Stop();
+					if (mcp.myChargedParticle_ps.isPlaying)
+					{
+						mcp.myChargedParticle_ps.Stop();
+					}
 				}
 			}
 		}

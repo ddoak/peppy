@@ -12,7 +12,11 @@ public class MovingChargedParticle : ChargedParticle {
 
 	void Start ()
 	{
-		rb = gameObject.GetComponent<Rigidbody>();
+		if (!rb)
+		{
+			rb = gameObject.GetComponent<Rigidbody>();
+		}
+		
 	}
 	
 	// Update is called once per frame
