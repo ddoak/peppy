@@ -30,7 +30,7 @@ public class Residue : MonoBehaviour {
 	public float phiCurrent;
 	public float psiCurrent;
 
-	public GameObject ramaPlot;
+	public GameObject ramaPlotOrigin;
 	public float ramaPlotScale = 0.0012f; //  set visually against UI
 
 	public ParticleSystem plotTrail_ps;
@@ -67,7 +67,7 @@ public class Residue : MonoBehaviour {
 
 	void Start ()
 	{
-		ramaPlot = GameObject.Find("RamaPlotOrigin");
+		ramaPlotOrigin = GameObject.Find("RamaPlotOrigin_tf");
 
 		myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		myPlotCube.name = "PlotCube";
@@ -75,8 +75,8 @@ public class Residue : MonoBehaviour {
 		myPlotCube.GetComponent<Collider>().enabled = false;
 		myPlotCube.transform.parent = gameObject.transform;
 		myPlotCube.transform.localScale = myPlotCubeBaseScale;
-		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
-		myPlotCube.transform.position = ramaPlot.transform.position;
+		myPlotCube.transform.rotation = ramaPlotOrigin.transform.rotation;
+		myPlotCube.transform.position = ramaPlotOrigin.transform.position;
 
 
 
@@ -91,12 +91,15 @@ public class Residue : MonoBehaviour {
 		myPlotCubeLabel = Instantiate(Label_pf, transform);
 		myPlotCubeLabel.name = "plotCubeLabel";
 
+		// plot particle trail
+		// note: particle alpha in build is different from in editor 
+		// bug? material? shader?
+		// for the moment compromise is to have trails with reasonable alpha in build
+		// which means they are almost invisible in editor
 		myPlotTrail_ps = Instantiate(plotTrail_ps, myPlotCube.transform);
 		myTrailPsMain = myPlotTrail_ps.main;
-		//psMain.simulationSpace = 2;
 		myTrailPsMain.startSize = 0.02f;
-		myTrailPsMain.customSimulationSpace = ramaPlot.transform;
-
+		myTrailPsMain.customSimulationSpace = ramaPlotOrigin.transform;
 		ParticleSystem.EmissionModule psEmission = myPlotTrail_ps.emission;
 		psEmission.rateOverTime = 200;
 
@@ -163,7 +166,7 @@ public class Residue : MonoBehaviour {
 			_myPlotCubeRenderer.material.SetColor("_Color", Color.green);
 			//deltaPos += ramaPlot.transform.forward * -0.015f;
 			targetDeltaScale = 1.6f;
-			myTrailPsMain.startColor = new Color(0f, 0.8f, 0f, 0.5f); // Color.green;
+			myTrailPsMain.startColor = new Color(0.5f, 1f, 0.5f, 1f); // Color.green;
 			myTrailPsMain.startSize = 0.01f;
 		}
 		else
@@ -173,7 +176,7 @@ public class Residue : MonoBehaviour {
 				_myPlotCubeRenderer.material.SetColor("_Color", Color.red);
 				//deltaPos += ramaPlot.transform.forward * -0.01f;
 				targetDeltaScale = 1.4f;
-				myTrailPsMain.startColor = new Color(0.8f, 0f, 0f, 0.5f); //Color.red;
+				myTrailPsMain.startColor = new Color(1f, 0.5f, 0.5f, 1f); //Color.red;
 				myTrailPsMain.startSize = 0.01f;
 			}
 			else
@@ -182,22 +185,22 @@ public class Residue : MonoBehaviour {
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.yellow);
 					targetDeltaScale = 1.2f;
-					myTrailPsMain.startColor = new Color(0.8f, 0.6f, 0f, 0.5f); // Color.yellow;
-					myTrailPsMain.startSize = 0.012f;
+					myTrailPsMain.startColor = new Color(0.7f, 0.6f, 0f, 1f); // Color.yellow;
+					myTrailPsMain.startSize = 0.015f;
 				}
 				else
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
 					targetDeltaScale = 1.0f;
-					myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.25f);  //white;
+					myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.1f);  //white;
 					myTrailPsMain.startSize = 0.01f;
 				}
 			}
 		}
 
 
-		myPlotCube.transform.rotation = ramaPlot.transform.rotation;
-		myPlotCube.transform.position = ramaPlot.transform.position + (ramaPlot.transform.right * ramaPlotScale * phiCurrent) + (ramaPlot.transform.up * ramaPlotScale * psiCurrent) + deltaPos;
+		myPlotCube.transform.rotation = ramaPlotOrigin.transform.rotation;
+		myPlotCube.transform.position = ramaPlotOrigin.transform.position + (ramaPlotOrigin.transform.right * ramaPlotScale * phiCurrent) + (ramaPlotOrigin.transform.up * ramaPlotScale * psiCurrent) + deltaPos;
 		deltaScale = Mathf.Lerp(deltaScale, targetDeltaScale, 0.2f);
 		myPlotCube.transform.localScale = myPlotCubeBaseScale * deltaScale;
 	}

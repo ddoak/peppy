@@ -59,8 +59,9 @@ MonoBehaviour:
   phiCurrent: 0
   psiCurrent: 0
   ramaPlot: {fileID: 0}
+  UI: {fileID: 0}
   ramaPlotScale: 0.0012
-  plotTrail_ps: {fileID: 198071437755785812, guid: c8fd33b3af585044184a715010c69b39,
+  plotTrail_ps: {fileID: 198148386415362036, guid: dcda1e25690cd6346a314e0e7dadad40,
     type: 2}
   myPlotCube: {fileID: 0}
   Label_pf: {fileID: 1168876270144662, guid: 0afd8dac3b015364faed92e309447fc8, type: 2}

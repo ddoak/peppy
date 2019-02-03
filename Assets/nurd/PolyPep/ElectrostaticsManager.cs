@@ -98,7 +98,8 @@ public class ElectrostaticsManager : MonoBehaviour {
 						}
 					}
 
-					// 3. backbone HN OC exclusions for adjacent residues in same chain
+					// 3. if backbone HN / OC don't act on adjacent residues
+					// (performance - not sure if paralleled in real MD sim)
 					if (mcp.rb && mcp2.rb)
 					{
 						if ((mcp.isBBAmide && mcp2.isBBCarbonyl) || (mcp2.isBBAmide && mcp.isBBCarbonyl))
@@ -152,8 +153,6 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 						//}
 					}
-
-					
 
 
 
