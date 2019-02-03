@@ -86,7 +86,6 @@ public class ElectrostaticsManager : MonoBehaviour {
 					// 1. don't act on myself
 					if (mcp==mcp2)
 					{
-						
 						continue;
 					}
 
@@ -99,50 +98,59 @@ public class ElectrostaticsManager : MonoBehaviour {
 						}
 					}
 
-					// 3. backbone HN OC exclusions for adjacent residues
-					// TODO written for clarity NOT performance...
+					// 3. backbone HN OC exclusions for adjacent residues in same chain
 					if (mcp.rb && mcp2.rb)
 					{
-						if (mcp.rb.tag == "amide")
+						if ((mcp.isBBAmide && mcp2.isBBCarbonyl) || (mcp2.isBBAmide && mcp.isBBCarbonyl))
 						{
-							if (mcp2.rb.tag == "carbonyl")
+							if (mcp.myPPBChain == mcp2.myPPBChain)
 							{
-
-								if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
+								if ((mcp.resid == mcp2.resid + 1) || (mcp.resid == mcp2.resid - 1))
 								{
-									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1)) 
-									{
-										continue;
-									}
-									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
-									{
-										continue;
-									}
+									continue;
 								}
-
 							}
-
 						}
-						if (mcp.rb.tag == "carbonyl")
-						{
-							if (mcp2.rb.tag == "amide")
-							{
 
-								if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
-								{
-									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
-									{
-										continue;
-									}
-									if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
-									{
-										continue;
-									}
-								}
+						//if (mcp.rb.tag == "amide")
+						//{
+						//	if (mcp2.rb.tag == "carbonyl")
+						//	{
 
-							}
+						//		if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
+						//		{
+						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
+						//			{
+						//				continue;
+						//			}
+						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
+						//			{
+						//				continue;
+						//			}
+						//		}
 
-						}
+						//	}
+						//}
+						//if (mcp.rb.tag == "carbonyl")
+						//{
+						//	if (mcp2.rb.tag == "amide")
+						//	{
+
+						//		if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
+						//		{
+						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
+						//			{
+						//				continue;
+						//			}
+						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
+						//			{
+						//				continue;
+						//			}
+						//		}
+
+						//	}
+
+						//}
 					}
 
 					

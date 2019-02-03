@@ -7,9 +7,6 @@ public class ChargedParticle : MonoBehaviour {
 	public float charge = 0f;
 	public ParticleSystem myChargedParticle_ps;
 
-	// reference to residue for exclusions
-	public GameObject residueGO;
-
 	// Use this for initialization
 	void Start ()
 	{
