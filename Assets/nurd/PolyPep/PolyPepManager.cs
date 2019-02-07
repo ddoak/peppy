@@ -141,7 +141,7 @@ public class PolyPepManager : MonoBehaviour {
 			phiSliderUI.GetComponent<Slider>().value = 0;
 			psiSliderUI.GetComponent<Slider>().value = 0;
 			vdwSliderUI.GetComponent<Slider>().value = 10;
-			hbondSliderUI.GetComponent<Slider>().value = 50;
+			hbondSliderUI.GetComponent<Slider>().value = 0; //50
 			phiPsiDriveSliderUI.GetComponent<Slider>().value = 50;
 			spawnLengthSliderUI.GetComponent<Slider>().value = 6; //10
 			jiggleStrengthSliderUI.GetComponent<Slider>().value = 0;
