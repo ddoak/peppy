@@ -198,7 +198,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 					var main = mcp.myChargedParticle_ps.main;
 					var shape = mcp.myChargedParticle_ps.shape;
 
-					float scaleParticleForce = 10.0f * (1 / cycleInterval); // 1000.0f;
+					float scaleParticleForce = 7.5f * (1 / cycleInterval); // 1000.0f;
 					fo.x = scaleParticleForce * newForce.x;
 					fo.y = scaleParticleForce * newForce.y;
 					fo.z = scaleParticleForce * newForce.z;
