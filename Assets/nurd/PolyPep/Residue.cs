@@ -58,6 +58,7 @@ public class Residue : MonoBehaviour {
 	public float drivePhiPsiTorqValue;
 
 	public Residue disulphidePartnerResidue = null;
+	public ConfigurableJoint disulphideCj = null;
 
 	// Use this for initialization
 	private void Awake()

@@ -220,6 +220,21 @@ public class Csp3 : MonoBehaviour {
 		_H.GetComponent<Renderer>().enabled = false;
 		_H.GetComponent<Collider>().enabled = false;
 		_H.tag = "UnusedAtom";
+
+		Destroy(_H.GetComponent<Renderer>());
+		//Destroy(_H.GetComponent<Collider>());
+		Destroy(_H.GetComponent<MeshFilter>());
+	}
+
+
+	private void SetBondUnused(Transform _bond)
+	{
+		_bond.GetComponent<Renderer>().enabled = false;
+		_bond.GetComponent<Collider>().enabled = false;
+
+		Destroy(_bond.GetComponent<Renderer>());
+		Destroy(_bond.GetComponent<Collider>());
+		Destroy(_bond.GetComponent<MeshFilter>());
 	}
 
 	private void SetAsBondToH(Transform _bond)
@@ -310,8 +325,9 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H3":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
@@ -404,8 +420,9 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H2":
 				case "tf_bond_H3":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H1":
 					SetAsBondToH(_bond);
@@ -448,8 +465,9 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H1":
 				case "tf_bond_H2":
 				case "tf_bond_H3":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				default:
 					break;
@@ -505,8 +523,9 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H3":
 					//_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
@@ -565,8 +584,9 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H3":
 					SetAsBondToH(_bond);
@@ -650,7 +670,12 @@ public class Csp3 : MonoBehaviour {
 				case "H_2":
 					break;
 				case "H_3":
-					SetHAtomUnused(_H);
+					//SetHAtomUnused(_H);
+					// dont destroy because we may want the bond back
+					// if disulphide is removed
+					_H.GetComponent<Renderer>().enabled = false;
+					_H.GetComponent<Collider>().enabled = false;
+					_H.tag = "UnusedAtom";
 					break;
 				default:
 					break;
@@ -666,14 +691,15 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H2":
 					break;
 				case "tf_bond_H3":
-					if (keepH3Bond)
+					_bond.tag = "Untagged";
+					if (!keepH3Bond)
 					{
-						_bond.tag = "Untagged";
-					}
-					else
-					{
+						//SetBondUnused(_bond);
+						// dont destroy because we may want the bond back
+						// if disulphide is removed
 						_bond.GetComponent<Renderer>().enabled = false;
-						_bond.GetComponent<Collider>().enabled = false;
+						// no bond colliders
+						//_bond.GetComponent<Collider>().enabled = false;
 					}
 
 					break;
@@ -683,6 +709,50 @@ public class Csp3 : MonoBehaviour {
 		}
 
 	}
+
+	public void ReEnableH3()
+	{
+		// TODO
+		// does not take account of:
+		// 1) rescaled bond geo
+		// 2) H3 transform
+
+		foreach (Transform _H in HtfList)
+		{
+			switch (_H.name)
+			{
+				case "H_0":
+				case "H_1":
+				case "H_2":
+					break;
+				case "H_3":
+					_H.GetComponent<Renderer>().enabled = true;
+					_H.GetComponent<Collider>().enabled = true;
+					_H.tag = "H";
+					break;
+				default:
+					break;
+			}
+		}
+		foreach (Transform _Btf in BtfList)
+		{
+			Transform _bond = _Btf.GetChild(0); // only one child in pf
+			switch (_Btf.name)
+			{
+				case "tf_bond_H0":
+				case "tf_bond_H1":
+				case "tf_bond_H2":
+					break;
+				case "tf_bond_H3":
+					_bond.GetComponent<Renderer>().enabled = true;
+					_bond.tag = "bondToH";
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
 
 	public void ConvertSp2ToCOO()
 	{
@@ -780,8 +850,9 @@ public class Csp3 : MonoBehaviour {
 					//Debug.Log("scale " + _bond.transform.localScale.y); // = 0.5f;
 					break;
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				default:
 					break;
@@ -824,8 +895,9 @@ public class Csp3 : MonoBehaviour {
 					}
 					else
 					{
-						_bond.GetComponent<Renderer>().enabled = false;
-						_bond.GetComponent<Collider>().enabled = false;
+						SetBondUnused(_bond);
+						//_bond.GetComponent<Renderer>().enabled = false;
+						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				case "tf_bond_H2":
@@ -835,8 +907,9 @@ public class Csp3 : MonoBehaviour {
 					}
 					else
 					{
-						_bond.GetComponent<Renderer>().enabled = false;
-						_bond.GetComponent<Collider>().enabled = false;
+						SetBondUnused(_bond);
+						//_bond.GetComponent<Renderer>().enabled = false;
+						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				default:
@@ -880,14 +953,16 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H1":
 					{
-						_bond.GetComponent<Renderer>().enabled = false;
-						_bond.GetComponent<Collider>().enabled = false;
+						SetBondUnused(_bond);
+						//_bond.GetComponent<Renderer>().enabled = false;
+						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				case "tf_bond_H2":
 					{
-						_bond.GetComponent<Renderer>().enabled = false;
-						_bond.GetComponent<Collider>().enabled = false;
+						SetBondUnused(_bond);
+						//_bond.GetComponent<Renderer>().enabled = false;
+						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				default:
@@ -996,8 +1071,9 @@ public class Csp3 : MonoBehaviour {
 					SetAsBondToH(_bond);
 					break;
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				default:
 					break;
@@ -1052,8 +1128,9 @@ public class Csp3 : MonoBehaviour {
 					SetAsBondToH(_bond);
 					break;
 				case "tf_bond_H2":
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+					SetBondUnused(_bond);
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				default:
 					break;

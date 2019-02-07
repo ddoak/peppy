@@ -1895,6 +1895,7 @@ MonoBehaviour:
   electrostaticsOn: 0
   electrostaticsStrength: 0
   showElectrostatics: 0
+  myPolyPepManager: {fileID: 0}
 --- !u!4 &48948581
 Transform:
   m_ObjectHideFlags: 0

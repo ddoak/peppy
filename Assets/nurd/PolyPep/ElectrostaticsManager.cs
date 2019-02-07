@@ -13,9 +13,13 @@ public class ElectrostaticsManager : MonoBehaviour {
 	public float electrostaticsStrength;
 	public bool showElectrostatics;
 
+	public PolyPepManager myPolyPepManager;
+
 	// Use this for initialization
 	void Start ()
 	{
+		myPolyPepManager =  GameObject.Find("PolyPepManager").GetComponent<PolyPepManager>();
+
 		chargedParticles = new List<ChargedParticle> (FindObjectsOfType<ChargedParticle>());
 		movingChargedParticles = new List<MovingChargedParticle>(FindObjectsOfType<MovingChargedParticle>());
 
@@ -192,17 +196,23 @@ public class ElectrostaticsManager : MonoBehaviour {
 					// 
 					var fo = mcp.myChargedParticle_ps.forceOverLifetime;
 					var main = mcp.myChargedParticle_ps.main;
+					var shape = mcp.myChargedParticle_ps.shape;
 
 					float scaleParticleForce = 10.0f * (1 / cycleInterval); // 1000.0f;
 					fo.x = scaleParticleForce * newForce.x;
 					fo.y = scaleParticleForce * newForce.y;
 					fo.z = scaleParticleForce * newForce.z;
+
 					//
 					main.startLifetimeMultiplier = Mathf.Clamp((1.0f-(0.5f*Vector3.Magnitude(newForce))), 0.1f, 1.0f);
 
 					//main.startSize = Mathf.Lerp(0.4f, 1.0f, (electrostaticsStrength / 100.0f));
 
 					main.startSize = Mathf.Lerp(0.4f, 2.0f, Vector3.Magnitude(newForce));
+
+					// scale shape radius to keep particles visible
+					// 2f is base radius in particle effect
+					shape.radius = 2f * myPolyPepManager.vdwScale;
 
 				}
 				else
@@ -221,14 +231,12 @@ public class ElectrostaticsManager : MonoBehaviour {
 	{
 		if (electrostaticsOn && electrostaticsStrength == 0)
 		{
-				Debug.Log("ES switched OFF");
-				//electrostaticsOn = false;
+				//Debug.Log("ES switched OFF");
 				SwitchElectrostatics();
 		}
 		else if (!electrostaticsOn && electrostaticsStrength != 0)
 		{
-				Debug.Log("ES switched ON");
-				//electrostaticsOn = true;
+				//Debug.Log("ES switched ON");
 				SwitchElectrostatics();
 		}
 	}

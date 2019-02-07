@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23994160404866996}
   - component: {fileID: 135275618138114996}
   m_Layer: 9
-  m_Name: hbond_acceptor
+  m_Name: hb_acceptor
   m_TagString: O
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

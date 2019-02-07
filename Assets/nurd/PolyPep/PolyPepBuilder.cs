@@ -422,6 +422,13 @@ public class PolyPepBuilder : MonoBehaviour {
 		foreach (Collider childCollider in allChildren)
 		{
 			childCollider.isTrigger = value;
+			if (childCollider.name.Contains("bond"))
+			{
+				// Debug.Log(childCollider.name);
+				// deletes ALL bond colliders!
+				Destroy(childCollider);
+			}
+			
 		}
 	}
 
@@ -747,7 +754,7 @@ public class PolyPepBuilder : MonoBehaviour {
 					if (Physics.SphereCast(donorRay, castRadius, out hit, castLength, layerMask))
 					{
 
-						if ((hit.collider.gameObject.name == "hbond_acceptor") || (hit.collider.gameObject.name == "O_carbonyl"))
+						if ((hit.collider.gameObject.name == "hb_acceptor")) // || (hit.collider.gameObject.name == "O_carbonyl"))
 						{
 
 							//Debug.Log(resid + " hit " + hit.collider.gameObject + " " + hit.collider.transform.parent.parent.name);

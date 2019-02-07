@@ -43,7 +43,7 @@ public class SideChainBuilder : MonoBehaviour {
 		HN.GetComponent<Collider>().enabled = enableValue;
 	
 		HNBond.GetComponent<Renderer>().enabled = enableValue;
-		HNBond.GetComponent<Collider>().enabled = enableValue;
+		//HNBond.GetComponent<Collider>().enabled = enableValue;
 
 		if (enableValue == true)
 		{
@@ -1587,7 +1587,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 	}
 
-	void AddConfigJointBond(GameObject go1, GameObject go2)
+	ConfigurableJoint AddConfigJointBond(GameObject go1, GameObject go2)
 	{
 		ConfigurableJoint cj = go1.AddComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
 		cj.connectedBody = go2.GetComponent<Rigidbody>();
@@ -1623,6 +1623,8 @@ public class SideChainBuilder : MonoBehaviour {
 		cj.angularXMotion = ConfigurableJointMotion.Free;
 		cj.angularYMotion = ConfigurableJointMotion.Locked;
 		cj.angularZMotion = ConfigurableJointMotion.Locked;
+
+		return cj;
 	}
 
 	void AddConfigJointBondSlack(GameObject go1, GameObject go2)
@@ -1674,7 +1676,7 @@ public class SideChainBuilder : MonoBehaviour {
 	{
 		// No checks here 
 		// TODO - asserts? residues CYS? etc...
-		// code path to here should have checked all requiremments !
+		// code path to here should have checked all requirements !
 
 		PolyPepBuilder ppb1_cs = ppb1_go.GetComponent<PolyPepBuilder>();
 		Residue residue1_cs = ppb1_cs.chainArr[resid1].GetComponent<Residue>();
@@ -1692,8 +1694,8 @@ public class SideChainBuilder : MonoBehaviour {
 		var SG1 = residue1_cs.sideChainList[1];
 		var SG2 = residue2_cs.sideChainList[1];
 
-		var sg1 = residue1_cs.sideChainList[1].GetComponent<Csp3>();
-		var sg2 = residue2_cs.sideChainList[1].GetComponent<Csp3>();
+		var sg1_script = residue1_cs.sideChainList[1].GetComponent<Csp3>();
+		var sg2_script = residue2_cs.sideChainList[1].GetComponent<Csp3>();
 
 
 		//residue2_cs.sideChainList[1].transform.position = residue1_cs.sideChainList[1].transform.Find("H_3").position;
@@ -1707,16 +1709,45 @@ public class SideChainBuilder : MonoBehaviour {
 		SG1.transform.position = SG2.transform.position + disulphideBond;
 
 		//SG1.transform.LookAt(sg2.transform.position);
-		AddFixedJointBond(SG1, SG2);
+		residue2_cs.disulphideCj = AddConfigJointBond(SG2, SG1);
 
-		sg1.ConvertToDisulphide(false);
-		sg2.ConvertToDisulphide(true);
+		//SG2 
+		// S-S fixed joint and H3 bond
+
+
+		sg1_script.ConvertToDisulphide(false);
+		sg2_script.ConvertToDisulphide(true);
 	}
 
 	public void RemoveDisulphide(Residue residue1_cs)
 	{
 		// TODO		- explicitly delete the configurable joint between the S atoms
 		//			- replace H atom on the partner CYS
+
+		//Debug.Log("RemoveDisulphide");
+
+		Residue residue2_cs = residue1_cs.disulphidePartnerResidue;
+
+		GameObject SG1 = residue1_cs.sideChainList[1];
+		GameObject SG2 = residue2_cs.sideChainList[1];
+
+		Csp3 sg1_script = SG1.GetComponent<Csp3>();
+		Csp3 sg2_script = SG2.GetComponent<Csp3>();
+
+		//Debug.Log(residue1_cs.disulphideCj);
+		//Debug.Log(residue2_cs.disulphideCj);
+
+		if (residue1_cs.disulphideCj)
+		{
+			Destroy(residue1_cs.disulphideCj);
+		}
+		if (residue2_cs.disulphideCj)
+		{
+			Destroy(residue2_cs.disulphideCj);
+		}
+
+		sg1_script.ReEnableH3();
+		sg2_script.ReEnableH3();
 
 		//book keeping in resid scripts
 		residue1_cs.disulphidePartnerResidue.disulphidePartnerResidue = null;
