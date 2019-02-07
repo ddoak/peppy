@@ -482,7 +482,7 @@ public class PolyPepManager : MonoBehaviour {
 									
 						case 1:
 							// GLY
-							selectedAminoAcidStr = "XXX"; //  "GLY";
+							selectedAminoAcidStr = "GLY"; //  "GLY";
 							break;
 
 						case 2:

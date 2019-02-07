@@ -6,6 +6,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 
 	public GameObject Csp3_pf;
+	public GameObject H_pf;
 	//public List<GameObject> residue_cssideChainList = new List<GameObject>();
 
 	int sideChainLength = 0;
@@ -123,6 +124,9 @@ public class SideChainBuilder : MonoBehaviour {
 
 			switch (type)
 			{
+				case "GLY":
+					Build_GLY(residue_cs);
+					break;
 				case "ALA":
 					Build_ALA(residue_cs);
 					break;
@@ -192,6 +196,30 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 
 
+	}
+
+	void Build_GLY(Residue residue_cs)
+	{
+		sideChainLength = 1;
+		for (int i = 0; i < sideChainLength; i++)
+		{
+			residue_cs.sideChainList.Add(Instantiate(H_pf, transform.position + (transform.right * i * 0.6f), Quaternion.identity, residue_cs.sidechain.transform));
+		}
+		GameObject _CB = residue_cs.sideChainList[0];
+		_CB.name = "H";
+
+		{
+			// Get CBeta position => R group
+			Transform CB_tf = residue_cs.calpha_pf.transform.Find("tf_sidechain/R_sidechain");
+			// Get CAlpha position
+			Transform CA_tf = residue_cs.calpha_pf.transform;
+
+			// Place and orient CBeta
+			_CB.transform.position = CB_tf.position;
+			_CB.transform.LookAt(CA_tf.position);
+			_CB.transform.position += _CB.transform.forward * 0.05f;
+			AddConfigJointBond(_CB, residue_cs.calpha_pf);
+		}
 	}
 
 	void Build_ALA(Residue residue_cs)

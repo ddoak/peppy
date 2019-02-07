@@ -314,11 +314,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_1":
 				case "H_2":
 					SetAsHydrogenAtom(_H);
-					//_H.transform.position += _H.transform.forward * 0.05f;
-					//if (!keepDebugAtomMaterial)
-					//{
-					//	_H.GetComponent<Renderer>().material.color = Color.white;
-					//}
 					break;
 				default:
 					break;
@@ -337,8 +332,6 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H3":
 					SetBondUnused(_bond);
-					//_bond.GetComponent<Renderer>().enabled = false;
-					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				case "tf_bond_H1":
 				case "tf_bond_H2":

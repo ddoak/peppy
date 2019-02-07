@@ -52,6 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Csp3_pf: {fileID: 1424276724713092, guid: 64ad9cd3a6de52a48a6072900fcf4797, type: 2}
+  H_pf: {fileID: 1085949570782548, guid: b0a167a74c4c4294f8eb442f91401b14, type: 2}
   posA: {x: 0, y: 0, z: 0}
   posB: {x: 0, y: 0, z: 0}
   posC: {x: 0, y: 0, z: 0}
+  myElectrostaticsManager: {fileID: 0}
+  chargedParticle_ps: {fileID: 0}
