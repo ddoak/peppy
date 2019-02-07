@@ -71,8 +71,33 @@ public class PolyPepManager : MonoBehaviour {
 	public GameObject myPlayerController;
 
 
+	public List<string> residueTypeList = new List<string>
+	{
+		"XXX",
+		"GLY",
+		"ALA",
+		"VAL",
+		"LEU",
+		"ILE",
+		"MET",
+		"PHE",
+		"TRP",
+		"PRO",
+		"SER",
+		"THR",
+		"CYS",
+		"TYR",
+		"ASN",
+		"GLN",
+		"ASP",
+		"GLU",
+		"LYS",
+		"ARG",
+		"HIS",
+	};
 
-	void Awake()
+
+void Awake()
 	{
 		GameObject temp = GameObject.Find("Slider_Phi");
 		phiSliderUI = temp.GetComponent<Slider>();
@@ -472,118 +497,20 @@ public class PolyPepManager : MonoBehaviour {
 				if (_residueGo.GetComponent<Residue>().residueSelected == true)
 				{
 					string selectedAminoAcidStr = "-";
-					switch (UISelectedAminoAcid)
+
+					if (UISelectedAminoAcid == -1)
 					{
-						// TODO use enumeration
-						case 0:
-							// not defined
-							selectedAminoAcidStr = "XXX"; 
-							break;
-									
-						case 1:
-							// GLY
-							selectedAminoAcidStr = "GLY"; //  "GLY";
-							break;
-
-						case 2:
-							// ALA
-							selectedAminoAcidStr = "ALA";
-							break;
-
-						case 3:
-							// VAL
-							selectedAminoAcidStr = "VAL";
-							break;
-
-						case 4:
-							//
-							selectedAminoAcidStr = "LEU";
-							break;
-
-						case 5:
-							//
-							selectedAminoAcidStr = "ILE";
-							break;
-
-						case 6:
-							//
-							selectedAminoAcidStr = "MET";
-							break;
-
-						case 7:
-							//
-							selectedAminoAcidStr = "PHE";
-							break;
-
-						case 8:
-							//
-							selectedAminoAcidStr = "TRP";
-							break;
-
-						case 9:
-							//
-							selectedAminoAcidStr = "PRO";
-							break;
-
-						case 10:
-							// GLY
-							selectedAminoAcidStr = "SER";
-							break;
-
-						case 11:
-							// ALA
-							selectedAminoAcidStr = "THR";
-							break;
-
-						case 12:
-							// VAL
-							selectedAminoAcidStr = "CYS";
-							break;
-
-						case 13:
-							//
-							selectedAminoAcidStr = "TYR";
-							break;
-
-						case 14:
-							//
-							selectedAminoAcidStr = "ASN";
-							break;
-
-						case 15:
-							//
-							selectedAminoAcidStr = "GLN";
-							break;
-
-						case 16:
-							//
-							selectedAminoAcidStr = "ASP";
-							break;
-
-						case 17:
-							//
-							selectedAminoAcidStr = "GLU";
-							break;
-
-						case 18:
-							//
-							selectedAminoAcidStr = "LYS";
-							break;
-
-						case 19:
-							//
-							selectedAminoAcidStr = "ARG";
-							break;
-
-						case 20:
-							//
-							selectedAminoAcidStr = "HIS";
-							break;
-
-						default:
-							break;
-
+						// random
+						int randomResidue = Random.Range(1, 20);
+						//Debug.Log(randomResidue);
+						selectedAminoAcidStr = residueTypeList[randomResidue];
 					}
+					else
+					{
+						selectedAminoAcidStr = residueTypeList[UISelectedAminoAcid];
+					}
+
+					//Debug.Log(UISelectedAminoAcid + " = mutate to " + selectedAminoAcidStr);
 
 					if (_residueGo.GetComponent<Residue>().type != selectedAminoAcidStr)
 					{
