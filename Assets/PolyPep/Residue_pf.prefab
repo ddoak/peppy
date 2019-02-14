@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1903836867372088}
+  m_IsPrefabAsset: 1
+--- !u!1 &1903836867372088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 224437380751399752}
+  - component: {fileID: 114873614660651314}
+  m_Layer: 0
+  m_Name: Residue_pf
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &114873614660651314
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903836867372088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b22d70f0956c9741b45b232fe387751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amide_pf: {fileID: 1106350776754678, guid: 4936e546446ffae4385076fe2eaded75, type: 2}
+  calpha_pf: {fileID: 1106350776754678, guid: 98047eb084056d04d9c000b3606e91e9, type: 2}
+  carbonyl_pf: {fileID: 1106350776754678, guid: be5cfe1926cf4d24bb8c219702f2b5be,
+    type: 2}
+  myPolyPepBuilder: {fileID: 0}
+  myPolyPepManager: {fileID: 0}
+  sidechain: {fileID: 0}
+  resid: 0
+  type: 
+  label: 
+  N: {fileID: 0}
+  HN: {fileID: 0}
+  C: {fileID: 0}
+  O: {fileID: 0}
+  backboneAtomsList: []
+  sideChainList: []
+  phiTarget: 0
+  psiTarget: 0
+  phiCurrent: 0
+  psiCurrent: 0
+  ramaPlotOrigin: {fileID: 0}
+  ramaPlotScale: 0.0012
+  plotTrail_ps: {fileID: 198148386415362036, guid: dcda1e25690cd6346a314e0e7dadad40,
+    type: 2}
+  myPlotCube: {fileID: 0}
+  Label_pf: {fileID: 1168876270144662, guid: 0afd8dac3b015364faed92e309447fc8, type: 2}
+  myLabel: {fileID: 0}
+  myPlotCubeLabel: {fileID: 0}
+  LabelTMP_pf: {fileID: 1168876270144662, guid: 2908a774359b5ff4da7fc9cd8b04e14c,
+    type: 2}
+  myLabelTMP: {fileID: 0}
+  isNTerminal: 0
+  isCTerminal: 0
+  residueSelected: 0
+  residueHovered: 0
+  residueGrabbed: 0
+  drivePhiPsiOn: 0
+  drivePhiPsiTorqValue: 0
+  disulphidePartnerResidue: {fileID: 0}
+  disulphideCj: {fileID: 0}
+--- !u!224 &224437380751399752
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903836867372088}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.51300716}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.8719549, y: 1.5}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
