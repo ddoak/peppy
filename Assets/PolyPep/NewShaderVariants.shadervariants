@@ -4,7 +4,8 @@
 ShaderVariantCollection:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: NewShaderVariants
   m_Shaders:
   - first: {fileID: 4800000, guid: 9ce107479d11178d11005b9844295342, type: 3}
@@ -22,15 +23,11 @@ ShaderVariantCollection:
   - first: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
-      - keywords: DIRECTIONAL
-        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
-        passType: 4
-      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION
           _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -43,16 +40,12 @@ ShaderVariantCollection:
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
-      - keywords: LIGHTPROBE_SH SHADOWS_SHADOWMASK
-        passType: 10
-      - keywords: INSTANCING_ON LIGHTPROBE_SH SHADOWS_SHADOWMASK
+      - keywords: INSTANCING_ON LIGHTPROBE_SH
         passType: 10
   - first: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: SHADOWS_SPLIT_SPHERES
-        passType: 0
-      - keywords: SHADOWS_SINGLE_CASCADE SHADOWS_SPLIT_SPHERES
         passType: 0
   - first: {fileID: 74, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -63,8 +56,6 @@ ShaderVariantCollection:
     second:
       variants:
       - keywords: 
-        passType: 0
-      - keywords: DIRECTIONAL SHADOWS_SCREEN SHADOWS_SHADOWMASK
         passType: 0
   - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -94,6 +85,11 @@ ShaderVariantCollection:
       - keywords: 
         passType: 0
   - first: {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: 
@@ -132,8 +128,6 @@ ShaderVariantCollection:
       variants:
       - keywords: OUTLINE_ON
         passType: 0
-      - keywords: OUTLINE_ON UNDERLAY_ON
-        passType: 0
   - first: {fileID: 4800000, guid: a31796e9e8816c7448b55d584c9417f1, type: 3}
     second:
       variants:
@@ -143,27 +137,4 @@ ShaderVariantCollection:
     second:
       variants:
       - keywords: 
-        passType: 0
-  - first: {fileID: 4800000, guid: dd89cf5b9246416f84610a006f916af7, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 0
-  - first: {fileID: 4800000, guid: f7ada0af4f174f0694ca6a487b8f543d, type: 3}
-    second:
-      variants:
-      - keywords: DIRECTIONAL LIGHTPROBE_SH
-        passType: 4
-      - keywords: DIRECTIONAL
-        passType: 5
-      - keywords: SHADOWS_DEPTH
-        passType: 8
-  - first: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 0
-      - keywords: OUTLINE_ON
-        passType: 0
-      - keywords: OUTLINE_ON UNDERLAY_ON
         passType: 0
