@@ -238,7 +238,7 @@ public class PolyPepManager : MonoBehaviour {
 			//Debug.Log(_toggle.colors.normalColor);
 
 			ColorBlock colors = _button.colors;
-			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);//  Color.blue;
+			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);
 			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
 			colors.pressedColor = new Color(1f, 1f, 0.8f);
 			colors.fadeDuration = 0.1f;
@@ -257,9 +257,9 @@ public class PolyPepManager : MonoBehaviour {
 			//Debug.Log(_toggle.colors.normalColor);
 
 			ColorBlock colors = _toggle.colors;
-			colors.normalColor = new Color(0.7f, 0.7f, 0.6f);
+			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);
 			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
-			colors.pressedColor = new Color(1f, 1f, 0.2f);
+			colors.pressedColor = new Color(1f, 1f, 0.4f);
 			colors.fadeDuration = 0.1f;
 
 			_toggle.colors = colors;
@@ -281,9 +281,9 @@ public class PolyPepManager : MonoBehaviour {
 			//Debug.Log(_toggle.colors.normalColor);
 
 			ColorBlock colors = _slider.colors;
-			colors.normalColor = new Color(0.7f, 0.7f, 0.6f);
+			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);
 			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
-			colors.pressedColor = new Color(1f, 1f, 0.2f);
+			colors.pressedColor = new Color(1f, 1f, 0.4f);
 			colors.fadeDuration = 0.1f;
 
 			_slider.colors = colors;
