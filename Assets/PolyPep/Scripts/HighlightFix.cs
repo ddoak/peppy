@@ -11,30 +11,50 @@ using UnityEngine.UI;
 public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler
 {
 	public RectTransform myRT;
+	public Vector3 myStartScale;
+	public Vector3 myTargetScale;
+	public Vector3 myCurrentScale;
+
+	public Toggle myToggle;
+
+	public float selectScaleFactor = 1.4f;
+	public float toggleOnScaleFactor = 1.3f;
+
+	public Color normalColor;
 
 	void Start()
 	{
-
-
 		// some very brittle code here
-		// makes lots of assumptions about how UI is set up
+		// makes assumptions about how UI is set up
 
+		// a slider
 		myRT = this.transform.Find("Slide_Area/Handle") as RectTransform;
-			if (myRT)
+
+		if (myRT)
 		{
-			Debug.Log("===========> Hurrah!");
+			//Debug.Log("-> Slider");
 		}
 
-			if (!myRT)
-			{
-				myRT = this.transform.Find("Background") as RectTransform;
-			}
+		if (!myRT)
+		{
+			// a button
+			myRT = this.transform.Find("Background") as RectTransform;
+		}
 
-			if (!myRT)
-			{
-				myRT = this.transform as RectTransform;
-			}
-		
+		if (!myRT)
+		{
+			// a toggle
+			myRT = this.transform as RectTransform;
+		}
+
+		if (!myRT)
+		{
+			Debug.Log("---> Failed to find Rect Transform for UI Element");
+		}
+
+		myStartScale = myRT.localScale;
+		myTargetScale = myStartScale;
+		myCurrentScale = myStartScale;
 
 	}
 
@@ -46,35 +66,63 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 		//if (EventSystem.current.currentSelectedGameObject == this.gameObject)
 		{
-			Debug.Log(myRT.localScale);
+			//Debug.Log(myRT.localScale);
 
-			myRT.localScale = new Vector3 (1.2f, (0.9f*1.2f), 1f);
-
+			myTargetScale.x = myStartScale.x * selectScaleFactor;
+			myTargetScale.y = myStartScale.y * selectScaleFactor;
+			myTargetScale.z = 1f;
 		}
-
+		//myRT.localScale = myTargetScale;
+		//myCurrentScale = myTargetScale;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		Debug.Log("highlight fix leave");
+		//Debug.Log("highlight fix leave");
 		//if (EventSystem.current.alreadySelecting)
-			
+
 		//{
 		//	Debug.Log("1");
-			
+
 		//}
 
 		if (EventSystem.current.currentSelectedGameObject == this.gameObject)
 		{
-			Debug.Log("2");
+			//Debug.Log("2");
 			EventSystem.current.SetSelectedGameObject(null);
 		}
 
 		{
-			Debug.Log(myRT.localScale);
+			myTargetScale = myStartScale;
+			if (myToggle)
+			{
+				if (myToggle.isOn)
+				{
+					{
+						//Debug.Log(myRT.localScale);
 
-			myRT.localScale = new Vector3(1.0f, (0.9f), 1f);
+						myTargetScale.x = myStartScale.x * toggleOnScaleFactor;
+						myTargetScale.y = myStartScale.y * toggleOnScaleFactor;
+						myTargetScale.z = 1f;
 
+
+						ColorBlock colors = myToggle.colors;
+						colors.normalColor = myToggle.colors.highlightedColor;
+						myToggle.colors = colors;
+					}
+				}
+				else
+				{
+					ColorBlock colors = myToggle.colors;
+					colors.normalColor = normalColor;
+					myToggle.colors = colors;
+				}
+			}
+
+			//Debug.Log(myRT.localScale);
+			
+			//myRT.localScale = myTargetScale;
+			//myCurrentScale = myTargetScale;
 		}
 
 		//this.GetComponent<Selectable>().OnPointerExit(null);
@@ -87,13 +135,9 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	void Update()
 	{
-		//if (EventSystem.current.currentSelectedGameObject == this.gameObject)
-		//{
-		//	RectTransform _bg = this.transform.Find("Background") as RectTransform;
-
-		//	Debug.Log("3");
-
-		//}
+		//Debug.Log("update");
+		myCurrentScale = Vector3.Lerp(myCurrentScale, myTargetScale, ((Time.deltaTime / 0.01f) * 0.2f));
+		myRT.localScale = myCurrentScale;
 	}
 }
 //
