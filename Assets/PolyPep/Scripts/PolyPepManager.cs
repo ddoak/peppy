@@ -96,8 +96,7 @@ public class PolyPepManager : MonoBehaviour {
 		"HIS",
 	};
 
-
-void Awake()
+	void Awake()
 	{
 		GameObject temp = GameObject.Find("Slider_Phi");
 		phiSliderUI = temp.GetComponent<Slider>();
@@ -136,7 +135,7 @@ void Awake()
 		UI = GameObject.Find("UI");
 
 		UIPanelSideChains = GameObject.Find("UI_PanelSideChains");
-		UIPanelSideChains.SetActive(false);
+		//UIPanelSideChains.SetActive(false);
 
 		UIPanelCamera = GameObject.Find("UI_PanelCamera");
 		UIPanelCamera.SetActive(false);
@@ -195,6 +194,13 @@ void Awake()
 			//scaleSliderUI = temp.GetComponent<Slider>();
 			//scaleSliderUI.value = 10;
 
+
+
+			DoInitialUIPrep(UI);
+			DoInitialUIPrep(UIPanelSideChains);
+			UIPanelSideChains.SetActive(false);
+
+
 		}
 
 		// dev: test always spawn pp on startup
@@ -203,6 +209,86 @@ void Awake()
 		mySnapshotCamera = Instantiate(snapshotCamera_pf);
 		mySnapshotCamera.SetActive(false);
 
+	}
+
+	private void DoInitialUIPrep(GameObject thisUI)
+	{
+		System.Type highlightFixScriptType;
+		string ScriptName = "HighlightFix";
+		highlightFixScriptType = System.Type.GetType(ScriptName + ",Assembly-CSharp");
+
+		//String ScriptName = "YourScriptNameWithoutExtension";
+		////We need to fetch the Type
+		//System.Type MyScriptType = System.Type.GetType(ScriptName + ",Assembly-CSharp");
+		////Now that we have the Type we can use it to Add Component
+		//gameObject.AddComponent(MyScriptType);
+
+
+		Button[] buttons = thisUI.GetComponentsInChildren<Button>();
+
+		//Debug.Log("buttons.length = " + buttons.Length);
+
+		Toggle[] toggles = thisUI.GetComponentsInChildren<Toggle>();
+
+		//Debug.Log("toggles.length = " + toggles.Length);
+
+		foreach (Button _button in buttons)
+		{
+			//Debug.Log(_toggle.colors.normalColor);
+
+			ColorBlock colors = _button.colors;
+			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);//  Color.blue;
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.8f);
+			colors.fadeDuration = 0.15f;
+
+			_button.colors = colors;
+
+			//var colors = GetComponent<Button>().colors;
+			//colors.normalColor = Color.red;
+			//GetComponent<Button>().colors = colors;
+
+			_button.gameObject.AddComponent(highlightFixScriptType);
+		}
+
+		foreach (Toggle _toggle in toggles)
+		{
+			//Debug.Log(_toggle.colors.normalColor);
+
+			ColorBlock colors = _toggle.colors;
+			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);//  Color.blue;
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.8f);
+			colors.fadeDuration = 0.15f;
+
+			_toggle.colors = colors;
+
+			//var colors = GetComponent<Button>().colors;
+			//colors.normalColor = Color.red;
+			//GetComponent<Button>().colors = colors;
+
+			_toggle.gameObject.AddComponent(highlightFixScriptType);
+		}
+
+		Slider[] sliders = thisUI.GetComponentsInChildren<Slider>();
+		foreach (Slider _slider in sliders)
+		{
+			//Debug.Log(_toggle.colors.normalColor);
+
+			ColorBlock colors = _slider.colors;
+			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);//  Color.blue;
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.8f);
+			colors.fadeDuration = 0.15f;
+
+			_slider.colors = colors;
+
+			//var colors = GetComponent<Button>().colors;
+			//colors.normalColor = Color.red;
+			//GetComponent<Button>().colors = colors;
+
+			_slider.gameObject.AddComponent(highlightFixScriptType);
+		}
 	}
 
 	public void SpawnPolypeptide(Transform spawnTransform)
