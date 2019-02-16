@@ -29,18 +29,20 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
         passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION
           _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 4
-      - keywords: DIRECTIONAL
-        passType: 5
       - keywords: SHADOWS_DEPTH
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
-      - keywords: INSTANCING_ON LIGHTPROBE_SH
+      - keywords: LIGHTPROBE_SH SHADOWS_SHADOWMASK
+        passType: 10
+      - keywords: INSTANCING_ON LIGHTPROBE_SH SHADOWS_SHADOWMASK
         passType: 10
   - first: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -57,6 +59,8 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+      - keywords: DIRECTIONAL SHADOWS_SCREEN SHADOWS_SHADOWMASK
+        passType: 0
   - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -65,8 +69,6 @@ ShaderVariantCollection:
   - first: {fileID: 207, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
-      - keywords: 
-        passType: 0
       - keywords: SOFTPARTICLES_ON
         passType: 0
   - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}

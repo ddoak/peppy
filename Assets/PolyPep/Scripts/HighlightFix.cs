@@ -39,12 +39,15 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		{
 			// a button
 			myRT = this.transform.Find("Background") as RectTransform;
-			selectScaleFactor = 1.25f;
+			if (!myToggle)
+			{
+				selectScaleFactor = 1.25f;
+			}
 		}
 
 		if (!myRT)
 		{
-			// a toggle
+			// a toggle ??
 			myRT = this.transform as RectTransform;
 		}
 
