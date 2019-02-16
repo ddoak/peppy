@@ -17,7 +17,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public Toggle myToggle;
 
-	public float selectScaleFactor = 1.4f;
+	public float selectScaleFactor = 1.45f;
 	public float toggleOnScaleFactor = 1.3f;
 
 	public Color normalColor;
@@ -39,6 +39,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		{
 			// a button
 			myRT = this.transform.Find("Background") as RectTransform;
+			selectScaleFactor = 1.25f;
 		}
 
 		if (!myRT)

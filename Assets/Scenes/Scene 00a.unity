@@ -569,13 +569,13 @@ RectTransform:
   m_LocalScale: {x: 0.9974953, y: 0.9974951, z: 1}
   m_Children:
   - {fileID: 91930013}
-  m_Father: {fileID: 187626335}
+  m_Father: {fileID: 1033334731}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.4, y: 3.9}
-  m_SizeDelta: {x: 20, y: 25}
+  m_AnchoredPosition: {x: 20.1, y: -1.7}
+  m_SizeDelta: {x: 21.55, y: 27.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3194226
 MonoBehaviour:
@@ -664,7 +664,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.23130657, y: 1.3494527, z: 0.59853226, w: 2.7163036}
+  m_margin: {x: 0.23130657, y: 1.9730375, z: 0.59853226, w: 1.23015}
   m_textInfo:
     textComponent: {fileID: 3194226}
     characterCount: 1
@@ -2902,7 +2902,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68526531}
   m_LocalRotation: {x: 1.4253507e-22, y: -2.842171e-14, z: 8.881784e-16, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1.0000001}
   m_Children: []
   m_Father: {fileID: 1175106571}
@@ -2910,7 +2910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -4.1, y: 18.6}
+  m_AnchoredPosition: {x: -5.4, y: 18.6}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &68526533
@@ -6766,7 +6766,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1033334731}
-  - {fileID: 3194225}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6832,11 +6831,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -14713,6 +14712,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1765883594}
+  - {fileID: 2058834981}
+  - {fileID: 1270450917}
   m_Father: {fileID: 1347480713}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15133,7 +15134,7 @@ RectTransform:
   m_LocalScale: {x: 0.9974953, y: 0.9974951, z: 1}
   m_Children:
   - {fileID: 1031682150}
-  m_Father: {fileID: 850283689}
+  m_Father: {fileID: 1707670905}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -18473,16 +18474,16 @@ RectTransform:
   m_GameObject: {fileID: 505527648}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.0064}
-  m_LocalScale: {x: 0.9974953, y: 0.9974951, z: 0.9999975}
+  m_LocalScale: {x: 0.9974953, y: 0.9974951, z: 1}
   m_Children:
   - {fileID: 267755552}
-  m_Father: {fileID: 644733581}
+  m_Father: {fileID: 1512400534}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -19.4, y: -1.1}
-  m_SizeDelta: {x: 20, y: 25}
+  m_AnchoredPosition: {x: -13.5, y: -6.7}
+  m_SizeDelta: {x: 29, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505527650
 MonoBehaviour:
@@ -18571,7 +18572,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.23130657, y: 1.3494527, z: 0.59853226, w: 2.7163036}
+  m_margin: {x: 0.23130657, y: 1.3494527, z: 0.59853226, w: 0.5405009}
   m_textInfo:
     textComponent: {fileID: 505527650}
     characterCount: 1
@@ -24287,7 +24288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -24343,7 +24344,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1512400534}
-  - {fileID: 505527649}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24409,11 +24409,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -24534,6 +24534,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 69257476}
+  - {fileID: 1225460169}
   m_Father: {fileID: 1714029747}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25265,7 +25266,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 159677762}
-  m_Father: {fileID: 1108522102}
+  m_Father: {fileID: 1311882525}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -26133,7 +26134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -32006,13 +32007,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1707670905}
-  - {fileID: 414429069}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -109.7, y: 100.2}
+  m_AnchoredPosition: {x: -113.6, y: 103.3}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &850283690
@@ -32072,11 +32072,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -37268,6 +37268,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 354461036}
+  - {fileID: 3194225}
   m_Father: {fileID: 187626335}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -39562,8 +39563,6 @@ RectTransform:
   m_LocalScale: {x: 0.9974953, y: 0.99749553, z: 0.99999785}
   m_Children:
   - {fileID: 1311882525}
-  - {fileID: 666605448}
-  - {fileID: 1772718143}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -39629,11 +39628,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -43194,7 +43193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -44990,7 +44989,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 846706607}
-  m_Father: {fileID: 1714029747}
+  m_Father: {fileID: 648140739}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -47082,7 +47081,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1315403110}
-  m_Father: {fileID: 1347480713}
+  m_Father: {fileID: 404880571}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -47927,6 +47926,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 756312488}
+  - {fileID: 666605448}
+  - {fileID: 1772718143}
   m_Father: {fileID: 1108522102}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48523,8 +48524,6 @@ RectTransform:
   m_LocalScale: {x: 0.9974953, y: 0.99749553, z: 0.99999785}
   m_Children:
   - {fileID: 404880571}
-  - {fileID: 2058834981}
-  - {fileID: 1270450917}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48590,11 +48589,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -48738,7 +48737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -54603,6 +54602,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1548397546}
+  - {fileID: 505527649}
   m_Father: {fileID: 644733581}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -57295,7 +57295,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -1.9, y: -0}
+  m_AnchoredPosition: {x: -1.9000015, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1566004482
@@ -63735,6 +63735,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 642936308}
+  - {fileID: 414429069}
   m_Father: {fileID: 850283689}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64155,17 +64156,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1714029746}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 0.9974953, y: 0.99749553, z: 0.99999785}
   m_Children:
   - {fileID: 648140739}
-  - {fileID: 1225460169}
   m_Father: {fileID: 1579489631}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -123.7, y: 112.7}
+  m_AnchoredPosition: {x: -126.07, y: 118.2}
   m_SizeDelta: {x: 18, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1714029748
@@ -64225,11 +64225,11 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 382481194}
         m_MethodName: UpdateDefinedSecondaryStructureFromUI
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -65896,7 +65896,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1496870130}
-  m_Father: {fileID: 1108522102}
+  m_Father: {fileID: 1311882525}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -68378,7 +68378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -70011,7 +70011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -71532,7 +71532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7568628, g: 0.82745105, b: 0.2901961, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -73906,7 +73906,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 91, y: -101.6}
+  m_AnchoredPosition: {x: 96.4, y: -101.6}
   m_SizeDelta: {x: 100, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2017576629
@@ -75465,17 +75465,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058834980}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0064}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0063999738}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1768832725}
-  m_Father: {fileID: 1347480713}
+  m_Father: {fileID: 404880571}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 17.6, y: 10.8}
-  m_SizeDelta: {x: 20, y: 25}
+  m_SizeDelta: {x: 28.9, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2058834982
 MonoBehaviour:
@@ -75564,7 +75564,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.23130657, y: 1.3494527, z: 0.59853226, w: 2.7163036}
+  m_margin: {x: 3.593604, y: 1.3494527, z: 0.59853226, w: 2.7163036}
   m_textInfo:
     textComponent: {fileID: 2058834982}
     characterCount: 1

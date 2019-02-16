@@ -138,7 +138,7 @@ public class PolyPepManager : MonoBehaviour {
 		//UIPanelSideChains.SetActive(false);
 
 		UIPanelCamera = GameObject.Find("UI_PanelCamera");
-		UIPanelCamera.SetActive(false);
+		//UIPanelCamera.SetActive(false);
 
 		UIPanelInfo = GameObject.Find("UI_PanelInfo");
 		UIInfoActiveTf = GameObject.Find("InfoActivePos").transform;
@@ -199,6 +199,7 @@ public class PolyPepManager : MonoBehaviour {
 			DoInitialUIPrep(UI);
 			//DoInitialUIPrep(UIPanelSideChains);
 			UIPanelSideChains.SetActive(false);
+			UIPanelCamera.SetActive(false);
 
 
 		}
@@ -240,7 +241,7 @@ public class PolyPepManager : MonoBehaviour {
 			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);//  Color.blue;
 			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
 			colors.pressedColor = new Color(1f, 1f, 0.8f);
-			colors.fadeDuration = 0.15f;
+			colors.fadeDuration = 0.1f;
 
 			_button.colors = colors;
 
@@ -280,9 +281,9 @@ public class PolyPepManager : MonoBehaviour {
 			//Debug.Log(_toggle.colors.normalColor);
 
 			ColorBlock colors = _slider.colors;
-			colors.normalColor = Color.white; //0.8f, 0.8f, 0.3f);//  Color.blue;
+			colors.normalColor = new Color(0.7f, 0.7f, 0.6f);
 			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
-			colors.pressedColor = new Color(1f, 1f, 0.8f);
+			colors.pressedColor = new Color(1f, 1f, 0.2f);
 			colors.fadeDuration = 0.1f;
 
 			_slider.colors = colors;
@@ -464,11 +465,12 @@ public class PolyPepManager : MonoBehaviour {
 		//}
 	}
 
-	public void UpdateDefinedSecondaryStructureFromUI()
+	public void UpdateDefinedSecondaryStructureFromUI(int value)
 	{
 		float phi = phiTarget;
 		float psi = psiTarget;
-		switch (UIDefinedSecondaryStructure)
+		//switch (UIDefinedSecondaryStructure)
+		switch (value)
 		{
 			case 0:     
 				// not defined
