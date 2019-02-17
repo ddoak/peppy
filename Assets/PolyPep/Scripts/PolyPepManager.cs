@@ -233,6 +233,7 @@ public class PolyPepManager : MonoBehaviour {
 
 		//Debug.Log("toggles.length = " + toggles.Length);
 
+		int i = 0;
 		foreach (Button _button in buttons)
 		{
 			//Debug.Log(_toggle.colors.normalColor);
@@ -249,9 +250,13 @@ public class PolyPepManager : MonoBehaviour {
 			//colors.normalColor = Color.red;
 			//GetComponent<Button>().colors = colors;
 
-			_button.gameObject.AddComponent(highlightFixScriptType);
+			//if (i%2 == 0)
+				_button.gameObject.AddComponent(highlightFixScriptType);
+
+			i++;
 		}
 
+		i = 0;
 		foreach (Toggle _toggle in toggles)
 		{
 			//Debug.Log(_toggle.colors.normalColor);
@@ -268,11 +273,14 @@ public class PolyPepManager : MonoBehaviour {
 			//colors.normalColor = Color.red;
 			//GetComponent<Button>().colors = colors;
 
-			_toggle.gameObject.AddComponent(highlightFixScriptType);
-			_toggle.gameObject.GetComponent<HighlightFix>().myToggle = _toggle;
+			//if (i % 2 == 0)
+			{
+				_toggle.gameObject.AddComponent(highlightFixScriptType);
+				_toggle.gameObject.GetComponent<HighlightFix>().myToggle = _toggle;
+				_toggle.gameObject.GetComponent<HighlightFix>().normalColor = colors.normalColor;
+			}
 
-			_toggle.gameObject.GetComponent<HighlightFix>().normalColor = colors.normalColor;
-
+			i++;
 		}
 
 		Slider[] sliders = thisUI.GetComponentsInChildren<Slider>();

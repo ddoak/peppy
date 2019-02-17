@@ -37,6 +37,7 @@ public class RawInteraction : MonoBehaviour {
         else {
 			//Debug.Log("---> " + t);
 			GameObject go =  t.gameObject;
+			//Debug.Log("RawInteraction Hover Entering " + go.name + " GameObject");
 			BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
 			if (bu != null)
 			{

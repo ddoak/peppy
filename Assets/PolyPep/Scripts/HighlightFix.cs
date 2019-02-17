@@ -24,6 +24,11 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	void Start()
 	{
+		SetUpRectTransformScales();
+	}
+
+	private void SetUpRectTransformScales ()
+	{
 		// some very brittle code here
 		// makes assumptions about how UI is set up
 
@@ -59,7 +64,6 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		myStartScale = myRT.localScale;
 		myTargetScale = myStartScale;
 		myCurrentScale = myStartScale;
-
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
@@ -67,6 +71,8 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		//if (!EventSystem.current.alreadySelecting)
 		//	EventSystem.current.SetSelectedGameObject(this.gameObject);
 		//Debug.Log("highlight fix enter");
+
+		Debug.Log("Cursor Entering " + name + " GameObject");
 
 		//if (EventSystem.current.currentSelectedGameObject == this.gameObject)
 		{
@@ -86,9 +92,11 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		//if (EventSystem.current.alreadySelecting)
 
 		//{
-		//	Debug.Log("1");
+		//	Debug.Log("Pointer Exit");
 
 		//}
+
+		Debug.Log("Cursor Exiting " + name + " GameObject");
 
 		if (EventSystem.current.currentSelectedGameObject == this.gameObject)
 		{
@@ -97,6 +105,8 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		}
 
 		{
+			// Toggle latching (colour and scale)
+
 			myTargetScale = myStartScale;
 			if (myToggle)
 			{
@@ -104,7 +114,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 				{
 					{
 						//Debug.Log(myRT.localScale);
-
+						// Latch On
 						myTargetScale.x = myStartScale.x * toggleOnScaleFactor;
 						myTargetScale.y = myStartScale.y * toggleOnScaleFactor;
 						myTargetScale.z = 1f;
@@ -117,6 +127,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 				}
 				else
 				{
+					// Latch Off
 					ColorBlock colors = myToggle.colors;
 					colors.normalColor = normalColor;
 					myToggle.colors = colors;
@@ -137,11 +148,16 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		//this.GetComponent<Selectable>().OnPointerExit(null);
 	}
 
-	void Update()
+	private void UpdateRTScale()
 	{
 		//Debug.Log("update");
 		myCurrentScale = Vector3.Lerp(myCurrentScale, myTargetScale, ((Time.deltaTime / 0.01f) * 0.2f));
 		myRT.localScale = myCurrentScale;
+	}
+
+	void Update()
+	{
+		UpdateRTScale();
 	}
 }
 //
