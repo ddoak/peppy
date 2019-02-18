@@ -846,6 +846,11 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void TestFromUI(string message)
+	{
+		Debug.Log(message);
+	}
+
 	public void ResetLevel()
 	{
 		Scene m_Scene = SceneManager.GetActiveScene();
