@@ -27,6 +27,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	void Start()
 	{
 		SetUpRectTransformScales();
+		SetToggleLatch();
 	}
 
 	private void SetUpRectTransformScales ()
@@ -67,6 +68,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		myTargetScale = myStartScale;
 		myCurrentScale = myStartScale;
 	}
+
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
@@ -121,44 +123,44 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 			//Debug.Log("2");
 			EventSystem.current.SetSelectedGameObject(null);
 		}
-
+	
 		{
-			// Toggle latching (colour and scale)
 
 			myTargetScale = myStartScale;
-			if (myToggle)
-			{
-				if (myToggle.isOn)
-				{
-					{
-						//Debug.Log(myRT.localScale);
-						// Latch On
-						myTargetScale.x = myStartScale.x * toggleOnScaleFactor;
-						myTargetScale.y = myStartScale.y * toggleOnScaleFactor;
-						myTargetScale.z = 1f;
-
-
-						ColorBlock colors = myToggle.colors;
-						colors.normalColor = myToggle.colors.highlightedColor;
-						myToggle.colors = colors;
-					}
-				}
-				else
-				{
-					// Latch Off
-					ColorBlock colors = myToggle.colors;
-					colors.normalColor = normalColor;
-					myToggle.colors = colors;
-				}
-			}
-
-			//Debug.Log(myRT.localScale);
-			
-			//myRT.localScale = myTargetScale;
-			//myCurrentScale = myTargetScale;
+			SetToggleLatch();
 		}
 
 		//this.GetComponent<Selectable>().OnPointerExit(null);
+	}
+
+	private void SetToggleLatch()
+	{
+		// Toggle latching (colour and scale)
+		if (myToggle)
+		{
+			if (myToggle.isOn)
+			{
+				{
+					//Debug.Log(myRT.localScale);
+					// Latch On
+					myTargetScale.x = myStartScale.x * toggleOnScaleFactor;
+					myTargetScale.y = myStartScale.y * toggleOnScaleFactor;
+					myTargetScale.z = 1f;
+
+
+					ColorBlock colors = myToggle.colors;
+					colors.normalColor = myToggle.colors.highlightedColor;
+					myToggle.colors = colors;
+				}
+			}
+			else
+			{
+				// Latch Off
+				ColorBlock colors = myToggle.colors;
+				colors.normalColor = normalColor;
+				myToggle.colors = colors;
+			}
+		}
 	}
 
 	public void OnDeselect(BaseEventData eventData)

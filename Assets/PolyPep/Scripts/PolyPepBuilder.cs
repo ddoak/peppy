@@ -765,8 +765,8 @@ public class PolyPepBuilder : MonoBehaviour {
 							{
 								int targetAcceptorResid = acceptorGO.GetComponent<BackboneUnit>().residue;
 								//Debug.Log(resid + "---> " + targetAcceptorResid);
-								//int offset = 3;
-								//if ( ((resid + offset) <= targetAcceptorResid) || ((resid - offset) >= targetAcceptorResid) ) 
+								int offset = 2;
+								if ( ((resid + offset) >= targetAcceptorResid) || ((resid - offset) <= targetAcceptorResid) ) 
 								{
 									foundAcceptor = true;
 									//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
