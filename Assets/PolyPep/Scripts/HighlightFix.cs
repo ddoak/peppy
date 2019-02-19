@@ -116,11 +116,11 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 		//Debug.Log("Cursor Exiting " + name + " GameObject");
 
-		//if (EventSystem.current.currentSelectedGameObject == this.gameObject)
-		//{
-		//	Debug.Log("2");
-		//	EventSystem.current.SetSelectedGameObject(null);
-		//}
+		if (EventSystem.current.currentSelectedGameObject == this.gameObject)
+		{
+			//Debug.Log("2");
+			EventSystem.current.SetSelectedGameObject(null);
+		}
 
 		{
 			// Toggle latching (colour and scale)
