@@ -8,13 +8,6 @@ ShaderVariantCollection:
   m_PrefabAsset: {fileID: 0}
   m_Name: NewShaderVariants
   m_Shaders:
-  - first: {fileID: 4800000, guid: 9ce107479d11178d11005b9844295342, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 0
-      - keywords: INSTANCING_ON SHADOWS_DEPTH
-        passType: 8
   - first: {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -23,20 +16,33 @@ ShaderVariantCollection:
   - first: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
-      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON SHADOWS_SCREEN
-        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION
+        passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
         passType: 4
-      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION
-          _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _NORMALMAP
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: DIRECTIONAL _NORMALMAP
+        passType: 5
+      - keywords: DIRECTIONAL _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 5
       - keywords: SHADOWS_DEPTH
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: SHADOWS_DEPTH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
@@ -44,8 +50,6 @@ ShaderVariantCollection:
         passType: 10
       - keywords: INSTANCING_ON LIGHTPROBE_SH SHADOWS_SHADOWMASK
         passType: 10
-      - keywords: 
-        passType: 11
   - first: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -68,19 +72,24 @@ ShaderVariantCollection:
       variants:
       - keywords: DIRECTIONAL LIGHTPROBE_SH
         passType: 4
-      - keywords: SPOT
+      - keywords: DIRECTIONAL
         passType: 5
-      - keywords: POINT
-        passType: 5
+      - keywords: SHADOWS_DEPTH
+        passType: 8
   - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: _SUNDISK_SIMPLE
         passType: 0
+  - first: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
   - first: {fileID: 207, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
-      - keywords: SOFTPARTICLES_ON
+      - keywords: 
         passType: 0
   - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -107,12 +116,22 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 10750, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
   - first: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: 
         passType: 0
       - keywords: UNITY_UI_ALPHACLIP
+        passType: 0
+  - first: {fileID: 4800000, guid: 05b53b473302943b58b8e33c93a38dac, type: 3}
+    second:
+      variants:
+      - keywords: 
         passType: 0
   - first: {fileID: 4800000, guid: 36b8b481cf607814a8cec318f0148d63, type: 3}
     second:
@@ -126,6 +145,13 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 4800000, guid: 48dca5b99d113b8d11006bab44295342, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
   - first: {fileID: 4800000, guid: 5e52aa58207bbf24d8eb8ec969e9ae88, type: 3}
     second:
       variants:
@@ -146,8 +172,23 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 4800000, guid: b95caf64e2cc3614892026a94bb2be84, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
   - first: {fileID: 4800000, guid: ced943c76cb8fb8489bab18c3dfcdcd3, type: 3}
     second:
       variants:
       - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: d84268709d11078d11005b9844295342, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
+    second:
+      variants:
+      - keywords: OUTLINE_ON UNDERLAY_ON
         passType: 0

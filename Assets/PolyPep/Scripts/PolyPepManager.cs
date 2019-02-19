@@ -197,7 +197,7 @@ public class PolyPepManager : MonoBehaviour {
 
 
 			DoInitialUIPrep(UI);
-			//DoInitialUIPrep(UIPanelSideChains);
+
 			UIPanelSideChains.SetActive(false);
 			UIPanelCamera.SetActive(false);
 

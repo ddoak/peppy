@@ -70,8 +70,12 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		Debug.Log("OnPointerEnter " + name);
-		
+		//Debug.Log("OnPointerEnter " + name);
+
+		//Debug.Log("Name: " + eventData.pointerCurrentRaycast.gameObject.name);
+		//Debug.Log("Tag: " + eventData.pointerCurrentRaycast.gameObject.tag);
+		//Debug.Log("GameObject: " + eventData.pointerCurrentRaycast.gameObject);
+
 		//if (!EventSystem.current.alreadySelecting)
 		//{
 		//	Debug.Log("1");
@@ -100,7 +104,8 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		isHovered = false;
-		Debug.Log("OnPointerExit " + name);
+		//Debug.Log("OnPointerExit " + name);
+
 		//Debug.Log("highlight fix leave");
 		//if (EventSystem.current.alreadySelecting)
 
@@ -158,13 +163,13 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public void OnDeselect(BaseEventData eventData)
 	{
-		Debug.Log("OnDeSelect " + name);
+		//Debug.Log("OnDeSelect " + name);
 		//this.GetComponent<Selectable>().OnPointerExit(null);
 	}
 
 	public void OnSelect(BaseEventData eventData)
 	{
-		Debug.Log("OnSelect " + name);
+		//Debug.Log("OnSelect " + name);
 		//this.GetComponent<Selectable>().OnPointerExit(null);
 	}
 
@@ -180,6 +185,9 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		UpdateRTScale();
 		//Debug.Log(EventSystem.current.currentSelectedGameObject);
 		//Debug.Log(EventSystem.current.IsPointerOverGameObject());
+		
+
+		//Debug.Log(EventSystem.current.isFocused);
 
 
 	}
