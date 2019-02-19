@@ -20,6 +20,7 @@ TagManager:
   - S
   - UnusedAtom
   - bondToH
+  - AAtoggle
   layers:
   - Default
   - TransparentFX
