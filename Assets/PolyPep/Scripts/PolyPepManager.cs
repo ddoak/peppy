@@ -70,6 +70,8 @@ public class PolyPepManager : MonoBehaviour {
 
 	public GameObject myPlayerController;
 
+	public List<Toggle> aaTogglesList = new List<Toggle> { };
+
 
 	public List<string> residueTypeList = new List<string>
 	{
@@ -259,7 +261,6 @@ public class PolyPepManager : MonoBehaviour {
 		i = 0;
 		foreach (Toggle _toggle in toggles)
 		{
-			//Debug.Log(_toggle.colors.normalColor);
 
 			ColorBlock colors = _toggle.colors;
 			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);
@@ -269,18 +270,16 @@ public class PolyPepManager : MonoBehaviour {
 
 			_toggle.colors = colors;
 
-			//var colors = GetComponent<Button>().colors;
-			//colors.normalColor = Color.red;
-			//GetComponent<Button>().colors = colors;
-
-			//if (i % 2 == 0)
 			{
 				_toggle.gameObject.AddComponent(highlightFixScriptType);
 				_toggle.gameObject.GetComponent<HighlightFix>().myToggle = _toggle;
 				_toggle.gameObject.GetComponent<HighlightFix>().normalColor = colors.normalColor;
 			}
 
-			i++;
+			if (_toggle.tag == "AAtoggle")
+			{
+				aaTogglesList.Add(_toggle);
+			}
 		}
 
 		Slider[] sliders = thisUI.GetComponentsInChildren<Slider>();
@@ -683,9 +682,27 @@ public class PolyPepManager : MonoBehaviour {
 	}
 
 
-	public void UpdateAminoAcidSelFromUI()
+	public void UpdateAminoAcidSelFromUI(Toggle myToggle)
 	{
-		//Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+		// bespoke implementation of toggle groups
+
+		// workaround for recursive 'on value changed' call ;)
+		int storedUISelectedAminoAcid = UISelectedAminoAcid;
+
+		//Debug.Log("called by " + myToggle + "sel amino = " + UISelectedAminoAcid);
+		if (myToggle.isOn)
+		{
+			int	cacheValue = UISelectedAminoAcid;
+			foreach (Toggle _toggle in aaTogglesList)
+			{
+				if (_toggle != myToggle)
+				{
+					_toggle.isOn = false;
+					_toggle.GetComponent<HighlightFix>().UpdateToggleLatch();
+				}
+			}
+		}
+		UISelectedAminoAcid = storedUISelectedAminoAcid;
 	}
 
 	public void UpdateShowHAtomsFromUI(bool value)

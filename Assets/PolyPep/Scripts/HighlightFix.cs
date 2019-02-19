@@ -27,7 +27,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	void Start()
 	{
 		SetUpRectTransformScales();
-		SetToggleLatch();
+		UpdateToggleLatch();
 	}
 
 	private void SetUpRectTransformScales ()
@@ -127,13 +127,13 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		{
 
 			myTargetScale = myStartScale;
-			SetToggleLatch();
+			UpdateToggleLatch();
 		}
 
 		//this.GetComponent<Selectable>().OnPointerExit(null);
 	}
 
-	private void SetToggleLatch()
+	public void UpdateToggleLatch()
 	{
 		// Toggle latching (colour and scale)
 		if (myToggle)
@@ -156,6 +156,10 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 			else
 			{
 				// Latch Off
+				myTargetScale.x = myStartScale.x;
+				myTargetScale.y = myStartScale.y;
+				myTargetScale.z = 1f;
+
 				ColorBlock colors = myToggle.colors;
 				colors.normalColor = normalColor;
 				myToggle.colors = colors;
