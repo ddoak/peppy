@@ -155,6 +155,9 @@ public class PolyPepManager : MonoBehaviour {
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
 		myPlayerController = GameObject.Find("OVRPlayerController");
+
+		mySnapshotCamera = GameObject.Find("SnapshotCamera_pf");
+
 	}
 
 	void Start()
@@ -198,10 +201,10 @@ public class PolyPepManager : MonoBehaviour {
 
 
 
-			DoInitialUIPrep(UI);
+			//DoInitialUIPrep(UI);
 
-			UIPanelSideChains.SetActive(false);
-			UIPanelCamera.SetActive(false);
+			//UIPanelSideChains.SetActive(false);
+			//UIPanelCamera.SetActive(false);
 
 
 		}
@@ -209,8 +212,16 @@ public class PolyPepManager : MonoBehaviour {
 		// dev: test always spawn pp on startup
 		//SpawnPolypeptide(transform);
 
-		mySnapshotCamera = Instantiate(snapshotCamera_pf);
+		//mySnapshotCamera = Instantiate(snapshotCamera_pf);
 		mySnapshotCamera.SetActive(false);
+
+		DoInitialUIPrep(UI);
+		DoInitialUIPrep(mySnapshotCamera);
+
+		// hide inactive UI 
+		UIPanelSideChains.SetActive(false);
+		UIPanelCamera.SetActive(false);
+
 
 	}
 
@@ -875,6 +886,12 @@ public class PolyPepManager : MonoBehaviour {
 		SceneManager.LoadScene(m_Scene.name);
 	}
 
+	public void AppQuit()
+	{
+		Debug.Log("Application.Quit");
+		Application.Quit();
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -886,5 +903,9 @@ public class PolyPepManager : MonoBehaviour {
 		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
 		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
 		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			AppQuit();
+		}
 	}
 }
