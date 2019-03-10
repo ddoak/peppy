@@ -57,13 +57,34 @@ public class SnapshotCamera : MonoBehaviour {
 			Directory.CreateDirectory(directoryPath);
 
 		}
-	
+
 		//File.WriteAllBytes(Application.dataPath + "/Snapshots/" + FileCounter + ".png", Bytes);
-		File.WriteAllBytes(directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount + ".png", Bytes);
 
-		imageCount++;
+		//string dateTime = DateTime.Now.ToString();
+		//dateTime = dateTime.Replace(@"\", "_");
+		//dateTime = dateTime.Replace(@"/", "_");
+		//dateTime = "xx";
 
-		
+		string snapshotFilename = directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount  + ".png";
+
+		bool validFilename = false;
+
+		while (validFilename == false)
+		{
+			if (File.Exists(snapshotFilename))
+			{
+				imageCount++;
+				snapshotFilename = directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount + ".png";
+			}
+			else
+			{
+				validFilename = true;
+			}
+		}
+
+		File.WriteAllBytes(snapshotFilename, Bytes);
+
+		//imageCount++;
 	}
 
 	private void UpdateOverlay()

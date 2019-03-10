@@ -314,6 +314,11 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void SpawnSliderIncrement(int delta)
+	{
+		spawnLengthSliderUI.GetComponent<Slider>().value += delta;
+	}
+
 	public void SpawnPolypeptide(Transform spawnTransform)
 	{
 		//if (!collidersOn)
