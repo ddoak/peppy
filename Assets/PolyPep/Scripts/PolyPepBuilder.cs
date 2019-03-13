@@ -722,7 +722,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			string resType = chainArr[resid].GetComponent<Residue>().type;
 			//Debug.Log(resType);
 
-			if ((myPolyPepManager.hbondsOn) || (myPolyPepManager.hbondStrength > 0) && (chainArr[resid].GetComponent<Residue>().type != "PRO")) // DGD dirty hack to disable PRO HN hbond
+			if ( ( myPolyPepManager.hbondsOn || (myPolyPepManager.hbondStrength > 0) ) && (resType != "PRO")) // DGD dirty hack to disable PRO HN hbond
 			{
 				GameObject donorGO = GetAmideForResidue(resid);
 
@@ -766,7 +766,7 @@ public class PolyPepBuilder : MonoBehaviour {
 								int targetAcceptorResid = acceptorGO.GetComponent<BackboneUnit>().residue;
 								//Debug.Log(resid + "---> " + targetAcceptorResid);
 								int offset = 2;
-								if ( ((resid + offset) >= targetAcceptorResid) || ((resid - offset) <= targetAcceptorResid) ) 
+								if ( ((resid + offset) < targetAcceptorResid) || ((resid - offset) > targetAcceptorResid) ) 
 								{
 									foundAcceptor = true;
 									//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
