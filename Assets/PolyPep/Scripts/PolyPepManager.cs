@@ -905,9 +905,9 @@ public class PolyPepManager : MonoBehaviour {
 		UpdatePanelInfoPos();
 		UpdatePanelControlsPos();
 		UpdateKeepGameObjectAccessible(UI, 0.4f, 5.0f);
-		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
+		//UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
 		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
-		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
+		//UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
 		if (Input.GetKey(KeyCode.Escape))
 		{
 			AppQuit();
