@@ -766,7 +766,16 @@ public class PolyPepBuilder : MonoBehaviour {
 								int targetAcceptorResid = acceptorGO.GetComponent<BackboneUnit>().residue;
 								//Debug.Log(resid + "---> " + targetAcceptorResid);
 								int offset = 2;
-								if ( ((resid + offset) < targetAcceptorResid) || ((resid - offset) > targetAcceptorResid) ) 
+                                //Debug.Log(gameObject.name + "---> " + acceptorGO.transform.root.name);
+                                //bool sameChain = (gameObject.name == acceptorGO.transform.root.name);
+                                bool sameChain = (gameObject.transform.root == acceptorGO.transform.root);
+                                bool notTooClose = (((resid + offset) < targetAcceptorResid) || ((resid - offset) > targetAcceptorResid));
+                                if (notTooClose)
+                                {
+                                    //Debug.Log(resid + "---> " + targetAcceptorResid);
+                                }
+                                //Debug.Log("->" + sameChain);
+                                if (!sameChain || (sameChain && notTooClose) )
 								{
 									foundAcceptor = true;
 									//DrawLine(donorHLocation, hit.point, Color.red, 0.02f);
