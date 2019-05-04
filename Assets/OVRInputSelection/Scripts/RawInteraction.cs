@@ -179,25 +179,29 @@ public class RawInteraction : MonoBehaviour {
 	}
 
 	public void TractorBeam(GameObject go, Vector3 position, bool attract, float scale)
+	{
+
+		//Debug.Log("tractor beam me!");
+
+		float tractorBeamAttractionFactor = scale * 100.0f;
+		float tractorBeamMin = scale * 100.0f;
+		float tractorBeamDistanceRatio = 400f / scale; // larger = weaker
+
+
+		Vector3 tractorBeam = position - go.transform.position;
+		float tractorBeamMagnitude = Vector3.Magnitude(tractorBeam);
+		//tractorBeamMagnitude = Mathf.Min(1.0f, tractorBeamMagnitude);
+
+		if (!attract)
 		{
+			// repel
+			tractorBeam = go.transform.position - position;
+		}
+		float tractorBeamScale = Mathf.Max(tractorBeamMin, (tractorBeamAttractionFactor * tractorBeamMagnitude / tractorBeamDistanceRatio));
 
-			//Debug.Log("tractor beam me!");
-
-			float tractorBeamAttractionFactor = scale * 100.0f;
-			float tractorBeamMax = scale * 100.0f;
-			float tractorBeamDistanceRatio = 400f / scale; // larger = weaker
-
-
-			Vector3 tractorBeam = position - go.transform.position;
-			if (!attract)
-			{
-				// repel
-				tractorBeam = go.transform.position - position;
-			}
-			float tractorBeamScale = Mathf.Max(tractorBeamMax, tractorBeamAttractionFactor * (Vector3.Magnitude(tractorBeam) / tractorBeamDistanceRatio));
-
-			go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
-			// add scaling for 'size' of target?
+			
+		go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+		// add scaling for 'size' of target?
 
 
 	}
