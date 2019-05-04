@@ -198,6 +198,10 @@ public class ElectrostaticsManager : MonoBehaviour {
 					var main = mcp.myChargedParticle_ps.main;
 					var shape = mcp.myChargedParticle_ps.shape;
 
+					var em = mcp.myChargedParticle_ps.emission;
+					em.rate = Mathf.Abs(mcp.charge) * Mathf.Abs(mcp.charge) * 5000;
+
+
 					float scaleParticleForce = 7.5f * (1 / cycleInterval); // 1000.0f;
 					fo.x = scaleParticleForce * newForce.x;
 					fo.y = scaleParticleForce * newForce.y;

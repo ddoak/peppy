@@ -22,6 +22,10 @@ public class SideChainBuilder : MonoBehaviour {
 	private System.Type movingChargedParticleScriptType;
 	public ParticleSystem chargedParticle_ps;
 
+	//simplified
+	private float amidePartialCharge = +0.25f;
+	private float carbonylPartialCharge = -0.25f;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -50,11 +54,13 @@ public class SideChainBuilder : MonoBehaviour {
 		{
 			HN.tag = "H";
 			HNBond.tag = "bondToH";
+			SetElectrostaticsChargeForAtom(residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, amidePartialCharge);
 		}
 		else
 		{
 			HN.tag = "UnusedAtom";
 			HNBond.tag = "Untagged";
+			SetElectrostaticsChargeForAtom(residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, 0.0f);
 		}
 	}
 
@@ -1050,6 +1056,17 @@ public class SideChainBuilder : MonoBehaviour {
 		}
 	}
 
+	void SetElectrostaticsChargeForAtom(GameObject atom, float charge)
+	{
+		if (atom.GetComponent<MovingChargedParticle>())
+		{
+			atom.GetComponent<MovingChargedParticle>().charge = charge;
+		}
+		else
+		{
+			Debug.LogError("tried to set charge for atom with no electrostatics");
+		}
+	}
 
 	void Build_PHEorTYR(Residue residue_cs, bool makeTYR)
 	{
@@ -1595,24 +1612,8 @@ public class SideChainBuilder : MonoBehaviour {
 
 	public void AddBackboneElectrostatics(Residue residue_cs)
 	{
-
-		//float amidePartialCharge = +0.3f;
-		//float carbonylPartialCharge = -0.45f;
-
-		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), amidePartialCharge);
-		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("tf_O/O_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), carbonylPartialCharge);
-
-
-		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("N_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), -amidePartialCharge);
-		//AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("C_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), -carbonylPartialCharge);
-
-		//simplified
-		float amidePartialCharge = +0.25f;
-		float carbonylPartialCharge = -0.25f;
-
 		AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.amide_pf.transform.Find("tf_H/H_amide").gameObject, residue_cs.amide_pf.GetComponent<Rigidbody>(), amidePartialCharge);
 		AssignElectrostaticsForAtomRb(residue_cs.gameObject, residue_cs.carbonyl_pf.transform.Find("tf_O/O_carbonyl").gameObject, residue_cs.carbonyl_pf.GetComponent<Rigidbody>(), carbonylPartialCharge);
-
 	}
 
 	ConfigurableJoint AddConfigJointBond(GameObject go1, GameObject go2)

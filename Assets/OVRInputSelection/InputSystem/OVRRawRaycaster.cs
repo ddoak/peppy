@@ -105,6 +105,11 @@ namespace ControllerSelection {
 		private float remoteGrabDelay = 0.08f; // secs before tractorbeam begins
 		private float approxMovingAvgPoke;
 
+		private Transform playerController;
+		private Vector3 prevPlayerControllerPos;
+
+
+
 
 		//[HideInInspector]
 		public OVRInput.Controller activeController = OVRInput.Controller.None;
@@ -116,6 +121,11 @@ namespace ControllerSelection {
 				
             }
 			centreEyeAnchor =  trackingSpace.transform.Find("CenterEyeAnchor");
+			playerController = GameObject.Find("OVRPlayerController").transform;
+			if (playerController == null)
+			{
+				Debug.LogError("Could not find OVRPlayerController in scene");
+			}
 		}
 
         void OnEnable() {
@@ -349,6 +359,10 @@ namespace ControllerSelection {
 							if (lastHit == primaryDown && lastHit == secondaryDown)
 							{
 								// START remote grabbing
+
+								//store centreEyeAnchor
+								prevPlayerControllerPos = playerController.position;
+
 								//Debug.Log(lastHit + " is candidate for remoteGrab");
 								remoteGrab = lastHit;
 								// initially set remoteGrabTargetDistance to hit.distance
@@ -407,8 +421,16 @@ namespace ControllerSelection {
 
 					// poke (detecting sustained controller movement along pointer axis)
 					// poke is projection of controller movement along pointer ray
-					// TODO: would be nice to filter out player movement
-					Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
+
+					// calculate delta player position to filter out player movement
+					Vector3 playerControllerDelta = (prevPlayerControllerPos - playerController.position);
+					//Debug.Log("playerControllerDelta = " + Vector3.Magnitude(playerControllerDelta));
+
+					//Vector3 deltaPointer = Vector3.Project((pointer.origin - prevPointer.origin), pointer.direction);
+
+					Vector3 deltaPointer = Vector3.Project(((pointer.origin + playerControllerDelta) - prevPointer.origin), pointer.direction);
+
+
 					float poke = Vector3.Dot(deltaPointer, pointer.direction);
 
 					//// approximate moving average over 5 frame window
@@ -424,6 +446,7 @@ namespace ControllerSelection {
 					}
 					
 					prevPointer = pointer;
+					prevPlayerControllerPos = playerController.position;
 
 					// calc new remoteGrabTarget
 					remoteGrabTargetPos = (pointer.origin + (remoteGrabTargetDistance * pointer.direction)) + remoteGrabHitOffset;

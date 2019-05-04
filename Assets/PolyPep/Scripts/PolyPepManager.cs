@@ -70,6 +70,8 @@ public class PolyPepManager : MonoBehaviour {
 
 	public GameObject myPlayerController;
 
+	public List<Toggle> aaTogglesList = new List<Toggle> { };
+
 
 	public List<string> residueTypeList = new List<string>
 	{
@@ -96,8 +98,7 @@ public class PolyPepManager : MonoBehaviour {
 		"HIS",
 	};
 
-
-void Awake()
+	void Awake()
 	{
 		GameObject temp = GameObject.Find("Slider_Phi");
 		phiSliderUI = temp.GetComponent<Slider>();
@@ -136,10 +137,10 @@ void Awake()
 		UI = GameObject.Find("UI");
 
 		UIPanelSideChains = GameObject.Find("UI_PanelSideChains");
-		UIPanelSideChains.SetActive(false);
+		//UIPanelSideChains.SetActive(false);
 
 		UIPanelCamera = GameObject.Find("UI_PanelCamera");
-		UIPanelCamera.SetActive(false);
+		//UIPanelCamera.SetActive(false);
 
 		UIPanelInfo = GameObject.Find("UI_PanelInfo");
 		UIInfoActiveTf = GameObject.Find("InfoActivePos").transform;
@@ -154,6 +155,9 @@ void Awake()
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
 		myPlayerController = GameObject.Find("OVRPlayerController");
+
+		mySnapshotCamera = GameObject.Find("SnapshotCamera_pf");
+
 	}
 
 	void Start()
@@ -195,14 +199,124 @@ void Awake()
 			//scaleSliderUI = temp.GetComponent<Slider>();
 			//scaleSliderUI.value = 10;
 
+
+
+			//DoInitialUIPrep(UI);
+
+			//UIPanelSideChains.SetActive(false);
+			//UIPanelCamera.SetActive(false);
+
+
 		}
 
 		// dev: test always spawn pp on startup
 		//SpawnPolypeptide(transform);
 
-		mySnapshotCamera = Instantiate(snapshotCamera_pf);
+		//mySnapshotCamera = Instantiate(snapshotCamera_pf);
 		mySnapshotCamera.SetActive(false);
 
+		DoInitialUIPrep(UI);
+		DoInitialUIPrep(mySnapshotCamera);
+
+		// hide inactive UI 
+		UIPanelSideChains.SetActive(false);
+		UIPanelCamera.SetActive(false);
+
+
+	}
+
+	private void DoInitialUIPrep(GameObject thisUI)
+	{
+		System.Type highlightFixScriptType;
+		string ScriptName = "HighlightFix";
+		highlightFixScriptType = System.Type.GetType(ScriptName + ",Assembly-CSharp");
+
+		//String ScriptName = "YourScriptNameWithoutExtension";
+		////We need to fetch the Type
+		//System.Type MyScriptType = System.Type.GetType(ScriptName + ",Assembly-CSharp");
+		////Now that we have the Type we can use it to Add Component
+		//gameObject.AddComponent(MyScriptType);
+
+
+		Button[] buttons = thisUI.GetComponentsInChildren<Button>();
+
+		//Debug.Log("buttons.length = " + buttons.Length);
+
+		Toggle[] toggles = thisUI.GetComponentsInChildren<Toggle>();
+
+		//Debug.Log("toggles.length = " + toggles.Length);
+
+		int i = 0;
+		foreach (Button _button in buttons)
+		{
+			//Debug.Log(_toggle.colors.normalColor);
+
+			ColorBlock colors = _button.colors;
+			colors.normalColor = new Color(0.8f, 0.8f, 0.3f);
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.8f);
+			colors.fadeDuration = 0.1f;
+
+			_button.colors = colors;
+
+			//var colors = GetComponent<Button>().colors;
+			//colors.normalColor = Color.red;
+			//GetComponent<Button>().colors = colors;
+
+			//if (i%2 == 0)
+				_button.gameObject.AddComponent(highlightFixScriptType);
+
+			i++;
+		}
+
+		i = 0;
+		foreach (Toggle _toggle in toggles)
+		{
+
+			ColorBlock colors = _toggle.colors;
+			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.4f);
+			colors.fadeDuration = 0.1f;
+
+			_toggle.colors = colors;
+
+			{
+				_toggle.gameObject.AddComponent(highlightFixScriptType);
+				_toggle.gameObject.GetComponent<HighlightFix>().myToggle = _toggle;
+				_toggle.gameObject.GetComponent<HighlightFix>().normalColor = colors.normalColor;
+			}
+
+			if (_toggle.tag == "AAtoggle")
+			{
+				aaTogglesList.Add(_toggle);
+			}
+		}
+
+		Slider[] sliders = thisUI.GetComponentsInChildren<Slider>();
+		foreach (Slider _slider in sliders)
+		{
+			//Debug.Log(_toggle.colors.normalColor);
+
+			ColorBlock colors = _slider.colors;
+			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);
+			colors.highlightedColor = new Color(0.9f, 0.9f, 0.6f);
+			colors.pressedColor = new Color(1f, 1f, 0.4f);
+			colors.fadeDuration = 0.1f;
+
+			_slider.colors = colors;
+
+			//var colors = GetComponent<Button>().colors;
+			//colors.normalColor = Color.red;
+			//GetComponent<Button>().colors = colors;
+
+			_slider.gameObject.AddComponent(highlightFixScriptType);
+		}
+	}
+
+	public void SpawnSliderIncrement(int delta)
+	{
+		spawnLengthSliderUI.GetComponent<Slider>().value += delta;
 	}
 
 	public void SpawnPolypeptide(Transform spawnTransform)
@@ -374,11 +488,12 @@ void Awake()
 		//}
 	}
 
-	public void UpdateDefinedSecondaryStructureFromUI()
+	public void UpdateDefinedSecondaryStructureFromUI(int value)
 	{
 		float phi = phiTarget;
 		float psi = psiTarget;
-		switch (UIDefinedSecondaryStructure)
+		//switch (UIDefinedSecondaryStructure)
+		switch (value)
 		{
 			case 0:     
 				// not defined
@@ -583,9 +698,27 @@ void Awake()
 	}
 
 
-	public void UpdateAminoAcidSelFromUI()
+	public void UpdateAminoAcidSelFromUI(Toggle myToggle)
 	{
-		//Debug.Log("UI selected amino acid = " + UISelectedAminoAcid);
+		// bespoke implementation of toggle groups
+
+		// workaround for recursive 'on value changed' call ;)
+		int storedUISelectedAminoAcid = UISelectedAminoAcid;
+
+		//Debug.Log("called by " + myToggle + "sel amino = " + UISelectedAminoAcid);
+		if (myToggle.isOn)
+		{
+			int	cacheValue = UISelectedAminoAcid;
+			foreach (Toggle _toggle in aaTogglesList)
+			{
+				if (_toggle != myToggle)
+				{
+					_toggle.isOn = false;
+					_toggle.GetComponent<HighlightFix>().UpdateToggleLatch();
+				}
+			}
+		}
+		UISelectedAminoAcid = storedUISelectedAminoAcid;
 	}
 
 	public void UpdateShowHAtomsFromUI(bool value)
@@ -746,11 +879,22 @@ void Awake()
 		}
 	}
 
+	public void TestFromUI(string message)
+	{
+		Debug.Log(message);
+	}
+
 	public void ResetLevel()
 	{
 		Scene m_Scene = SceneManager.GetActiveScene();
 		Debug.Log("Loading... " + m_Scene.name);
 		SceneManager.LoadScene(m_Scene.name);
+	}
+
+	public void AppQuit()
+	{
+		Debug.Log("Application.Quit");
+		Application.Quit();
 	}
 
 	// Update is called once per frame
@@ -764,5 +908,9 @@ void Awake()
 		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
 		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
 		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			AppQuit();
+		}
 	}
 }
