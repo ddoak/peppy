@@ -57,6 +57,8 @@ public class Residue : MonoBehaviour {
 	public bool residueHovered = false;
 	public bool residueGrabbed = false;
 
+	public bool residueFrozen = false;
+
 	public bool drivePhiPsiOn;
 	public float drivePhiPsiTorqValue;
 
@@ -200,10 +202,21 @@ public class Residue : MonoBehaviour {
 				}
 				else
 				{
-					_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
-					targetDeltaScale = 1.0f;
-					myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
-					myTrailPsMain.startSize = 0.01f;
+					if (residueFrozen)
+					{
+						_myPlotCubeRenderer.material.SetColor("_Color", Color.cyan);
+						targetDeltaScale = 1.0f;
+						//myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
+						//myTrailPsMain.startSize = 0.01f;
+					}
+					else
+					{
+						_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
+						targetDeltaScale = 1.0f;
+						myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
+						myTrailPsMain.startSize = 0.01f;
+					}
+
 				}
 			}
 		}

@@ -86,11 +86,28 @@ public class BackboneUnit : MonoBehaviour {
 		UpdateRenderMode();
 	}
 
-	public void SetBackboneUnitControllerHover(bool flag)
+	public void SetBackboneUnitControllerHover(bool value)
 	{
-		controllerHoverOn = flag;
-		myResidue.residueHovered = flag;
-		UpdateRenderMode();
+		if (controllerHoverOn != value)
+		{
+			controllerHoverOn = value;
+			myResidue.residueHovered = value;
+
+			BackboneUnit buAmide = myResidue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCalpha = myResidue.calpha_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCarbonyl = myResidue.carbonyl_pf.GetComponent("BackboneUnit") as BackboneUnit;
+
+			BackboneUnit thisBBU = gameObject.GetComponent<BackboneUnit>();
+			if (thisBBU != buAmide) { buAmide.SetBackboneUnitControllerHover(value); }
+			if (thisBBU != buCalpha) { buCalpha.SetBackboneUnitControllerHover(value); }
+			if (thisBBU != buCarbonyl) { buCarbonyl.SetBackboneUnitControllerHover(value); }
+
+			UpdateRenderMode();
+		}
+
+		//controllerHoverOn = flag;
+		//myResidue.residueHovered = flag;
+		//UpdateRenderMode();
 	}
 
 	public void SetMyResidueSelect(bool flag)
@@ -130,9 +147,22 @@ public class BackboneUnit : MonoBehaviour {
 
 	public void SetRemoteGrabSelect(bool value)
 	{
-		remoteGrabSelectOn = value;
-		myResidue.residueGrabbed = value;
-		UpdateRenderMode();
+		if (remoteGrabSelectOn != value)
+		{
+			remoteGrabSelectOn = value;
+			myResidue.residueGrabbed = value;
+
+			BackboneUnit buAmide = myResidue.amide_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCalpha = myResidue.calpha_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			BackboneUnit buCarbonyl = myResidue.carbonyl_pf.GetComponent("BackboneUnit") as BackboneUnit;
+
+			BackboneUnit thisBBU = gameObject.GetComponent<BackboneUnit>();
+			if (thisBBU != buAmide) { buAmide.SetRemoteGrabSelect(value); }
+			if (thisBBU != buCalpha) { buCalpha.SetRemoteGrabSelect(value); }
+			if (thisBBU != buCarbonyl) { buCarbonyl.SetRemoteGrabSelect(value); }
+
+			UpdateRenderMode();
+		}
 	}
 
 	private void SetRenderingMode(GameObject go, string shaderName)
@@ -171,6 +201,14 @@ public class BackboneUnit : MonoBehaviour {
 							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.yellow);
 							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale);
+						}
+						break;
+
+					case "ToonOutlineCyan":
+						{
+							_rendererAtom.material.shader = shaderToonOutline;
+							_rendererAtom.material.SetColor("_OutlineColor", Color.cyan);
+							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 1.2f);
 						}
 						break;
 
@@ -253,6 +291,14 @@ public class BackboneUnit : MonoBehaviour {
 		else if (controllerSelectOn)
 		{
 			SetRenderingMode(gameObject, "ToonOutlineYellow");
+		}
+		else if (myResidue.residueFrozen)
+		{
+			//BackboneUnit buCalpha = myResidue.calpha_pf.GetComponent("BackboneUnit") as BackboneUnit;
+			//if (buCalpha)
+			{
+				SetRenderingMode(gameObject, "ToonOutlineCyan");
+			}
 		}
 		else
 		{

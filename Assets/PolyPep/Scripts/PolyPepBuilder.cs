@@ -368,21 +368,49 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 	}
 
+	public void UpdateAllFreeze(bool freeze)
+	{
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			if (residue.residueSelected)
+			{
+				SetRbDragFreeze(GetAmideForResidue(resid), freeze);
+				SetRbDragFreeze(GetCalphaForResidue(resid), freeze);
+				SetRbDragFreeze(GetCarbonylForResidue(resid), freeze);
+
+				//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
+				foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+				{
+					SetRbDragFreeze(_sidechainGO, freeze);
+				}
+
+				residue.residueFrozen = freeze;
+			}
+		}
+	}
+
+
 	public void UpdateAllDragStrength(float dragStrength)
 	{
 		for (int resid = 0; resid < numResidues; resid++)
 		{
-			SetRbDragStrength(GetAmideForResidue(resid), dragStrength);
-			SetRbDragStrength(GetCalphaForResidue(resid), dragStrength);
-			SetRbDragStrength(GetCarbonylForResidue(resid), dragStrength);
-
-			//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
-			foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+			if (!residue.residueFrozen)
 			{
-				SetRbDragStrength(_sidechainGO, dragStrength);
+				SetRbDragStrength(GetAmideForResidue(resid), dragStrength);
+				SetRbDragStrength(GetCalphaForResidue(resid), dragStrength);
+				SetRbDragStrength(GetCarbonylForResidue(resid), dragStrength);
+
+				//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
+				foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+				{
+					SetRbDragStrength(_sidechainGO, dragStrength);
+				}
 			}
 		}
 	}
+
 	void SetRbDrag(GameObject go)
 	{
 		if (myPolyPepManager.dragHigh)
@@ -411,7 +439,27 @@ public class PolyPepBuilder : MonoBehaviour {
 		go.GetComponent<Rigidbody>().angularDrag = value;
 	}
 
-	public void SetAllColliderIsTrigger(bool value)
+	void SetRbDragFreeze(GameObject go, bool freeze)
+	{
+
+		// use lerp to map to meaningful range
+		//float value = Mathf.Lerp(5, 25, dragStrength / 100);
+		if (freeze)
+		{
+			go.GetComponent<Rigidbody>().mass = Mathf.Infinity;
+			go.GetComponent<Rigidbody>().drag = Mathf.Infinity;
+			go.GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
+		}
+		else
+		{
+			go.GetComponent<Rigidbody>().mass = 1;
+			go.GetComponent<Rigidbody>().drag = 5;
+			go.GetComponent<Rigidbody>().angularDrag = 5;
+		}
+
+	}
+
+public void SetAllColliderIsTrigger(bool value)
 	{
 		//for (int i = 0; i < polyLength; i++)
 		//{

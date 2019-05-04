@@ -375,6 +375,17 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void UpdateFreezeFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.UpdateAllFreeze(value);
+			_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
 	public void UpdateDragFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
