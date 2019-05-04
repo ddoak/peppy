@@ -232,12 +232,16 @@ public class PolyPepBuilder : MonoBehaviour {
 
 			{
 				// turn off shadows / renderer
+				// makes surprisingly little difference
 				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
 				foreach (Renderer child in allChildren)
 				{
 					Renderer myRenderer = child.GetComponent<Renderer>();
 					myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 					myRenderer.receiveShadows = false;
+					// performance ?
+					myRenderer.allowOcclusionWhenDynamic = false;
+
 				}
 			}
 
