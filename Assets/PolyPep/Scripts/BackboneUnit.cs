@@ -208,7 +208,7 @@ public class BackboneUnit : MonoBehaviour {
 						{
 							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.cyan);
-							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 1.2f);
+							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 0.8f);
 						}
 						break;
 

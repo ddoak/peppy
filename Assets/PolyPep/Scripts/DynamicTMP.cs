@@ -40,6 +40,18 @@ public class DynamicTMP : MonoBehaviour {
 		textComponent.text = System.Math.Round((sliderValue / 100), 1).ToString();
 	}
 
+	public void SetFreezeTxt(bool freeze)
+	{
+		if (!freeze)
+		{
+			textComponent.text = "Freeze Selection";
+		}
+		else
+		{
+			textComponent.text = "Un-Freeze Selection";
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		
