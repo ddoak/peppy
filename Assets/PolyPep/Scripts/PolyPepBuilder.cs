@@ -475,7 +475,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	void UpdateMeshRendererFreeze(GameObject go, bool freeze)
 	{
-		go.transform.Find("Freeze").GetComponent<MeshRenderer>().enabled = freeze;
+		Transform _tf = go.transform.Find("Freeze");
+		if (_tf)
+		{
+			_tf.GetComponent<MeshRenderer>().enabled = freeze;
+		}
 	}
 
 public void SetAllColliderIsTrigger(bool value)
