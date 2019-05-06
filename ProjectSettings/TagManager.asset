@@ -21,6 +21,7 @@ TagManager:
   - UnusedAtom
   - bondToH
   - AAtoggle
+  - freeze
   layers:
   - Default
   - TransparentFX

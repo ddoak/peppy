@@ -302,6 +302,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			float radiusH = 0.75f;
 			float radiusS = 1.1f;
 			float radiusR = 1.1f;
+			float radiusFreeze = 70.0f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
 			foreach (Transform child in allChildren)
@@ -333,8 +334,12 @@ public class PolyPepBuilder : MonoBehaviour {
 						//atomDisplayScale = radiusS * scaleVDW;
 						ScaleAtom(child, scaleVDW, radiusS);
 						break;
+					case "freeze":
+						//atomDisplayScale = radiusS * scaleVDW;
+						ScaleFreeze(child, scaleVDW, radiusFreeze);
+						break;
 				}
-				
+
 			}
 		}
 	}
@@ -350,6 +355,14 @@ public class PolyPepBuilder : MonoBehaviour {
 		myAtom.GetComponent<SphereCollider>().radius = 1.1f * relativeRadiusAtomType / scaleVDW; 
 		// 1.1f is magic number
 
+	}
+
+	private void ScaleFreeze(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
+	{
+		// CPK / VDW slider changes rendering
+		// min freeze radius clamped at empirical value (looks better)
+		float atomDisplayScale = Mathf.Max(50.0f, relativeRadiusAtomType * scaleVDW);
+		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
 	}
 
 	public void UpdateAllDrag()
@@ -457,6 +470,12 @@ public class PolyPepBuilder : MonoBehaviour {
 			go.GetComponent<Rigidbody>().angularDrag = 5;
 		}
 
+		UpdateMeshRendererFreeze(go, freeze);
+	}
+
+	void UpdateMeshRendererFreeze(GameObject go, bool freeze)
+	{
+		go.transform.Find("Freeze").GetComponent<MeshRenderer>().enabled = freeze;
 	}
 
 public void SetAllColliderIsTrigger(bool value)
