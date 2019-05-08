@@ -51023,7 +51023,7 @@ MonoBehaviour:
   bButton: 2
   excludeLayers:
     serializedVersion: 2
-    m_Bits: 823
+    m_Bits: 807
   raycastDistance: 500
   myRawInteraction: {fileID: 1919213148}
   myOVRPointerVisualizer: {fileID: 1082519095}
@@ -54980,7 +54980,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: ' "Peppy" v0.57 (07-05-2019)'
+  m_text: ' "Peppy" v0.58 (08-05-2019)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

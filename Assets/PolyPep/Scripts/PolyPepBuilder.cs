@@ -493,14 +493,42 @@ public void SetAllColliderIsTrigger(bool value)
 		//	}
 		//}
 
+		//if (value == true)
+		//{
+		//	Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Atom"), LayerMask.NameToLayer("Atom"), true);
+		//}
+		//else
+		//{
+		//	Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Atom"), LayerMask.NameToLayer("Atom"), false);
+		//}
+
+
 		Collider[] allChildren = GetComponentsInChildren<Collider>();
 		foreach (Collider childCollider in allChildren)
 		{
-			childCollider.isTrigger = value;
+			//childCollider.isTrigger = value;
+
+			//sidechain colliders  need to be explicitly set - bug
+			childCollider.isTrigger = false;
+
+			if (childCollider.gameObject.layer != LayerMask.NameToLayer("Hbond"))
+			{
+				if (value == true)
+				{
+					childCollider.gameObject.layer = LayerMask.NameToLayer("Water");
+				}
+				else
+				{
+					childCollider.gameObject.layer = LayerMask.NameToLayer("Atom");
+
+				}
+			}
+
 			if (childCollider.name.Contains("bond"))
 			{
 				// Debug.Log(childCollider.name);
 				// deletes ALL bond colliders!
+				// attempt at culling unused components
 				Destroy(childCollider);
 			}
 			
