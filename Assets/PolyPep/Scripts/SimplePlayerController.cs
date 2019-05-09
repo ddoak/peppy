@@ -63,7 +63,7 @@ public class SimplePlayerController : MonoBehaviour
 
 		mouseLook += smoothV;
 
-		Debug.Log(mouseDirection);
+		//Debug.Log(mouseDirection);
 
 		Camera.main.transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
 		this.transform.rotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
