@@ -879,6 +879,7 @@ public class PolyPepManager : MonoBehaviour {
 		// hacky repositioning lerp to keep things from getting lost...
 		// TODO - bounding box for play area?
 		Vector3 offSet = go.transform.position - myPlayerController.transform.position;
+		
 
 		//Debug.Log(offSet.magnitude);
 		if (offSet.magnitude > maxDistance)

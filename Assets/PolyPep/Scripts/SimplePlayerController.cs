@@ -59,11 +59,12 @@ public class SimplePlayerController : MonoBehaviour
 
 
 
+		if (Input.GetKey(KeyCode.LeftShift))
 		{
 			float mouseX = Input.GetAxis("Mouse X");
 			float mouseY = Input.GetAxis("Mouse Y");
 
-			mouseDirection = new Vector2(mouseX,mouseY);
+			mouseDirection = new Vector2(mouseX, mouseY);
 
 			//mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
 			mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity, sensitivity));
@@ -88,7 +89,7 @@ public class SimplePlayerController : MonoBehaviour
 			{
 				this.transform.rotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
 			}
-				
+
 		}
 
 	}
