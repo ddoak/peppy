@@ -15,12 +15,15 @@ public class MouseInteraction : MonoBehaviour
 	public GameObject remoteGrabObj;
 	public float grabObjDist;
 	public float grabObjDistTarget;
+	public float distToHitPoint;
 	public Vector3 grabObjOffset;
 
 	public float mouseWheelSensitivity;
 	public float mouseTractorSmoothing;
 
 	public float grabDeltaPush;
+
+	public float fudge;
 	
 
 	// Start is called before the first frame update
@@ -70,7 +73,9 @@ public class MouseInteraction : MonoBehaviour
 			if (hit.transform)
 			{
 				hitPoint = hit.point;
-				myMouseProxy.transform.position = hitPoint;
+				//myMouseProxy.transform.position = hitPoint;
+
+				distToHitPoint = Vector3.Magnitude(hitPoint - Camera.main.transform.position);
 
 				// raycast is hitting something
 
@@ -111,7 +116,7 @@ public class MouseInteraction : MonoBehaviour
 			}
 		}
 
-		// Remote Grab - left mouse (1)
+		// Remote Grab - right mouse (1)
 
 		if (Input.GetMouseButtonDown(1) && lastHit && !grabbing)
 		{
@@ -122,7 +127,7 @@ public class MouseInteraction : MonoBehaviour
 
 			grabObjOffset = remoteGrabObj.transform.position - hitPoint;
 
-			grabObjDist = Vector3.Magnitude(hitPoint - Camera.main.transform.position);
+			grabObjDist = Vector3.Magnitude(hitPoint - Camera.main.transform.position) - fudge ;
 			grabObjDistTarget = grabObjDist;
 		}
 
