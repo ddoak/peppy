@@ -69,3 +69,9 @@ public class SimplePlayerController : MonoBehaviour
 		this.transform.rotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
 	}
 }
+
+// ideas: circle straffe on hovered hit bbu ?
+
+// Ref:
+// https://joshuawinn.com/unity-player-controller-top-down-c-sharp-simple-basic-bare-bones/
+// https://youtu.be/blO039OzUZc
