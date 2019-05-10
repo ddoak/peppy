@@ -6,6 +6,7 @@ public class MouseInteraction : MonoBehaviour
 {
 
     public Transform lastHit = null;
+	public Vector3 hitPoint;
 
 	public GameObject myMouseProxy;
 
@@ -45,7 +46,7 @@ public class MouseInteraction : MonoBehaviour
 
 		Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-		myMouseProxy.transform.position = ray.GetPoint(1.0f);
+		//myMouseProxy.transform.position = ray.GetPoint(1.0f);
 
 		//Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.red);
 		//Debug.DrawRay(ray.origin, ray.direction * 100, Color.cyan);
@@ -54,19 +55,29 @@ public class MouseInteraction : MonoBehaviour
         {
             if (hit.transform)
             {
-                GameObject go = hit.transform.gameObject;
+				hitPoint = hit.point;
+				myMouseProxy.transform.position = hitPoint;
+
+				// raycast is hitting something
+
+				GameObject go = hit.transform.gameObject;
                 //Debug.Log(hit.transform.gameObject.name);
 
                 if (hit.transform != lastHit)
                 {
-                    if (lastHit != null)
+					// something is not what I hit (or didn't hit) last frame
+					if (lastHit != null)
                     {
-                        HoverExit();
+						// was hitting something last frame - but have exited it
+						HoverExit();
                     }
 
+					// have entered something new
                     HoverEnter(go);
 
                 }
+
+				// store current hit as lasthit
                 lastHit = hit.transform;
 
 
@@ -91,7 +102,7 @@ public class MouseInteraction : MonoBehaviour
     void HoverExit()
     {
         GameObject go = lastHit.gameObject;
-        Debug.Log(" Hover Exiting " + go.name + " GameObject");
+        //Debug.Log(" Hover Exiting " + go.name + " GameObject");
         BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
         if (bu != null)
         {
@@ -101,7 +112,7 @@ public class MouseInteraction : MonoBehaviour
 
     void HoverEnter(GameObject go)
     {
-        Debug.Log(" Hover Entering " + go.name + " GameObject");
+       // Debug.Log(" Hover Entering " + go.name + " GameObject");
         BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
         if (bu != null)
         {
@@ -114,7 +125,7 @@ public class MouseInteraction : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(" Mouse Down");
+            //Debug.Log(" Mouse Down");
             if (lastHit != null)
             {
                 GameObject go = lastHit.gameObject;

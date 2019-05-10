@@ -16,14 +16,34 @@ public class SimplePlayerController : MonoBehaviour
 	public float sensitivity;
 	public float smoothing;
 
+	public MouseInteraction myMI;
+	public Transform lastHit;
+	public Vector3 hitPoint;
+
 	void Start()
     {
         // Store reference to attached component
         controller = GetComponent<CharacterController>();
-    }
 
-    void Update()
-    {
+		myMI = GameObject.Find("MouseInteraction").GetComponent<MouseInteraction>();
+		
+	}
+
+	void UpdateDataFromMouseInteraction()
+	{
+		
+
+		if (Input.GetMouseButtonDown(1))
+		{
+			lastHit = myMI.lastHit;
+			hitPoint = myMI.hitPoint;
+		}
+
+
+	}
+
+	void UpdateMovement()
+	{
 		// Character is on ground (built-in functionality of Character Controller)
 		if (controller.isGrounded)
 		{
@@ -37,36 +57,47 @@ public class SimplePlayerController : MonoBehaviour
 		//// Move Character Controller
 		controller.Move(moveDirection * Time.deltaTime);
 
-		float dead = 0.3f;
-
-		float mouseX = Input.GetAxis("Mouse X");
-		float mouseY = Input.GetAxis("Mouse Y");
-
-		//if (mouseX > 0f)
-		//{
-		//	mouseX = (Mathf.Max(0f, mouseX - dead));
-		//}
-		//if (mouseX < 0f)
-		//{
-		//	mouseX = (Mathf.Min(0f, mouseX + dead));
-		//}
 
 
-		mouseDirection = new Vector2(mouseX,mouseY);
+		{
+			float mouseX = Input.GetAxis("Mouse X");
+			float mouseY = Input.GetAxis("Mouse Y");
 
+			mouseDirection = new Vector2(mouseX,mouseY);
 
+			//mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
+			mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity, sensitivity));
+			smoothV.x = Mathf.Lerp(smoothV.x, mouseDirection.x, 1f / smoothing);
+			smoothV.y = Mathf.Lerp(smoothV.y, mouseDirection.y, 1f / smoothing);
 
-		//mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
-		mouseDirection = Vector2.Scale(mouseDirection, new Vector2(sensitivity, sensitivity));
-		smoothV.x = Mathf.Lerp(smoothV.x, mouseDirection.x, 1f / smoothing);
-		smoothV.y = Mathf.Lerp(smoothV.y, mouseDirection.y, 1f / smoothing);
+			mouseLook += smoothV;
+			mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
 
-		mouseLook += smoothV;
+			//Debug.Log(mouseDirection);
 
-		//Debug.Log(mouseDirection);
+			Camera.main.transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
 
-		Camera.main.transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-		this.transform.rotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
+			if (lastHit && Input.GetMouseButton(1))
+			{
+				Transform target = lastHit;
+				//Debug.Log("Mouse1");
+				this.transform.LookAt(hitPoint);
+
+			}
+			else
+			{
+				this.transform.rotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
+			}
+				
+		}
+
+	}
+
+    void Update()
+    {
+		
+		UpdateMovement();
+		UpdateDataFromMouseInteraction();
 	}
 }
 
@@ -75,3 +106,6 @@ public class SimplePlayerController : MonoBehaviour
 // Ref:
 // https://joshuawinn.com/unity-player-controller-top-down-c-sharp-simple-basic-bare-bones/
 // https://youtu.be/blO039OzUZc
+
+
+ // Vector3 deltaPointer = Vector3.Project(((pointer.origin + playerControllerDelta) - prevPointer.origin), pointer.direction);

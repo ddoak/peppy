@@ -154,7 +154,12 @@ public class PolyPepManager : MonoBehaviour {
 
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
+
 		myPlayerController = GameObject.Find("OVRPlayerController");
+		if (!myPlayerController)
+		{
+			myPlayerController = GameObject.Find("PlayerNonVR");
+		}
 
 		mySnapshotCamera = GameObject.Find("SnapshotCamera_pf");
 
