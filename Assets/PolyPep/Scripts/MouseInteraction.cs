@@ -12,8 +12,15 @@ public class MouseInteraction : MonoBehaviour
 
 	public bool grabbing;
 	public bool startGrab;
-	public GameObject grabObj;
+	public GameObject remoteGrabObj;
 	public float grabObjDist;
+	public float grabObjDistTarget;
+	public Vector3 grabObjOffset;
+
+	public float mouseWheelSensitivity;
+	public float mouseTractorSmoothing;
+
+	public float grabDeltaPush;
 	
 
 	// Start is called before the first frame update
@@ -104,26 +111,60 @@ public class MouseInteraction : MonoBehaviour
 			}
 		}
 
-		// Remote Grab
+		// Remote Grab - left mouse (1)
 
-		if (Input.GetMouseButtonDown(2) && lastHit && !grabbing)
+		if (Input.GetMouseButtonDown(1) && lastHit && !grabbing)
 		{
 			startGrab = true;
 			grabbing = true;
-			grabObj = lastHit.gameObject;
+
+			remoteGrabObj = lastHit.gameObject;
+
+			grabObjOffset = remoteGrabObj.transform.position - hitPoint;
+
 			grabObjDist = Vector3.Magnitude(hitPoint - Camera.main.transform.position);
+			grabObjDistTarget = grabObjDist;
 		}
 
-		if (Input.GetMouseButtonUp(2))
+		if (Input.GetMouseButtonUp(1))
 		{
 			grabbing = false;
-			grabObj = null;
+			remoteGrabObj = null;
 		}
 
 		if (grabbing)
 		{
-			Vector3 remoteGrabTargetPosition = ray.GetPoint(grabObjDist);
-			RemoteGrabInteraction(grabObj.transform, remoteGrabTargetPosition);
+			// add wheel input and smooth
+			grabObjDistTarget += Input.GetAxis("Mouse ScrollWheel") * mouseWheelSensitivity;
+			grabObjDist = Mathf.Lerp(grabObjDist, grabObjDistTarget, mouseTractorSmoothing);
+
+			Vector3 remoteGrabTargetPosition = ray.GetPoint(grabObjDist) + grabObjOffset;
+			RemoteGrabInteraction(remoteGrabObj.transform, remoteGrabTargetPosition);
+
+			//// copy pasted from OVRRawRaycaster.cs
+			Transform remoteGrab = remoteGrabObj.transform;
+			if (remoteGrab.gameObject.tag == "UI")
+			{
+
+				// UI - make the 'front' face the pointer
+				// flipped because UI GO was initially set up with z facing away
+
+				//Use pointer position
+				//Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + pointer.direction;
+
+				//Use HMD (possibly better - maybe a bit queasy)
+				Vector3 lookAwayPos = remoteGrab.gameObject.transform.position + Camera.main.transform.forward;
+
+				// use the transform of the GO this script is attached to (RawInteraction) as proxy for storing target rotation :)
+				transform.position = remoteGrab.position;
+				transform.LookAt(lookAwayPos, Vector3.up);
+
+				// lerp to target - eases the rotation of the UI - useful when remote grab just initiated
+				remoteGrab.gameObject.transform.rotation = Quaternion.Lerp(remoteGrab.gameObject.transform.rotation, transform.rotation, Time.deltaTime * 10.0f);
+				//remoteGrab.gameObject.transform.LookAt(lookAwayPos, Vector3.up);
+
+			}
+			////
 		}
 
 	}
@@ -251,3 +292,5 @@ public class MouseInteraction : MonoBehaviour
 
 
 }
+
+

@@ -33,7 +33,7 @@ public class SimplePlayerController : MonoBehaviour
 	{
 		
 
-		if (Input.GetMouseButtonDown(1))
+		if (Input.GetMouseButtonDown(2))
 		{
 			lastHit = myMI.lastHit;
 			hitPoint = myMI.hitPoint;
@@ -77,7 +77,7 @@ public class SimplePlayerController : MonoBehaviour
 
 			Camera.main.transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
 
-			if (lastHit && Input.GetMouseButton(1))
+			if (lastHit && Input.GetMouseButton(2))
 			{
 				Transform target = lastHit;
 				//Debug.Log("Mouse1");
@@ -101,11 +101,11 @@ public class SimplePlayerController : MonoBehaviour
 	}
 }
 
-// ideas: circle straffe on hovered hit bbu ?
 
 // Ref:
 // https://joshuawinn.com/unity-player-controller-top-down-c-sharp-simple-basic-bare-bones/
 // https://youtu.be/blO039OzUZc
 
+// https://stackoverflow.com/questions/34117591/c-sharp-with-unity-3d-how-do-i-make-a-camera-move-around-an-object-when-user-mo/48997101#48997101
 
- // Vector3 deltaPointer = Vector3.Project(((pointer.origin + playerControllerDelta) - prevPointer.origin), pointer.direction);
+// Vector3 deltaPointer = Vector3.Project(((pointer.origin + playerControllerDelta) - prevPointer.origin), pointer.direction);

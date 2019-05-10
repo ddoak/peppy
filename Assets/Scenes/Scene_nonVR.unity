@@ -5319,7 +5319,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastHit: {fileID: 0}
+  hitPoint: {x: 0, y: 0, z: 0}
   myMouseProxy: {fileID: 444355940}
+  grabbing: 0
+  startGrab: 0
+  remoteGrabObj: {fileID: 0}
+  grabObjDist: 0
+  grabObjDistTarget: 0
+  grabObjOffset: {x: 0, y: 0, z: 0}
+  mouseWheelSensitivity: 4
+  mouseTractorSmoothing: 0.05
+  grabDeltaPush: 0
 --- !u!4 &199158566
 Transform:
   m_ObjectHideFlags: 0
@@ -41760,6 +41770,9 @@ MonoBehaviour:
   controller: {fileID: 0}
   sensitivity: 0.6
   smoothing: 10
+  myMI: {fileID: 0}
+  lastHit: {fileID: 0}
+  hitPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &1589750436
 GameObject:
   m_ObjectHideFlags: 0
