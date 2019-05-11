@@ -25,8 +25,7 @@ public class MouseInteraction : MonoBehaviour
 
 	public float grabDeltaPush;
 
-	public float fudge; 
-	
+	public float fudge;
 
 	// Start is called before the first frame update
 	void Start()
@@ -39,8 +38,7 @@ public class MouseInteraction : MonoBehaviour
 	void Update()
 	{
 		UpdateMouseRaycast();
-		//UpdateMouseButtons();
-		UpdatePollKeyboard();
+		UpdateSelection();
 	}
 
 
@@ -51,6 +49,32 @@ public class MouseInteraction : MonoBehaviour
 		Gizmos.DrawWireSphere(ray.GetPoint(10.0f), 1.0f);
 	}
 
+
+	void doTractorBeam(GameObject go, Ray ray)
+	{
+		// TRACTOR BEAM
+
+		bool tractorBeamActive = false;
+		bool attract = false;
+
+		if (getTractorBeamPullKey())
+		{
+			tractorBeamActive = true;
+			attract = true;
+		}
+		else if (getTractorBeamPushKey())
+		{
+			tractorBeamActive = true;
+			attract = false;
+		}
+
+		if (tractorBeamActive)
+		{
+			TractorBeam(go, ray.origin, attract, tractorBeamScale);
+		}
+
+
+	}
 
 	void UpdateMouseRaycast()
 	{
@@ -102,31 +126,7 @@ public class MouseInteraction : MonoBehaviour
 				// store current hit as lasthit
 				lastHit = hit.transform;
 
-				{
-					// TRACTOR BEAM
-
-					bool tractorBeamActive = false;
-					bool attract = false;
-
-
-					if (Input.GetKey(KeyCode.Q))
-					{
-						tractorBeamActive = true;
-						attract = true;
-					} 
-					else if (Input.GetKey(KeyCode.E))
-					{
-						tractorBeamActive = true;
-						attract = false;
-					}
-
-					if (tractorBeamActive)
-					{
-						TractorBeam(go, ray.origin, attract, tractorBeamScale);
-					}
-
-
-				}
+				doTractorBeam(go, ray);
 
 			}
 			else
@@ -144,9 +144,9 @@ public class MouseInteraction : MonoBehaviour
 			}
 		}
 
-		// Remote Grab - right mouse (1)
+		// REMOTE GRAB
 
-		if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Tab)) && lastHit && !grabbing)
+		if (getRemoteGrabDown() && lastHit && !grabbing)
 		{
 			startGrab = true;
 			grabbing = true;
@@ -164,7 +164,7 @@ public class MouseInteraction : MonoBehaviour
 			}
 		}
 
-		if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Tab))
+		if (getRemoteGrabUp())
 		{
 			grabbing = false;
 
@@ -250,28 +250,43 @@ public class MouseInteraction : MonoBehaviour
 		}
 	}
 
-	private void UpdateMouseButtons()
+
+	// KEYBOARD / MOUSE mappings
+
+	private bool getSelectKey()
 	{
-		if (Input.GetMouseButtonDown(0))
-		{
-			//Debug.Log(" Mouse Down");
-			if (lastHit != null)
-			{
-				GameObject go = lastHit.gameObject;
-				BackboneUnit bu = (go.GetComponent("BackboneUnit") as BackboneUnit);
-				if (bu != null)
-				{
-					bu.SetMyResidueSelect(!bu.myResidue.residueSelected);
-
-				}
-			}
-		}
-
+		return (Input.GetKey(KeyCode.Space));
 	}
 
-	private void UpdatePollKeyboard()
+	private bool getDeselectKey()
 	{
-		if (Input.GetKey(KeyCode.Space))
+		return (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt));
+	}
+
+	private bool getRemoteGrabDown()
+	{
+		return (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Tab));
+	}
+
+	private bool getRemoteGrabUp()
+	{
+		return (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Tab));
+	}
+
+	private bool getTractorBeamPullKey()
+	{
+		return 	(Input.GetKey(KeyCode.Q));
+	}
+
+	private bool getTractorBeamPushKey()
+	{
+		return (Input.GetKey(KeyCode.E));
+	}
+
+
+	private void UpdateSelection()
+	{
+		if (getSelectKey())
 		{
 			//SELECT
 
@@ -286,7 +301,7 @@ public class MouseInteraction : MonoBehaviour
 			}
 		}
 
-		if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+		if (getDeselectKey())
 		{
 			// DESELECT
 
