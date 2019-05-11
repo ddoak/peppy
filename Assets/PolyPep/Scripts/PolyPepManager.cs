@@ -919,15 +919,16 @@ public class PolyPepManager : MonoBehaviour {
 		Scene m_Scene = SceneManager.GetActiveScene();
 		Debug.Log("Currently in... " + m_Scene.name);
 
-		switch (m_Scene.name)
-		{
-			case "Scene_VR":
-				SceneManager.LoadScene("Scene_nonVR");
-				break;
-			case "Scene_nonVR":
-				SceneManager.LoadScene("Scene_VR");
-				break;
-		}
+		//switch (m_Scene.name)
+		//{
+		//	case "Scene_VR":
+		//		SceneManager.LoadScene("Scene_nonVR");
+		//		break;
+		//	case "Scene_nonVR":
+		//		SceneManager.LoadScene("Scene_VR");
+		//		break;
+		//}
+		SceneManager.LoadScene("FrontEnd");
 	}
 
 	// Update is called once per frame
