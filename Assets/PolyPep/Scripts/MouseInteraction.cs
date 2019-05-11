@@ -21,14 +21,17 @@ public class MouseInteraction : MonoBehaviour
 	public float mouseWheelSensitivity;
 	public float mouseTractorSmoothing;
 
+	public float tractorBeamScale = 0.2f;
+
 	public float grabDeltaPush;
 
-	public float fudge;
+	public float fudge; 
 	
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		// necessary to make mouse raycast line up with viewport
 		Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
 	}
 
@@ -99,6 +102,31 @@ public class MouseInteraction : MonoBehaviour
 				// store current hit as lasthit
 				lastHit = hit.transform;
 
+				{
+					// TRACTOR BEAM
+
+					bool tractorBeamActive = false;
+					bool attract = false;
+
+
+					if (Input.GetKey(KeyCode.Q))
+					{
+						tractorBeamActive = true;
+						attract = true;
+					} 
+					else if (Input.GetKey(KeyCode.E))
+					{
+						tractorBeamActive = true;
+						attract = false;
+					}
+
+					if (tractorBeamActive)
+					{
+						TractorBeam(go, ray.origin, attract, tractorBeamScale);
+					}
+
+
+				}
 
 			}
 			else
@@ -118,31 +146,57 @@ public class MouseInteraction : MonoBehaviour
 
 		// Remote Grab - right mouse (1)
 
-		if (Input.GetMouseButtonDown(1) && lastHit && !grabbing)
+		if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Tab)) && lastHit && !grabbing)
 		{
 			startGrab = true;
 			grabbing = true;
 
 			remoteGrabObj = lastHit.gameObject;
-
 			grabObjOffset = remoteGrabObj.transform.position - hitPoint;
 
-			grabObjDist = Vector3.Magnitude(hitPoint - Camera.main.transform.position) - fudge ;
+			grabObjDist = distToHitPoint - fudge;
 			grabObjDistTarget = grabObjDist;
+
+			BackboneUnit bu = (remoteGrabObj.GetComponent("BackboneUnit") as BackboneUnit);
+			if (bu != null)
+			{
+				bu.SetRemoteGrabSelect(true);
+			}
 		}
 
-		if (Input.GetMouseButtonUp(1))
+		if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Tab))
 		{
 			grabbing = false;
-			remoteGrabObj = null;
+
+			if (remoteGrabObj)
+			{
+				BackboneUnit bu = (remoteGrabObj.GetComponent("BackboneUnit") as BackboneUnit);
+				if (bu != null)
+				{
+					bu.SetRemoteGrabSelect(false);
+				}
+				remoteGrabObj = null;
+			}
+
 		}
 
 		if (grabbing)
 		{
 			// add wheel input and smooth
-			grabObjDistTarget += Input.GetAxis("Mouse ScrollWheel") * mouseWheelSensitivity;
+			if (Input.GetAxis("Mouse ScrollWheel") != 0)
+			{
+				float scrollAmount = (Input.GetAxis("Mouse ScrollWheel") * mouseWheelSensitivity);
+
+				scrollAmount *= (grabObjDistTarget * 0.3f);
+
+				grabObjDistTarget += scrollAmount;
+			}
+
+
 			grabObjDist = Mathf.Lerp(grabObjDist, grabObjDistTarget, mouseTractorSmoothing);
 
+
+			// ray.GetPoint(grabObjDist) doesn't behave as expected - hence fudge
 			Vector3 remoteGrabTargetPosition = ray.GetPoint(grabObjDist) + grabObjOffset;
 			RemoteGrabInteraction(remoteGrabObj.transform, remoteGrabTargetPosition);
 
@@ -219,7 +273,8 @@ public class MouseInteraction : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.Space))
 		{
-			//Debug.Log(" Mouse Down");
+			//SELECT
+
 			if (lastHit != null)
 			{
 				GameObject go = lastHit.gameObject;
@@ -227,15 +282,14 @@ public class MouseInteraction : MonoBehaviour
 				if (bu != null)
 				{
 					bu.SetMyResidueSelect(true);
-
 				}
-
 			}
-
 		}
-		if (Input.GetKey(KeyCode.LeftShift))
+
+		if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
 		{
-			//Debug.Log(" Mouse Down");
+			// DESELECT
+
 			if (lastHit != null)
 			{
 				GameObject go = lastHit.gameObject;
@@ -243,11 +297,8 @@ public class MouseInteraction : MonoBehaviour
 				if (bu != null)
 				{
 					bu.SetMyResidueSelect(false);
-
 				}
-
 			}
-
 		}
 	}
 

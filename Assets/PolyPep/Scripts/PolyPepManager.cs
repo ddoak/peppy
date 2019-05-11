@@ -914,6 +914,22 @@ public class PolyPepManager : MonoBehaviour {
 		Application.Quit();
 	}
 
+	public void SwitchLevel()
+	{
+		Scene m_Scene = SceneManager.GetActiveScene();
+		Debug.Log("Currently in... " + m_Scene.name);
+
+		switch (m_Scene.name)
+		{
+			case "Scene_VR":
+				SceneManager.LoadScene("Scene_nonVR");
+				break;
+			case "Scene_nonVR":
+				SceneManager.LoadScene("Scene_VR");
+				break;
+		}
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -928,6 +944,10 @@ public class PolyPepManager : MonoBehaviour {
 		if (Input.GetKey(KeyCode.Escape))
 		{
 			AppQuit();
+		}
+		if (Input.GetKeyDown(KeyCode.Backspace))
+		{
+			SwitchLevel();
 		}
 	}
 }

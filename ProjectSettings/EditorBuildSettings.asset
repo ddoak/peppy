@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene 00b.unity
     guid: 9af5466f9c59b3b48bdb38520a170603
   - enabled: 1
-    path: Assets/Scenes/Scene_Peppy.unity
+    path: Assets/Scenes/Scene_VR.unity
     guid: b09c683b3844b424083e418fd4459f96
+  - enabled: 1
+    path: Assets/Scenes/Scene_nonVR.unity
+    guid: fda8e2d284316ee458e12798f5604d62
   m_configObjects: {}
