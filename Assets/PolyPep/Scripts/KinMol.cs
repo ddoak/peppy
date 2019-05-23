@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class mol01 : MonoBehaviour
+public class KinMol : MonoBehaviour
 {
 
 	public GameObject zoneGO;
@@ -12,8 +12,8 @@ public class mol01 : MonoBehaviour
 	public bool inZone;
 	public int type;
 
-	public float speedDiffuse = 0.04f;
-	public float speedZone = 0.02f;
+	public float speedDiffuse;
+	public float speedZone;
 	public float scale = 0.05f;
 
 	public float decomposeProb = 0.001f;
@@ -23,7 +23,9 @@ public class mol01 : MonoBehaviour
 
 	public List<Material> materials;
 
-	public Spawner mySpawner;
+	public KinSpawner mySpawner;
+
+	public KinBind myKinBind;
 
 
 	private void Awake()
@@ -48,6 +50,9 @@ public class mol01 : MonoBehaviour
 
 		Vector3 myScale = new  Vector3(scale, scale, scale);
 		transform.localScale = myScale;
+
+		speedDiffuse = 0.01f;
+		speedZone = 0.005f;
 	}
 
 	private void SetRenderer()
@@ -63,6 +68,18 @@ public class mol01 : MonoBehaviour
 
 	private void UpdateJiggle()
 	{
+		if (myKinBind)
+		{
+			//transform.position = myKinBind.bindingSite.transform.position;
+			//Vector3 targetPos = Vector3.Lerp(transform.position, myKinBind.bindingSite.transform.position, 0.2f);
+			Vector3 targetPos = myKinBind.bindingSite.transform.position;
+			transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.001f);
+			//myRigidbody.AddForce((myKinBind.bindingSite.transform.position - transform.position) * 0.1f, ForceMode.Impulse);
+
+			
+
+		}
+		else
 		if (age > inertTime / 2f)
 		{
 			if (inZone)
@@ -82,18 +99,32 @@ public class mol01 : MonoBehaviour
 
 	private void OnTriggerEnter(Collider collider)
 	{
+
 		if (age > inertTime)
 		{
-			mol01 molecule = collider.gameObject.GetComponent("mol01") as mol01;
+			KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
 			if (molecule)
 			{
-				if ((type == 0 && molecule.type == 1))
+				//Debug.Log("Trigger!");
+				if ((type == 0 && molecule.type == 1))// && (myKinBind && molecule.myKinBind))
 				{
 					var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
-					mySpawner.SpawnNewMolecule(3, averagePosition);
+					
+
+					if (myKinBind)
+					{
+						myKinBind.ReleaseMol();
+					}
+					if (molecule.myKinBind)
+					{
+						molecule.myKinBind.ReleaseMol();
+					}
+
 
 					Destroy(gameObject);
 					Destroy(collider.gameObject);
+
+					mySpawner.SpawnNewMolecule(3, averagePosition);
 
 				}
 			}
@@ -128,13 +159,11 @@ public class mol01 : MonoBehaviour
 		UpdateJiggle();
 		UpdateKeepInZone();
 		UpdateCheckDecompose();
-		age += Time.deltaTime;
 	}
 
 	// Update is called once per frame
 	void Update()
     {
-
-
+		age += Time.deltaTime;
     }
 }

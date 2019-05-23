@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class KinSpawner : MonoBehaviour
 {
 
-	public mol01 molecule;
+	public KinMol molecule;
 	public GameObject zoneGO;
 	public int numMol = 20;
 
@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
 	public void SpawnNewMolecule(int molType, Vector3 position)
 	{
 
-		mol01 _mol01 = Instantiate(molecule, position, Quaternion.identity, zoneGO.transform);
+		KinMol _mol01 = Instantiate(molecule, position, Quaternion.identity); //, zoneGO.transform);
 
 		_mol01.type = molType;
 		_mol01.mySpawner = this;
