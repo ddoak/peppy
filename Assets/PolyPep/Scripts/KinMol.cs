@@ -27,6 +27,8 @@ public class KinMol : MonoBehaviour
 
 	public KinBind myKinBind;
 
+	private Vector3 leftZoneOffset;
+
 
 	private void Awake()
 	{
@@ -73,8 +75,12 @@ public class KinMol : MonoBehaviour
 			//transform.position = myKinBind.bindingSite.transform.position;
 			//Vector3 targetPos = Vector3.Lerp(transform.position, myKinBind.bindingSite.transform.position, 0.2f);
 			Vector3 targetPos = myKinBind.bindingSite.transform.position;
-			transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.001f);
-			//myRigidbody.AddForce((myKinBind.bindingSite.transform.position - transform.position) * 0.1f, ForceMode.Impulse);
+
+
+			transform.position = Vector3.MoveTowards(transform.position, targetPos, myKinBind.affinity * 0.001f);
+			
+			
+			//myRigidbody.AddForce((targetPos - transform.position) * 0.02f, ForceMode.Impulse);
 
 			
 
@@ -93,9 +99,20 @@ public class KinMol : MonoBehaviour
 	{
 		if (!inZone)
 		{
-			myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * speedZone, ForceMode.Impulse);
+			Debug.DrawLine(zoneCollider.ClosestPointOnBounds(transform.position), transform.position);
+			myRigidbody.AddForce((zoneCollider.ClosestPointOnBounds(transform.position)  - transform.position) * 5f * speedZone, ForceMode.Impulse);
 		}
 	}
+
+
+	//private void OnTriggerExit(Collider other)
+	//{
+	//	if (other = zoneCollider)
+	//	{
+	//		myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * 1f * speedZone, ForceMode.Impulse);
+	//	}
+	//}
+
 
 	private void OnTriggerEnter(Collider collider)
 	{
@@ -109,16 +126,19 @@ public class KinMol : MonoBehaviour
 				if ((type == 0 && molecule.type == 1))// && (myKinBind && molecule.myKinBind))
 				{
 					var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
-					
 
-					if (myKinBind)
 					{
-						myKinBind.ReleaseMol();
+						// deal with enzyme bound
+						if (myKinBind)
+						{
+							myKinBind.ReleaseMol();
+						}
+						if (molecule.myKinBind)
+						{
+							molecule.myKinBind.ReleaseMol();
+						}
 					}
-					if (molecule.myKinBind)
-					{
-						molecule.myKinBind.ReleaseMol();
-					}
+
 
 
 					Destroy(gameObject);

@@ -10,6 +10,7 @@ public class KinDiffuse : MonoBehaviour
 	private Collider myCollider;
 	Rigidbody myRigidbody;
 	public bool inZone;
+	public bool isTransmembrane;
 	public int type;
 
 	public float speedDiffuse;
@@ -47,6 +48,23 @@ public class KinDiffuse : MonoBehaviour
 
 	private void UpdateJiggle()
 	{
+		if (isTransmembrane)
+		{
+			{
+				Vector3 pushDir = - zoneCollider.transform.right;
+				float dot = Vector3.Dot(pushDir, (zoneCollider.transform.position - transform.position));
+				if (dot > 0f)
+				{
+					gameObject.GetComponent<Rigidbody>().AddForce(pushDir * 0.01f, ForceMode.Impulse);
+				}
+				else if (dot < 0f)
+				{
+					gameObject.GetComponent<Rigidbody>().AddForce(-pushDir * 0.01f, ForceMode.Impulse);
+				}
+				transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation * Quaternion.Euler(0,0,-90f), 10f);
+			}
+		}
+
 		if (age > inertTime / 2f)
 		{
 			if (inZone)
@@ -62,8 +80,6 @@ public class KinDiffuse : MonoBehaviour
 		if (!inZone)
 		{
 			myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * speedZone, ForceMode.Impulse);
-
-
 		}
 	}
 
