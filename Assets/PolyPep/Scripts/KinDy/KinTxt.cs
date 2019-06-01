@@ -27,12 +27,12 @@ public class KinTxt : MonoBehaviour {
 	public void SetSliderValue(float sliderValue)
 	{
 		//Debug.Log(sliderValue);
-		textComponent.text = Mathf.Round(sliderValue/1).ToString();
+		textComponent.text = Mathf.Round(sliderValue / 1).ToString();
 	}
 
 	public void SetSliderValue10(float sliderValue)
 	{
-		textComponent.text = System.Math.Round((sliderValue/10),1).ToString();
+		textComponent.text = System.Math.Round((sliderValue / 10), 1).ToString();
 	}
 
 	public void SetSliderValue100(float sliderValue)
@@ -52,9 +52,13 @@ public class KinTxt : MonoBehaviour {
 		}
 	}
 
+	public void SetTxt(string text)
+	{
+		textComponent.text = text;
+	}
 	// Update is called once per frame
 	void Update ()
 	{
-		textComponent.text = "test";
+		//textComponent.text = "test";
 	}
 }

@@ -18,6 +18,7 @@ public class KinMol : MonoBehaviour
 
 	public float age;
 	public float inertTime = 2.0f;
+	public bool pendingDestruct;
 
 	public List<Material> materials;
 
@@ -26,6 +27,7 @@ public class KinMol : MonoBehaviour
 	public KinBind myKinBind;
 
 	private Vector3 leftZoneOffset;
+
 
 
 	private void Awake()
@@ -47,8 +49,9 @@ public class KinMol : MonoBehaviour
 		myRigidbody = GetComponent<Rigidbody>();
 
 		age = 0f;
+		pendingDestruct = false;
 
-		SetRenderer();
+		//SetRenderer();
 
 
 		Vector3 myScale = new  Vector3(scale, scale, scale);
@@ -83,7 +86,7 @@ public class KinMol : MonoBehaviour
 			if (molecule)
 			{
 				//Debug.Log("Collided with another molecule");
-				if ((type == 0 && molecule.type == 1))// && (myKinBind && molecule.myKinBind))
+				if ((type == 0 && molecule.type == 1) && (!pendingDestruct && !molecule.pendingDestruct))// && (myKinBind && molecule.myKinBind))
 				{
 					var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
 
@@ -100,10 +103,17 @@ public class KinMol : MonoBehaviour
 					}
 
 					// Destroy reactant A + B
-					Destroy(gameObject);
-					Destroy(collider.gameObject);
+					if (collider.gameObject) // ?
+					{
+						mySpawner.DestroyMolecule(gameObject);
+						mySpawner.DestroyMolecule(collider.gameObject);
+					}
+
+					//Destroy(gameObject);
+					//Destroy(collider.gameObject);
+
 					// Create product C
-					mySpawner.SpawnNewMolecule(3, averagePosition);
+					mySpawner.SpawnNewMolecule(2, averagePosition);
 
 				}
 			}
@@ -116,14 +126,15 @@ public class KinMol : MonoBehaviour
 
 		if (type == 2 && age > inertTime)
 		{
-			if (Random.Range(0f, 1.0f) < decomposeProb)
+			if (Random.Range(0f, 1.0f) <  mySpawner.pDecompose2)// decomposeProb)
 			{
 				Vector3 offset = (Random.onUnitSphere * transform.localScale.x);
 				// Create products A + B
 				mySpawner.SpawnNewMolecule(0, transform.position + offset);
 				mySpawner.SpawnNewMolecule(1, transform.position - offset);
 				// Destroy reactant C
-				Destroy(gameObject);
+				mySpawner.DestroyMolecule(gameObject);
+				//Destroy(gameObject);
 
 			}
 		}
