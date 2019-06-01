@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 1536904344135460465}
   - component: {fileID: 1536904344135460466}
   - component: {fileID: 1536904344135460467}
-  - component: {fileID: 1536904344135460430}
   - component: {fileID: 1536904344135460431}
+  - component: {fileID: 1536904344135460430}
+  - component: {fileID: 5285218255658649617}
   m_Layer: 0
   m_Name: mol01_pf
   m_TagString: Untagged
@@ -93,6 +94,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.75
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1536904344135460431
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536904344135460468}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 1
+  m_AngularDrag: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &1536904344135460430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,26 +128,28 @@ MonoBehaviour:
   type: 0
   speedDiffuse: 0
   speedZone: 0
-  scale: 0.02
+  scale: 0
   decomposeProb: 0.001
   age: 0
   inertTime: 1
   materials: []
   mySpawner: {fileID: 0}
   myKinBind: {fileID: 0}
---- !u!54 &1536904344135460431
-Rigidbody:
+--- !u!114 &5285218255658649617
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536904344135460468}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995de5e55e7ab64489f554a30c3f1da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneGO: {fileID: 0}
+  zoneCollider: {fileID: 0}
+  inZone: 0
+  isTransmembrane: 0
+  speedDiffuse: 0
+  speedZone: 0

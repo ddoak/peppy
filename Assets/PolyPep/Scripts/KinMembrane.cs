@@ -31,9 +31,11 @@ public class KinMembrane : MonoBehaviour
 
 	private void OnTriggerStay(Collider collider)
 	{
+	
+		KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
+		if (molecule)
 		{
-			KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
-			if (molecule)
+			if (!molecule.myKinBind)
 			{
 				if (molecule.type == 3)
 				{
@@ -51,6 +53,27 @@ public class KinMembrane : MonoBehaviour
 			}
 		}
 
+		if (!molecule)
+		{
+			KinDiffuse diffuse = collider.gameObject.GetComponent("KinDiffuse") as KinDiffuse;
+			if (diffuse)
+			{
+				//if (molecule.type == 3)
+				{
+					Vector3 pushDir = -transform.right;
+					float dot = Vector3.Dot(pushDir, (diffuse.transform.position - transform.position));
+					if (dot > 0f)
+					{
+						diffuse.GetComponent<Rigidbody>().AddForce(pushDir * 0.01f, ForceMode.Impulse);
+					}
+					else if (dot < 0f)
+					{
+						diffuse.GetComponent<Rigidbody>().AddForce(-pushDir * 0.01f, ForceMode.Impulse);
+					}
+				}
+
+			}
+		}
 	}
 
 

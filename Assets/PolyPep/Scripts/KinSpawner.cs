@@ -11,6 +11,8 @@ public class KinSpawner : MonoBehaviour
 
 	public List<Material> materials;
 
+	private int molCount = 0;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -44,9 +46,18 @@ public class KinSpawner : MonoBehaviour
 
 		KinMol _mol01 = Instantiate(molecule, position, Quaternion.identity); //, zoneGO.transform);
 
+		_mol01.gameObject.name = "mol_" + molCount;
 		_mol01.type = molType;
 		_mol01.mySpawner = this;
+		_mol01.scale = 0.04f;
 		_mol01.zoneGO = zoneGO;
+
+		KinDiffuse _diffuse = _mol01.gameObject.GetComponent("KinDiffuse") as KinDiffuse;
+
+		_diffuse.zoneGO = zoneGO;
+
+		molCount++;
+
 	}
 
     // Update is called once per frame

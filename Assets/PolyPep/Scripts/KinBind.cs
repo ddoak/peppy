@@ -11,6 +11,9 @@ public class KinBind: MonoBehaviour
 	public float affinity;
 	public bool isReleaseSite;
 
+	public KinMol testMolecule;
+	public KinMol lastBindableMolecule;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -20,30 +23,62 @@ public class KinBind: MonoBehaviour
 
 	private void OnTriggerEnter(Collider collider)
 	{
-		if (!isBinding)
+		if (collider.gameObject.GetComponent("KinMol") as KinMol)
 		{
-			KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
+			testMolecule = collider.gameObject.GetComponent("KinMol") as KinMol;
+			DoBindCheck(testMolecule);
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.gameObject.GetComponent("KinMol") as KinMol == lastBindableMolecule)
+		{
+			lastBindableMolecule = null;
+		}
+	}
+
+
+	private void DoBindCheck(KinMol molecule)
+	{
+		//if (!isBinding)
+		{
+			//KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
 			if (molecule)
 			{
 				if (molecule.type == typeToBind)
 				{
-					// if already bound to another site - force release
-					if (molecule.myKinBind)
+					//bool displace = Random.Range(0f, 1f) > 0.9f;
+					if (!isBinding)// || displace)
 					{
-						molecule.myKinBind.ReleaseMol();
+						// if I am already binding then release my bound molecule
+						if (isBinding)
+						{
+							boundMol.myKinBind.ReleaseMol();
+						}
+
+						// if molecule is already bound to another site - force release
+						if (molecule.myKinBind)
+						{
+							molecule.myKinBind.ReleaseMol();
+						}
+
+						BindMol(molecule);
+						//var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
+						//mySpawner.SpawnNewMolecule(3, averagePosition);
+
+						//Destroy(gameObject);
+						//Destroy(collider.gameObject);
+					}
+					else
+					{
+						lastBindableMolecule = testMolecule;
 					}
 
-					BindMol(molecule);
-					//var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
-					//mySpawner.SpawnNewMolecule(3, averagePosition);
-
-					//Destroy(gameObject);
-					//Destroy(collider.gameObject);
 
 				}
 			}
 		}
-
 	}
 
 	private void BindMol(KinMol molecule)
@@ -57,9 +92,16 @@ public class KinBind: MonoBehaviour
 	{
 		if (boundMol)
 		{
+			KinMol _lastBoundMolecule = boundMol;
+
 			isBinding = false;
 			boundMol.myKinBind = null;
 			boundMol = null;
+
+			if (lastBindableMolecule && (lastBindableMolecule != _lastBoundMolecule))
+			{
+				DoBindCheck(lastBindableMolecule);
+			}
 			
 		}
 		else
@@ -80,10 +122,20 @@ public class KinBind: MonoBehaviour
 		}
 	}
 
+	void CheckForMissedTrigger()
+	{
+		if (!isBinding && lastBindableMolecule)
+		{
+			Debug.Log("MISSED TRIGGER");
+			//DoBindCheck(lastBindableMolecule);
+		}
+	}
+
 
 	// Update is called once per frame
 	void Update()
 	{
 		CheckForExit();
+		CheckForMissedTrigger();
 	}
 }

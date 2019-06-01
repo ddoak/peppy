@@ -11,17 +11,9 @@ public class KinDiffuse : MonoBehaviour
 	Rigidbody myRigidbody;
 	public bool inZone;
 	public bool isTransmembrane;
-	public int type;
 
 	public float speedDiffuse;
 	public float speedZone;
-	public float scale = 0.05f;
-
-	public float age;
-	public float inertTime = 2.0f;
-
-	public List<Material> materials;
-
 
 	private void Awake()
 	{
@@ -37,8 +29,6 @@ public class KinDiffuse : MonoBehaviour
 		speedDiffuse = 0.01f;
 		speedZone = 0.02f;
 
-
-	age = 0f;
 	}
 
 	private void UpdateInZone()
@@ -46,71 +36,67 @@ public class KinDiffuse : MonoBehaviour
 		inZone = myCollider.bounds.Intersects(zoneCollider.bounds);
 	}
 
-	private void UpdateJiggle()
+	private void UpdateMovement()
 	{
 		if (isTransmembrane)
 		{
 			{
 				Vector3 pushDir = - zoneCollider.transform.right;
+				float delta = Vector3.Magnitude(zoneCollider.transform.position - transform.position);
 				float dot = Vector3.Dot(pushDir, (zoneCollider.transform.position - transform.position));
-				if (dot > 0f)
+				//Debug.Log("transmembrane" + delta);
+				if (delta > 0.2f)
 				{
-					gameObject.GetComponent<Rigidbody>().AddForce(pushDir * 0.01f, ForceMode.Impulse);
+					float force = 0.02f * delta;
+					if (dot > 0f)
+					{
+						gameObject.GetComponent<Rigidbody>().AddForce(pushDir * force, ForceMode.Impulse);
+					}
+					else if (dot < 0f)
+					{
+						gameObject.GetComponent<Rigidbody>().AddForce(-pushDir * force, ForceMode.Impulse);
+					}
 				}
-				else if (dot < 0f)
+
+				transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation * Quaternion.Euler(0,0,-90f), 5f);
+
+				Vector2 inCircle = Random.insideUnitCircle;
+				Vector3 diffuseV = new Vector3 (0f, inCircle.y, inCircle.x);
+				myRigidbody.AddForce(diffuseV * speedDiffuse, ForceMode.Impulse);
+			}
+		}
+		else
+		{
+			//if (age > inertTime / 2f)
+			{
+				if (inZone)
 				{
-					gameObject.GetComponent<Rigidbody>().AddForce(-pushDir * 0.01f, ForceMode.Impulse);
+					myRigidbody.AddForce(Random.onUnitSphere * speedDiffuse, ForceMode.Impulse);
+					myRigidbody.AddTorque((0.1f * new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f))), ForceMode.Impulse);
 				}
-				transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation * Quaternion.Euler(0,0,-90f), 10f);
 			}
 		}
 
-		if (age > inertTime / 2f)
-		{
-			if (inZone)
-			{
-				myRigidbody.AddForce(Random.onUnitSphere * speedDiffuse, ForceMode.Impulse);
-				myRigidbody.AddTorque((0.1f * new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f))), ForceMode.Impulse);
-			}
-		}
 	}
 
 	private void UpdateKeepInZone()
 	{
+		//if (!inZone)
+		//{
+		//	myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * speedZone, ForceMode.Impulse);
+		//}
 		if (!inZone)
 		{
-			myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * speedZone, ForceMode.Impulse);
+			Debug.DrawLine(zoneCollider.ClosestPointOnBounds(transform.position), transform.position);
+			myRigidbody.AddForce((zoneCollider.ClosestPointOnBounds(transform.position) - transform.position) * 5f * speedZone, ForceMode.Impulse);
 		}
 	}
-
-	private void OnTriggerEnter(Collider collider)
-	{
-		if (age > inertTime)
-		{
-			//mol01 molecule = collider.gameObject.GetComponent("mol01") as mol01;
-			//if (molecule)
-			//{
-			//	if ((type == 0 && molecule.type == 1))
-			//	{
-			//		var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
-			//		mySpawner.SpawnNewMolecule(3, averagePosition);
-
-			//		Destroy(gameObject);
-			//		Destroy(collider.gameObject);
-
-			//	}
-			//}
-		}
-
-	}
-
 
 	private void FixedUpdate()
 	{
 		UpdateInZone();
-		UpdateJiggle();
+		UpdateMovement();
 		UpdateKeepInZone();
-		age += Time.deltaTime;
 	}
 
 	// Update is called once per frame

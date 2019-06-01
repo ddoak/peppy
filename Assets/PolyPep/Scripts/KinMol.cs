@@ -12,9 +12,7 @@ public class KinMol : MonoBehaviour
 	public bool inZone;
 	public int type;
 
-	public float speedDiffuse;
-	public float speedZone;
-	public float scale = 0.05f;
+	public float scale;
 
 	public float decomposeProb = 0.001f;
 
@@ -37,12 +35,14 @@ public class KinMol : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
+		//Debug.Log("New Molecule!");
+
 		materials.Add(Resources.Load("Materials/material01", typeof( Material)) as Material);
 		materials.Add(Resources.Load("Materials/material02", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material03", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material04", typeof(Material)) as Material);
 
-		zoneCollider = zoneGO.GetComponent<Collider>();
+		//zoneCollider = zoneGO.GetComponent<Collider>();
 		myCollider = GetComponent<Collider>();
 		myRigidbody = GetComponent<Rigidbody>();
 
@@ -50,11 +50,10 @@ public class KinMol : MonoBehaviour
 
 		SetRenderer();
 
+
 		Vector3 myScale = new  Vector3(scale, scale, scale);
 		transform.localScale = myScale;
 
-		speedDiffuse = 0.01f;
-		speedZone = 0.005f;
 	}
 
 	private void SetRenderer()
@@ -63,57 +62,18 @@ public class KinMol : MonoBehaviour
 		myRenderer.material = materials[type];
 	}
 
-	private void UpdateInZone()
-	{
-		inZone = myCollider.bounds.Intersects(zoneCollider.bounds);
-	}
 
-	private void UpdateJiggle()
+	private void UpdateBind()
 	{
 		if (myKinBind)
 		{
-			//transform.position = myKinBind.bindingSite.transform.position;
-			//Vector3 targetPos = Vector3.Lerp(transform.position, myKinBind.bindingSite.transform.position, 0.2f);
 			Vector3 targetPos = myKinBind.bindingSite.transform.position;
-
-
 			transform.position = Vector3.MoveTowards(transform.position, targetPos, myKinBind.affinity * 0.001f);
-			
-			
-			//myRigidbody.AddForce((targetPos - transform.position) * 0.02f, ForceMode.Impulse);
-
-			
-
 		}
-		else
-		if (age > inertTime / 2f)
-		{
-			if (inZone)
-			{
-				myRigidbody.AddForce(Random.onUnitSphere * speedDiffuse, ForceMode.Impulse);
-			}
-		}
+
 	}
 
-	private void UpdateKeepInZone()
-	{
-		if (!inZone)
-		{
-			Debug.DrawLine(zoneCollider.ClosestPointOnBounds(transform.position), transform.position);
-			myRigidbody.AddForce((zoneCollider.ClosestPointOnBounds(transform.position)  - transform.position) * 5f * speedZone, ForceMode.Impulse);
-		}
-	}
-
-
-	//private void OnTriggerExit(Collider other)
-	//{
-	//	if (other = zoneCollider)
-	//	{
-	//		myRigidbody.AddForce(Vector3.Normalize(zoneCollider.transform.position - transform.position) * 1f * speedZone, ForceMode.Impulse);
-	//	}
-	//}
-
-
+	// REACT
 	private void OnTriggerEnter(Collider collider)
 	{
 
@@ -122,7 +82,7 @@ public class KinMol : MonoBehaviour
 			KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
 			if (molecule)
 			{
-				//Debug.Log("Trigger!");
+				//Debug.Log("Collided with another molecule");
 				if ((type == 0 && molecule.type == 1))// && (myKinBind && molecule.myKinBind))
 				{
 					var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
@@ -139,11 +99,10 @@ public class KinMol : MonoBehaviour
 						}
 					}
 
-
-
+					// Destroy reactant A + B
 					Destroy(gameObject);
 					Destroy(collider.gameObject);
-
+					// Create product C
 					mySpawner.SpawnNewMolecule(3, averagePosition);
 
 				}
@@ -160,12 +119,10 @@ public class KinMol : MonoBehaviour
 			if (Random.Range(0f, 1.0f) < decomposeProb)
 			{
 				Vector3 offset = (Random.onUnitSphere * transform.localScale.x);
+				// Create products A + B
 				mySpawner.SpawnNewMolecule(0, transform.position + offset);
 				mySpawner.SpawnNewMolecule(1, transform.position - offset);
-
-				//SetType(0);
-				//age = 0f;
-
+				// Destroy reactant C
 				Destroy(gameObject);
 
 			}
@@ -175,9 +132,7 @@ public class KinMol : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		UpdateInZone();
-		UpdateJiggle();
-		UpdateKeepInZone();
+		UpdateBind();
 		UpdateCheckDecompose();
 	}
 
