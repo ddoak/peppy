@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DynamicTMP : MonoBehaviour {
+public class KinTxt : MonoBehaviour {
 
 	public TMPro.TextMeshProUGUI textComponent;
 
@@ -55,6 +55,6 @@ public class DynamicTMP : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		
+		textComponent.text = "test";
 	}
 }
