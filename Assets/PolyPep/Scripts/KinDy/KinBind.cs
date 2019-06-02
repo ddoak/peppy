@@ -42,6 +42,7 @@ public class KinBind: MonoBehaviour
 	private void DoBindCheck(KinMol molecule)
 	{
 		//if (!isBinding)
+		bool canBind = false;
 		{
 			//KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
 			if (molecule)
@@ -51,24 +52,25 @@ public class KinBind: MonoBehaviour
 					//bool displace = Random.Range(0f, 1f) > 0.9f;
 					if (!isBinding)// || displace)
 					{
-						// if I am already binding then release my bound molecule
-						if (isBinding)
-						{
-							boundMol.myKinBind.ReleaseMol();
-						}
-
 						// if molecule is already bound to another site - force release
 						if (molecule.myKinBind)
 						{
-							molecule.myKinBind.ReleaseMol();
+							if (affinity > molecule.myKinBind.affinity)
+							{
+								molecule.myKinBind.ReleaseMol();
+								canBind = true;
+							}
+						}
+						else
+						{
+							canBind = true;
 						}
 
-						BindMol(molecule);
-						//var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
-						//mySpawner.SpawnNewMolecule(3, averagePosition);
-
-						//Destroy(gameObject);
-						//Destroy(collider.gameObject);
+						if (canBind)
+						{
+							BindMol(molecule);
+						}
+						
 					}
 					else
 					{

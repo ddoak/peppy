@@ -26,9 +26,8 @@ public class KinMol : MonoBehaviour
 
 	public KinBind myKinBind;
 
-	private Vector3 leftZoneOffset;
-
-
+	public KinMol possRxMol;
+	public float rxTime;
 
 	private void Awake()
 	{
@@ -50,6 +49,7 @@ public class KinMol : MonoBehaviour
 
 		age = 0f;
 		pendingDestruct = false;
+		rxTime = 0f;
 
 		//SetRenderer();
 
@@ -70,14 +70,101 @@ public class KinMol : MonoBehaviour
 	{
 		if (myKinBind)
 		{
+			GetComponent<KinDiffuse>().canDiffuse = false;
 			Vector3 targetPos = myKinBind.bindingSite.transform.position;
 			transform.position = Vector3.MoveTowards(transform.position, targetPos, myKinBind.affinity * 0.001f);
+		}
+		else
+		{
+			GetComponent<KinDiffuse>().canDiffuse = true;
 		}
 
 	}
 
-	// REACT
-	private void OnTriggerEnter(Collider collider)
+
+	private void OnTriggerEnter(Collider other)
+	{
+
+		//if (age > inertTime)
+		{
+			KinMol molecule = other.gameObject.GetComponent("KinMol") as KinMol;
+			if (molecule)
+			{
+				//Debug.Log("Collided with another molecule");
+				if ((type == 0 && molecule.type == 1) && (!pendingDestruct && !molecule.pendingDestruct))
+				{
+					if (!possRxMol)
+					{
+						possRxMol = molecule;
+						rxTime = 0f;
+					}
+				}
+			}
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		KinMol molecule = other.gameObject.GetComponent("KinMol") as KinMol;
+		if (molecule)
+		{
+			if (molecule = possRxMol)
+			{
+				possRxMol = null;
+				rxTime = 0f;
+			}
+		}
+	}
+
+	private void OnTriggerStay(Collider other)
+	{
+		KinMol molecule = other.gameObject.GetComponent("KinMol") as KinMol;
+		if (molecule)
+		{
+			if (molecule = possRxMol)
+			{
+				rxTime += Time.deltaTime;
+			}
+			if (rxTime > mySpawner.tRx01)
+			{
+				DoReaction();
+			}
+		}
+	}
+
+	private void DoReaction()
+	{
+		// DO REACTION
+		{
+			// deal with enzyme bound
+			if (myKinBind)
+			{
+				myKinBind.ReleaseMol();
+			}
+			if (possRxMol.myKinBind)
+			{
+				possRxMol.myKinBind.ReleaseMol();
+			}
+		}
+
+
+		var averagePosition = (possRxMol.gameObject.transform.position + gameObject.transform.position) / 2f;
+
+		// Destroy reactant A + B
+
+		mySpawner.DestroyMolecule(gameObject);
+			mySpawner.DestroyMolecule(possRxMol.gameObject);
+
+
+		//Destroy(gameObject);
+		//Destroy(collider.gameObject);
+
+		// Create product C
+		mySpawner.SpawnNewMolecule(3, averagePosition);
+	}
+
+	// CHECK REACT
+	private void LegacyOnTriggerEnter(Collider collider)
 	{
 
 		if (age > inertTime)
@@ -142,7 +229,7 @@ public class KinMol : MonoBehaviour
 
 		if (type == 2 && age > inertTime)
 		{
-			if (Random.Range(0f, 1.0f) <  mySpawner.pDecompose2)// decomposeProb)
+			if (Random.Range(0f, 1.0f) <  mySpawner.pDecompose2)
 			{
 				Vector3 offset = (Random.onUnitSphere * transform.localScale.x);
 				// Create products A + B
@@ -152,6 +239,17 @@ public class KinMol : MonoBehaviour
 				mySpawner.DestroyMolecule(gameObject);
 				//Destroy(gameObject);
 
+			}
+		}
+
+		if (type == 3 && age > inertTime)
+		{
+			if (Random.Range(0f, 1.0f) < mySpawner.pDecompose3)
+			{
+				// Create product
+				mySpawner.SpawnNewMolecule(2, transform.position);
+				// Destroy reactant
+				mySpawner.DestroyMolecule(gameObject);
 			}
 		}
 

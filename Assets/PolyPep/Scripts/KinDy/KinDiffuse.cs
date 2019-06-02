@@ -11,9 +11,10 @@ public class KinDiffuse : MonoBehaviour
 	Rigidbody myRigidbody;
 	public bool inZone;
 	public bool isTransmembrane;
+	public bool canDiffuse;
 
-	public float speedDiffuse;
-	public float speedZone;
+	public float speedDiffuse = 0.01f;
+	public float speedZone = 0.02f;
 
 	private void Awake()
 	{
@@ -25,9 +26,7 @@ public class KinDiffuse : MonoBehaviour
 		zoneCollider = zoneGO.GetComponent<Collider>();
 		myCollider = GetComponent<Collider>();
 		myRigidbody = GetComponent<Rigidbody>();
-
-		speedDiffuse = 0.01f;
-		speedZone = 0.02f;
+		canDiffuse = true;
 
 	}
 
@@ -67,7 +66,7 @@ public class KinDiffuse : MonoBehaviour
 		}
 		else
 		{
-			//if (age > inertTime / 2f)
+			if (canDiffuse)// (age > inertTime / 2f)
 			{
 				if (inZone)
 				{

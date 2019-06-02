@@ -10,6 +10,13 @@ public class KinSpawner : MonoBehaviour
 	public GameObject zoneGO;
 	public int numMol;
 
+	public float pDecompose2 = 0f;
+	public float pDecompose3 = 0f;
+	public float tRx01 = 0.5f;
+
+	public float molSpeedDiffuse = 0.01f;
+	public float molSpeedZone = 0.02f;
+
 	public List<Material> materials;
 
 	public List<KinMol> kinMols;
@@ -21,7 +28,7 @@ public class KinSpawner : MonoBehaviour
 
 	private int[] molCounts;
 
-	public float pDecompose2 = 0f;
+
 
 	// Start is called before the first frame update
 	void Start()
@@ -103,6 +110,8 @@ public class KinSpawner : MonoBehaviour
 		KinDiffuse _diffuse = _mol01.gameObject.GetComponent("KinDiffuse") as KinDiffuse;
 
 		_diffuse.zoneGO = zoneGO;
+		_diffuse.speedDiffuse = molSpeedDiffuse;
+		_diffuse.speedZone = molSpeedZone;
 
 		molCount++;
 
