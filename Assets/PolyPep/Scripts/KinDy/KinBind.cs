@@ -126,16 +126,25 @@ public class KinBind: MonoBehaviour
 	{
 		if (!isBinding && lastBindableMolecule)
 		{
-			Debug.Log("MISSED TRIGGER");
+			//Debug.Log("MISSED TRIGGER");
 			//DoBindCheck(lastBindableMolecule);
 		}
 	}
 
+	void CheckForMissingMolecule()
+	{
+		if (isBinding && !boundMol)
+		{
+			Debug.Log("KinBind: lost molecule");
+			isBinding = false;
+		}
+	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		CheckForExit();
 		CheckForMissedTrigger();
+		CheckForMissingMolecule();
 	}
 }

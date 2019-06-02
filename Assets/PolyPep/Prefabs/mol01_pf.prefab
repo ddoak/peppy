@@ -92,7 +92,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.75
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1536904344135460431
 Rigidbody:
@@ -126,12 +126,11 @@ MonoBehaviour:
   zoneCollider: {fileID: 0}
   inZone: 0
   type: 0
-  speedDiffuse: 0
-  speedZone: 0
   scale: 0
   decomposeProb: 0.001
   age: 0
   inertTime: 1
+  pendingDestruct: 0
   materials: []
   mySpawner: {fileID: 0}
   myKinBind: {fileID: 0}

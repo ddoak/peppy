@@ -90,31 +90,47 @@ public class KinMol : MonoBehaviour
 				{
 					var averagePosition = (collider.gameObject.transform.position + gameObject.transform.position) / 2f;
 
+					float dotA = Vector3.Dot(Vector3.Normalize(gameObject.GetComponent<Rigidbody>().velocity), Vector3.Normalize(gameObject.transform.position - collider.gameObject.transform.position));
+
+					float dotB = Vector3.Dot(Vector3.Normalize(collider.gameObject.GetComponent<Rigidbody>().velocity), Vector3.Normalize(collider.gameObject.transform.position - gameObject.transform.position));
+
+					//Debug.Log(" velocity = " + gameObject.GetComponent<Rigidbody>().velocity);
+
+					//Debug.Log(" dotA = " + dotA);
+					//Debug.Log(" dotB = " + dotB);
+
+					bool enzymeInvolved = (myKinBind || molecule.myKinBind);
+
+					if ((dotA + dotB) > 0.1f)
 					{
-						// deal with enzyme bound
-						if (myKinBind)
+						Debug.Log(" dotA + dotB = " + (dotA + dotB) + " " + enzymeInvolved);
+
+						// DO REACTION
 						{
-							myKinBind.ReleaseMol();
+							// deal with enzyme bound
+							if (myKinBind)
+							{
+								myKinBind.ReleaseMol();
+							}
+							if (molecule.myKinBind)
+							{
+								molecule.myKinBind.ReleaseMol();
+							}
 						}
-						if (molecule.myKinBind)
+
+						// Destroy reactant A + B
+						if (collider.gameObject) // ?
 						{
-							molecule.myKinBind.ReleaseMol();
+							mySpawner.DestroyMolecule(gameObject);
+							mySpawner.DestroyMolecule(collider.gameObject);
 						}
+
+						//Destroy(gameObject);
+						//Destroy(collider.gameObject);
+
+						// Create product C
+						mySpawner.SpawnNewMolecule(2, averagePosition);
 					}
-
-					// Destroy reactant A + B
-					if (collider.gameObject) // ?
-					{
-						mySpawner.DestroyMolecule(gameObject);
-						mySpawner.DestroyMolecule(collider.gameObject);
-					}
-
-					//Destroy(gameObject);
-					//Destroy(collider.gameObject);
-
-					// Create product C
-					mySpawner.SpawnNewMolecule(2, averagePosition);
-
 				}
 			}
 		}

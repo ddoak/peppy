@@ -94,7 +94,7 @@ public class KinSpawner : MonoBehaviour
 		_mol01.gameObject.name = "mol_" + molCount;
 		_mol01.type = molType;
 		_mol01.mySpawner = this;
-		_mol01.scale = 0.05f;
+		_mol01.scale = 0.04f;
 		_mol01.zoneGO = zoneGO;
 		_mol01.inertTime = 0.5f;
 
