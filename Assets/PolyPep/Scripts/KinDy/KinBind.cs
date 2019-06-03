@@ -21,7 +21,7 @@ public class KinBind: MonoBehaviour
 	}
 
 
-	private void OnTriggerEnter(Collider collider)
+	private void OnTriggerStay(Collider collider)
 	{
 		if (collider.gameObject.GetComponent("KinMol") as KinMol)
 		{

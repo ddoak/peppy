@@ -35,11 +35,11 @@ public class KinMembrane : MonoBehaviour
 		KinMol molecule = collider.gameObject.GetComponent("KinMol") as KinMol;
 		if (molecule)
 		{
-			if (!molecule.myKinBind)
+			if (!molecule.myKinBind) // leave bound molecules alone
 			{
-				if (molecule.type == 3)
+				//if (molecule.type == 3)
 				{
-					Vector3 pushDir = - transform.right;
+					Vector3 pushDir = - transform.up;
 					float dot = Vector3.Dot(pushDir, (molecule.transform.position - transform.position));
 					if (dot > 0f)
 					{
@@ -60,7 +60,7 @@ public class KinMembrane : MonoBehaviour
 			{
 				//if (molecule.type == 3)
 				{
-					Vector3 pushDir = -transform.right;
+					Vector3 pushDir = -transform.up;
 					float dot = Vector3.Dot(pushDir, (diffuse.transform.position - transform.position));
 					if (dot > 0f)
 					{

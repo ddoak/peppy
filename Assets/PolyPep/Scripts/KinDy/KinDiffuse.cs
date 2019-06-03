@@ -40,28 +40,38 @@ public class KinDiffuse : MonoBehaviour
 		if (isTransmembrane)
 		{
 			{
-				Vector3 pushDir = - zoneCollider.transform.right;
+				Vector3 pushDir = - zoneCollider.transform.up;
+
+				Plane membrane = new Plane(zoneCollider.transform.up, zoneCollider.transform.position);
+
+				Vector3 closest = membrane.ClosestPointOnPlane(transform.position);
+
+				Debug.DrawLine(transform.position, closest);
 				float delta = Vector3.Magnitude(zoneCollider.transform.position - transform.position);
 				float dot = Vector3.Dot(pushDir, (zoneCollider.transform.position - transform.position));
 				//Debug.Log("transmembrane" + delta);
 				if (delta > 0.2f)
 				{
-					float force = 0.02f * delta;
-					if (dot > 0f)
-					{
-						gameObject.GetComponent<Rigidbody>().AddForce(pushDir * force, ForceMode.Impulse);
-					}
-					else if (dot < 0f)
-					{
-						gameObject.GetComponent<Rigidbody>().AddForce(-pushDir * force, ForceMode.Impulse);
-					}
+
+					//float force = 0.02f * delta;
+					//if (dot > 0f)
+					//{
+					//	gameObject.GetComponent<Rigidbody>().AddForce(pushDir * force, ForceMode.Impulse);
+					//}
+					//else if (dot < 0f)
+					//{
+					//	gameObject.GetComponent<Rigidbody>().AddForce(-pushDir * force, ForceMode.Impulse);
+					//}
+
 				}
 
-				transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation * Quaternion.Euler(0,0,-90f), 5f);
+				//transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation * Quaternion.Euler(0,0,-90f), 5f);
+
+				transform.rotation = Quaternion.RotateTowards(transform.rotation, zoneCollider.transform.rotation, 5f);
 
 				Vector2 inCircle = Random.insideUnitCircle;
-				Vector3 diffuseV = new Vector3 (0f, inCircle.y, inCircle.x);
-				myRigidbody.AddForce(diffuseV * speedDiffuse, ForceMode.Impulse);
+				Vector3 diffuseV = new Vector3(inCircle.x, 0f, inCircle.y);
+				myRigidbody.AddRelativeForce(diffuseV * speedDiffuse, ForceMode.Impulse);
 			}
 		}
 		else
