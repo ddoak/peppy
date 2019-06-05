@@ -33,11 +33,12 @@ public class KinSpawner : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		
+		materials.Add(Resources.Load("Materials/material00", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material01", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material02", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material03", typeof(Material)) as Material);
 		materials.Add(Resources.Load("Materials/material04", typeof(Material)) as Material);
+		materials.Add(Resources.Load("Materials/material05", typeof(Material)) as Material);
 
 		molCount = 0;
 		molCounts = new int[4];
@@ -73,14 +74,16 @@ public class KinSpawner : MonoBehaviour
 		molTxts[2] = GameObject.Find("molTxt02").GetComponent<KinTxt>();
 		molTxts[3] = GameObject.Find("molTxt03").GetComponent<KinTxt>();
 
-		DoStartingSpawn();
-    }
+		DoStartingSpawn(numMol, 2);
+		DoStartingSpawn(50, 4);
+		DoStartingSpawn(20, 5);
+	}
 
-	void DoStartingSpawn()
+	void DoStartingSpawn(int number, int type)
 	{ 
 		Bounds bounds = zoneGO.GetComponent<Collider>().bounds;
 
-		for (int i = 0; i < numMol; i++)
+		for (int i = 0; i < number; i++)
 		{
 			Vector3 randomPos = new Vector3(Random.Range(bounds.min.x, bounds.max.x),
 											Random.Range(bounds.min.y, bounds.max.y),
@@ -88,7 +91,7 @@ public class KinSpawner : MonoBehaviour
 
 			//Random.Range(0, 2);
 
-			SpawnNewMolecule(2, randomPos);
+			SpawnNewMolecule(type, randomPos);
 		}
 	}
 
@@ -101,7 +104,17 @@ public class KinSpawner : MonoBehaviour
 		_mol01.gameObject.name = "mol_" + molCount;
 		_mol01.type = molType;
 		_mol01.mySpawner = this;
+
 		_mol01.scale = 0.04f;
+		if (molType == 4)
+		{
+			_mol01.scale = 0.03f;
+		}
+		if (molType == 5)
+		{
+			_mol01.scale = 0.02f;
+		}
+
 		_mol01.zoneGO = zoneGO;
 		_mol01.inertTime = 0.5f;
 
