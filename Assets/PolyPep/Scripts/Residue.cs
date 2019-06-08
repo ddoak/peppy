@@ -35,7 +35,8 @@ public class Residue : MonoBehaviour {
 
 	public ParticleSystem plotTrail_ps;
 	private ParticleSystem myPlotTrail_ps;
-	private ParticleSystem.MainModule myTrailPsMain;
+	private ParticleSystem.MainModule myPlotTrail_psMain;
+	ParticleSystem.EmissionModule myPlotTrail_psEmission;
 
 	public GameObject myPlotCube;
 	private Vector3 myPlotCubeBaseScale = new Vector3(0.018f, 0.018f, 0.01f);
@@ -68,14 +69,19 @@ public class Residue : MonoBehaviour {
 	// Use this for initialization
 	private void Awake()
 	{
-		
+		myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		// Particle system initialised in Awake to avoid error:
+		// "Do not create your own module instances, get them from a ParticleSystem instance"
+		myPlotTrail_ps = Instantiate(plotTrail_ps, myPlotCube.transform);
+		myPlotTrail_psMain = myPlotTrail_ps.main;
+		myPlotTrail_psEmission = myPlotTrail_ps.emission;
 	}
 
 	void Start ()
 	{
 		ramaPlotOrigin = GameObject.Find("RamaPlotOrigin_tf");
 
-		myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//myPlotCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		myPlotCube.name = "PlotCube";
 		myPlotCube.GetComponent<Collider>().isTrigger = true;
 		myPlotCube.GetComponent<Collider>().enabled = false;
@@ -104,16 +110,9 @@ public class Residue : MonoBehaviour {
 		myPlotCubeLabel.name = "plotCubeLabel";
 
 		// plot particle trail
-		// note: particle alpha in build is different from in editor 
-		// bug? material? shader?
-		// for the moment compromise is to have trails with reasonable alpha in build
-		// which means they are almost invisible in editor
-		myPlotTrail_ps = Instantiate(plotTrail_ps, myPlotCube.transform);
-		myTrailPsMain = myPlotTrail_ps.main;
-		myTrailPsMain.startSize = 0.02f;
-		myTrailPsMain.customSimulationSpace = ramaPlotOrigin.transform;
-		ParticleSystem.EmissionModule psEmission = myPlotTrail_ps.emission;
-		psEmission.rateOverTime = 200;
+		myPlotTrail_psMain.startSize = 0.02f;
+		myPlotTrail_psMain.customSimulationSpace = ramaPlotOrigin.transform;
+		myPlotTrail_psEmission.rateOverTime = 200;
 
 		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
 		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0008f;
@@ -178,8 +177,8 @@ public class Residue : MonoBehaviour {
 			_myPlotCubeRenderer.material.SetColor("_Color", Color.green);
 			//deltaPos += ramaPlot.transform.forward * -0.015f;
 			targetDeltaScale = 1.6f;
-			myTrailPsMain.startColor = new Color(0.5f, 1f, 0.5f, 1f); // Color.green;
-			myTrailPsMain.startSize = 0.02f;
+			myPlotTrail_psMain.startColor = new Color(0.5f, 1f, 0.5f, 1f); // Color.green;
+			myPlotTrail_psMain.startSize = 0.02f;
 		}
 		else
 		{
@@ -188,8 +187,8 @@ public class Residue : MonoBehaviour {
 				_myPlotCubeRenderer.material.SetColor("_Color", Color.red);
 				//deltaPos += ramaPlot.transform.forward * -0.01f;
 				targetDeltaScale = 1.4f;
-				myTrailPsMain.startColor = new Color(1f, 0.5f, 0.5f, 1f); //Color.red;
-				myTrailPsMain.startSize = 0.02f;
+				myPlotTrail_psMain.startColor = new Color(1f, 0.5f, 0.5f, 1f); //Color.red;
+				myPlotTrail_psMain.startSize = 0.02f;
 			}
 			else
 			{
@@ -197,8 +196,8 @@ public class Residue : MonoBehaviour {
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.yellow);
 					targetDeltaScale = 1.2f;
-					myTrailPsMain.startColor = new Color(0.7f, 0.6f, 0f, 1f); // Color.yellow;
-					myTrailPsMain.startSize = 0.02f;
+					myPlotTrail_psMain.startColor = new Color(0.7f, 0.6f, 0f, 1f); // Color.yellow;
+					myPlotTrail_psMain.startSize = 0.02f;
 				}
 				else
 				{
@@ -213,8 +212,8 @@ public class Residue : MonoBehaviour {
 					{
 						_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
 						targetDeltaScale = 1.0f;
-						myTrailPsMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
-						myTrailPsMain.startSize = 0.01f;
+						myPlotTrail_psMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
+						myPlotTrail_psMain.startSize = 0.01f;
 					}
 
 				}

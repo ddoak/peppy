@@ -8,6 +8,13 @@ using UnityEngine.Assertions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public class PeptideData
+{
+	public string residPD;
+	public float phiPD;
+	public float psiPD;
+}
+
 public class PolyPepBuilder : MonoBehaviour {
 
 	public GameObject amidePf;
@@ -37,6 +44,9 @@ public class PolyPepBuilder : MonoBehaviour {
 	public int secondaryStructure { get; set; } // = 0;
 
 	public int numResidues = 0;
+
+	public List<PeptideData> myPeptideDataList = new List<PeptideData>(); 
+
 
 	public GameObject[] polyArr;
 	private int polyLength;
@@ -84,21 +94,27 @@ public class PolyPepBuilder : MonoBehaviour {
 	void Start()
 
 	{
-		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/253l_phi_psi.txt"));
+		// read peptide data from file
+		bool readExternalPeptideData = false; 
+		string filename = "Assets/PolyPep/Data/1l2y_phi_psi.txt";
+
+		if (readExternalPeptideData)
+		{
+			// reads data into and overwrites numResidues
+			Debug.Log("LOAD FILE = " + LoadPhiPsiData(filename));
+			//foreach ( PeptideData _peptideData in peptideDataRead)
+			//{
+			//	Debug.Log(_peptideData.residPD + " " + _peptideData.phiPD + " " + _peptideData.psiPD);
+			//}
+		}
+		
 
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
 
 		buildPolypeptideChain();
 
-		//for (int resid = 0; resid < numResidues; resid++)
-		//{
-		//	sideChainBuilder.BuildSideChain(gameObject, resid, "PHE"); // ppb_cs.chainArr[0].GetComponent<Residue>());
-		//}
 
-		//sideChainBuilder.BuildSideChain(gameObject, 0, "PRO");
-		//sideChainBuilder.BuildSideChain(gameObject, 3, "ASP");
-		//sideChainBuilder.BuildSideChain(gameObject, 5, "GLU");
 
 		if (false)
 		{
@@ -124,9 +140,19 @@ public class PolyPepBuilder : MonoBehaviour {
 		// placeholder: should be created and updated on tick
 		//InvokeRepeating("UpdateDistanceConstraintGfx", 0, 0.05f);
 
-		//Debug.Log("LOAD FILE = " + Load("Assets/Data/253l_phi_psi.txt"));
-		//disablePhiPsiUIInput = true;
-		//Debug.Log("LOAD FILE = " + LoadPhiPsiData("Assets/Data/1xda_phi_psi.txt")); 
+		if (readExternalPeptideData)
+		{
+			// push sequence and phi psi data to peptide
+			for (int i = 0; i < myPeptideDataList.Count; i++)
+			{
+				PeptideData _pd = myPeptideDataList[i];
+				//Debug.Log(i + " " + _pd.residPD + " " + _pd.phiPD + " " + _pd.psiPD);
+				sideChainBuilder.BuildSideChain(gameObject, i, _pd.residPD);
+				SetPhiPsiTargetValuesForResidue(i, _pd.phiPD, _pd.psiPD);
+				chainArr[i].GetComponent<Residue>().drivePhiPsiOn = true;
+			}
+			UpdatePhiPsiDrives();
+		}
 
 		secondaryStructure = 0;
 
@@ -1366,13 +1392,33 @@ public void SetAllColliderIsTrigger(bool value)
 		float myPhi = float.Parse(line.Substring(12, 7));
 		float myPsi = float.Parse(line.Substring(20, 7));
 
+		if (myResid == 2)
+		{
+			// add default data for resid 1
+			PeptideData _peptideData = new PeptideData();
+			_peptideData.residPD = "XXX";
+			_peptideData.phiPD = 0f;
+			_peptideData.psiPD = 0f;
+			myPeptideDataList.Add(_peptideData);
+		}
 
 		Debug.Log("  resname = " + resName);
 		Debug.Log("  resid = " + myResid);
 		Debug.Log("  phi = " + myPhi);
 		Debug.Log("  psi = " + myPsi);
 
-		SetPhiPsiTargetValuesForResidue(myResid, myPhi, myPsi);
+		{
+			// add data for current resid
+			PeptideData _peptideData = new PeptideData();
+			_peptideData.residPD = resName;
+			_peptideData.phiPD = myPhi;
+			_peptideData.psiPD = myPsi;
+			myPeptideDataList.Add(_peptideData);
+		}
+
+
+		//SetPhiPsiTargetValuesForResidue(myResid, myPhi, myPsi);
+		numResidues = myResid;
 	}
 
 	public void UpdateResidueSelectionStartFromUI()
