@@ -1,22 +1,17 @@
 /************************************************************************************
+Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
 
-Copyright   :   Copyright 2017 Oculus VR, LLC. All Rights reserved.
-
-Licensed under the Oculus VR Rift SDK License Version 3.4.1 (the "License");
-you may not use the Oculus VR Rift SDK except in compliance with the License,
-which is provided at the time of installation or download, or which
-otherwise accompanies this software in either electronic or hard copy form.
+Licensed under the Oculus Utilities SDK License Version 1.31 (the "License"); you may not use
+the Utilities SDK except in compliance with the License, which is provided at the time of installation
+or download, or which otherwise accompanies this software in either electronic or hard copy form.
 
 You may obtain a copy of the License at
+https://developer.oculus.com/licenses/utilities-1.31
 
-https://developer.oculus.com/licenses/sdk-3.4.1
-
-Unless required by applicable law or agreed to in writing, the Oculus VR SDK
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
+Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.
 ************************************************************************************/
 
 #if UNITY_EDITOR
@@ -65,6 +60,7 @@ using Assets.OVR.Scripts;
 ///Large textures, lots of prefabs in startup scene (for bootstrap optimization)
 ///GPU skinning: testing Android-only, as most Rift devs are GPU-bound.
 /// </summary>
+[InitializeOnLoadAttribute]
 public class OVRLint : EditorWindow
 {
 	//TODO: The following require reflection or static analysis.
@@ -75,15 +71,66 @@ public class OVRLint : EditorWindow
 	///Declared but empty Awake/Start/Update/OnCollisionEnter/OnCollisionExit/OnCollisionStay.  Also OnCollision* star methods that declare the Collision  argument but do not reference it (omitting it short-circuits the collision contact calculation).
 
 	private static List<FixRecord> mRecords = new List<FixRecord>();
+	private static List<FixRecord> mRuntimeEditModeRequiredRecords = new List<FixRecord>();
+#if !UNITY_2017_2_OR_NEWER
+	private static bool mWasPlaying = false;
+#endif
 	private Vector2 mScrollPosition;
 
-
-	[MenuItem("Tools/Oculus/OVR Performance Lint Tool")]
+	[MenuItem("Oculus/Tools/OVR Performance Lint Tool")]
 	static void Init()
 	{
 		// Get existing open window or if none, make a new one:
 		EditorWindow.GetWindow(typeof(OVRLint));
+		OVRPlugin.SendEvent("perf_lint", "activated");
 		OVRLint.RunCheck();
+#if !UNITY_2017_2_OR_NEWER
+		mWasPlaying = EditorApplication.isPlaying;
+#endif
+	}
+
+	OVRLint()
+	{
+#if UNITY_2017_2_OR_NEWER
+		EditorApplication.playModeStateChanged += HandlePlayModeState;
+#else
+		EditorApplication.playmodeStateChanged += () =>
+		{
+			// When Unity starts playing, it would also trigger play mode changed event with isPlaying == false
+			// Fixes should only be applied when it was transitioned from playing mode
+			if (!EditorApplication.isPlaying && mWasPlaying)
+			{
+				ApplyEditModeRequiredFix();
+				mWasPlaying = false;
+			}
+			else
+			{
+				mWasPlaying = true;
+			}
+		};
+#endif
+	}
+
+#if UNITY_2017_2_OR_NEWER
+	private static void HandlePlayModeState(PlayModeStateChange state)
+	{
+		if (state == PlayModeStateChange.EnteredEditMode)
+		{
+			ApplyEditModeRequiredFix();
+		}
+	}
+#endif
+
+	private static void ApplyEditModeRequiredFix()
+	{
+		// Apply runtime fixes that require edit mode when applying fix
+		foreach (FixRecord record in mRuntimeEditModeRequiredRecords)
+		{
+			record.fixMethod(null, false, 0);
+			OVRPlugin.SendEvent("perf_lint_apply_fix", record.category);
+			record.complete = true;
+		}
+		mRuntimeEditModeRequiredRecords.Clear();
 	}
 
 	void OnGUI()
@@ -150,6 +197,7 @@ public class OVRLint : EditorWindow
 								{
 									FixRecord thisRecord = recordsToProcess[z];
 									thisRecord.fixMethod(thisRecord.targetObject, (z + 1 == recordsToProcess.Count), y);
+									OVRPlugin.SendEvent("perf_lint_apply_fix", thisRecord.category);
 									thisRecord.complete = true;
 								}
 							}
@@ -183,8 +231,25 @@ public class OVRLint : EditorWindow
 						{
 							Undo.RecordObject(record.targetObject, record.category);
 						}
-						record.fixMethod(record.targetObject, true, y);
-						record.complete = true;
+
+						if (record.editModeRequired)
+						{
+							// Add to the fix record list that requires edit mode
+							mRuntimeEditModeRequiredRecords.Add(record);
+						}
+						else
+						{
+							// Apply the fix directly
+							record.fixMethod(record.targetObject, true, y);
+							OVRPlugin.SendEvent("perf_lint_apply_fix", record.category);
+							record.complete = true;
+						}
+
+						if (mRuntimeEditModeRequiredRecords.Count != 0)
+						{
+							// Stop the scene to apply edit mode required records
+							EditorApplication.ExecuteMenuItem("Edit/Play");
+						}
 					}
 				}
 
@@ -200,6 +265,7 @@ public class OVRLint : EditorWindow
 	static void RunCheck()
 	{
 		mRecords.Clear();
+		mRuntimeEditModeRequiredRecords.Clear();
 
 		CheckStaticCommonIssues();
 #if UNITY_ANDROID
@@ -220,20 +286,26 @@ public class OVRLint : EditorWindow
 		});
 	}
 
-	static void AddFix(string category, string message, FixMethodDelegate method, UnityEngine.Object target, params string[] buttons)
+	static void AddFix(string category, string message, FixMethodDelegate method, UnityEngine.Object target, bool editModeRequired, params string[] buttons)
 	{
-		mRecords.Add(new FixRecord(category, message, method, target, buttons));
+		OVRPlugin.SendEvent("perf_lint_add_fix", category);
+		mRecords.Add(new FixRecord(category, message, method, target, editModeRequired, buttons));
 	}
 
 	static void CheckStaticCommonIssues()
 	{
+		if (OVRManager.IsUnityAlphaOrBetaVersion())
+		{
+			AddFix("General", OVRManager.UnityAlphaOrBetaVersionWarningMessage, null, null, false);
+		}
+
 		if (QualitySettings.anisotropicFiltering != AnisotropicFiltering.Enable && QualitySettings.anisotropicFiltering != AnisotropicFiltering.ForceEnable)
 		{
 			AddFix("Optimize Aniso", "Anisotropic filtering is recommended for optimal image sharpness and GPU performance.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				// Ideally this would be multi-option: offer Enable or ForceEnable.
 				QualitySettings.anisotropicFiltering = AnisotropicFiltering.Enable;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 #if UNITY_ANDROID
@@ -247,17 +319,17 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Pixel Light Count", "For GPU performance set no more than " + recommendedPixelLightCount + " pixel lights in Quality Settings (currently " + QualitySettings.pixelLightCount + ").", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				QualitySettings.pixelLightCount = recommendedPixelLightCount;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 #if false
 		// Should we recommend this?  Seems to be mutually exclusive w/ dynamic batching.
 		if (!PlayerSettings.graphicsJobs)
 		{
-			AddFix ("Optimize Graphics Jobs", "For CPU performance, please use graphics jobs.", delegate(UnityEngine.Object obj, bool last, int selected) 
+			AddFix ("Optimize Graphics Jobs", "For CPU performance, please use graphics jobs.", delegate(UnityEngine.Object obj, bool last, int selected)
 			{
 				PlayerSettings.graphicsJobs = true;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 #endif
 
@@ -275,8 +347,36 @@ public class OVRLint : EditorWindow
 #else
 				PlayerSettings.MTRendering = PlayerSettings.mobileMTRendering = true;
 #endif
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
+
+#if UNITY_ANDROID
+		if (!PlayerSettings.use32BitDisplayBuffer)
+		{
+			AddFix("Optimize Display Buffer Format", "We recommend to enable use32BitDisplayBuffer.", delegate (UnityEngine.Object obj, bool last, int selected)
+			{
+				PlayerSettings.use32BitDisplayBuffer = true;
+			}, null, false, "Fix");
+		}
+#endif
+
+#if UNITY_2017_3_OR_NEWER && !UNITY_ANDROID
+		if (!PlayerSettings.VROculus.dashSupport)
+		{
+			AddFix("Enable Dash Integration", "We recommend to enable Dash Integration for better user experience.", delegate (UnityEngine.Object obj, bool last, int selected)
+			{
+				PlayerSettings.VROculus.dashSupport = true;
+			}, null, false, "Fix");
+		}
+
+		if (!PlayerSettings.VROculus.sharedDepthBuffer)
+		{
+			AddFix("Enable Depth Buffer Sharing", "We recommend to enable Depth Buffer Sharing for better user experience on Oculus Dash.", delegate (UnityEngine.Object obj, bool last, int selected)
+			{
+				PlayerSettings.VROculus.sharedDepthBuffer = true;
+			}, null, false, "Fix");
+		}
+#endif
 
 		BuildTargetGroup target = EditorUserBuildSettings.selectedBuildTargetGroup;
 		var tier = UnityEngine.Rendering.GraphicsTier.Tier1;
@@ -289,7 +389,7 @@ public class OVRLint : EditorWindow
 			{
 				tierSettings.renderingPath = RenderingPath.Forward;
 				UnityEditor.Rendering.EditorGraphicsSettings.SetTierSettings(target, tier, tierSettings);
-			}, null, "Use Forward");
+			}, null, false, "Use Forward");
 		}
 
 		if (PlayerSettings.stereoRenderingPath == StereoRenderingPath.MultiPass)
@@ -297,7 +397,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Stereo Rendering", "For CPU performance, please enable single-pass or instanced stereo rendering.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				PlayerSettings.stereoRenderingPath = StereoRenderingPath.Instancing;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		if (LightmapSettings.lightmaps.Length > 0 && LightmapSettings.lightmapsMode != LightmapsMode.NonDirectional)
@@ -305,7 +405,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Lightmap Directionality", "Switching from directional lightmaps to non-directional lightmaps can save a small amount of GPU time.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				LightmapSettings.lightmapsMode = LightmapsMode.NonDirectional;
-			}, null, "Switch to non-directional lightmaps");
+			}, null, false, "Switch to non-directional lightmaps");
 		}
 
 		if (Lightmapping.realtimeGI)
@@ -313,7 +413,7 @@ public class OVRLint : EditorWindow
 			AddFix("Disable Realtime GI", "Disabling real-time global illumination can improve GPU performance.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				Lightmapping.realtimeGI = false;
-			}, null, "Set Lightmapping.realtimeGI = false.");
+			}, null, false, "Set Lightmapping.realtimeGI = false.");
 		}
 
 		var lights = GameObject.FindObjectsOfType<Light>();
@@ -325,7 +425,7 @@ public class OVRLint : EditorWindow
 			if (lights[i].type != LightType.Directional && !lights[i].isBaked && IsLightBaked(lights[i]))
 #endif
 			{
-				AddFix("Unbaked Lights", "The following lights in the scene are marked as Baked, but they don't have up to date lightmap data. Generate the lightmap data, or set it to auto-generate, in Window->Lighting->Settings.", null, lights[i], null);
+				AddFix("Unbaked Lights", "The following lights in the scene are marked as Baked, but they don't have up to date lightmap data. Generate the lightmap data, or set it to auto-generate, in Window->Lighting->Settings.", null, lights[i], false, null);
 			}
 
 			if (lights[i].shadows != LightShadows.None && !IsLightBaked(lights[i]))
@@ -334,7 +434,7 @@ public class OVRLint : EditorWindow
 				{
 					Light thisLight = (Light)obj;
 					thisLight.shadows = LightShadows.None;
-				}, lights[i], "Set \"Shadow Type\" to \"No Shadows\"");
+				}, lights[i], false, "Set \"Shadow Type\" to \"No Shadows\"");
 			}
 		}
 
@@ -361,9 +461,9 @@ public class OVRLint : EditorWindow
 				{
 					AddFix("Optimize Audio Source Count", "For CPU performance, please disable all but the top 16 AudioSources.", delegate (UnityEngine.Object obj, bool last, int selected)
 					{
-					AudioSource audioSource = (AudioSource)obj;
-					audioSource.enabled = false;
-					}, playingAudioSources[i], "Disable");
+						AudioSource audioSource = (AudioSource)obj;
+						audioSource.enabled = false;
+					}, playingAudioSources[i], false, "Disable");
 				}
 			}
 		}
@@ -385,7 +485,7 @@ public class OVRLint : EditorWindow
 						SetAudioLoadType(thisClip, AudioClipLoadType.Streaming, last);
 					}
 
-				}, clips[i], "Change to Compressed in Memory", "Change to Streaming");
+				}, clips[i], false, "Change to Compressed in Memory", "Change to Streaming");
 			}
 
 			if (clips[i].preloadAudioData)
@@ -393,7 +493,7 @@ public class OVRLint : EditorWindow
 				AddFix("Audio Preload", "For fast loading, please don't preload data for audio clips.", delegate (UnityEngine.Object obj, bool last, int selected)
 				{
 					SetAudioPreload(clips[i], false, last);
-				}, clips[i], "Fix");
+				}, clips[i], false, "Fix");
 			}
 		}
 
@@ -402,7 +502,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Contact Offset", "For CPU performance, please don't use default contact offset below 0.01.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				Physics.defaultContactOffset = 0.01f;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		if (Physics.sleepThreshold < 0.005f)
@@ -410,7 +510,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Sleep Threshold", "For CPU performance, please don't use sleep threshold below 0.005.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				Physics.sleepThreshold = 0.005f;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		if (Physics.defaultSolverIterations > 8)
@@ -418,7 +518,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Solver Iterations", "For CPU performance, please don't use excessive solver iteration counts.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				Physics.defaultSolverIterations = 8;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		var materials = Resources.FindObjectsOfTypeAll<Material>();
@@ -448,7 +548,7 @@ public class OVRLint : EditorWindow
 							Debug.LogWarning("Unable to find a replacement for shader " + materials[i].shader.name);
 						}
 					}
-				}, materials[i], "Fix");
+				}, materials[i], false, "Fix");
 			}
 		}
 
@@ -457,7 +557,7 @@ public class OVRLint : EditorWindow
 		{
 			if (renderers[i].sharedMaterial == null)
 			{
-				AddFix("Instanced Materials", "Please avoid instanced materials on renderers.", null, renderers[i]);
+				AddFix("Instanced Materials", "Please avoid instanced materials on renderers.", null, renderers[i], false);
 			}
 		}
 
@@ -470,7 +570,7 @@ public class OVRLint : EditorWindow
 				{
 					OVROverlay.instances[i].enabled = false;
 				}
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		var splashScreen = PlayerSettings.virtualRealitySplashScreen;
@@ -484,7 +584,7 @@ public class OVRLint : EditorWindow
 					var importer = (TextureImporter)TextureImporter.GetAtPath(assetPath);
 					importer.filterMode = FilterMode.Trilinear;
 					AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
-				}, null, "Fix");
+				}, null, false, "Fix");
 			}
 
 			if (splashScreen.mipmapCount <= 1)
@@ -495,7 +595,7 @@ public class OVRLint : EditorWindow
 					var importer = (TextureImporter)TextureImporter.GetAtPath(assetPath);
 					importer.mipmapEnabled = true;
 					AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
-				}, null, "Fix");
+				}, null, false, "Fix");
 			}
 		}
 	}
@@ -507,15 +607,19 @@ public class OVRLint : EditorWindow
 			AddFix("Occlusion Mesh", "Enabling the occlusion mesh saves substantial GPU resources, generally with no visual impact. Enable unless you have an exceptional use case.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				OVRPlugin.occlusionMesh = true;
-			}, null, "Set OVRPlugin.occlusionMesh = true");
+			}, null, false, "Set OVRPlugin.occlusionMesh = true");
 		}
 
 		if (OVRManager.instance != null && !OVRManager.instance.useRecommendedMSAALevel)
 		{
 			AddFix("Optimize MSAA", "OVRManager can select the optimal antialiasing for the installed hardware at runtime. Recommend enabling this.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
-				OVRManager.instance.useRecommendedMSAALevel = true;
-			}, null, "Set useRecommendedMSAALevel = true");
+				var ovrManagers = GameObject.FindObjectsOfType<OVRManager>();
+				foreach (var ovrManager in ovrManagers)
+				{
+					ovrManager.useRecommendedMSAALevel = true;
+				}
+			}, null, true, "Stop Play and Fix");
 		}
 
 #if UNITY_2017_2_OR_NEWER
@@ -531,7 +635,7 @@ public class OVRLint : EditorWindow
 #else
 				UnityEngine.VR.VRSettings.renderScale = 1.5f;
 #endif
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 	}
 
@@ -543,7 +647,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Android API Level", "To avoid legacy workarounds, please require at least API level " + (int)recommendedAndroidSdkVersion, delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				PlayerSettings.Android.minSdkVersion = recommendedAndroidSdkVersion;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		if (!PlayerSettings.gpuSkinning)
@@ -551,7 +655,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize GPU Skinning", "If you are CPU-bound, consider using GPU skinning.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				PlayerSettings.gpuSkinning = true;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 
@@ -560,7 +664,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Clearing", "For GPU performance, please don't use Unity's built-in Skybox.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				RenderSettings.skybox = null;
-			}, null, "Clear Skybox");
+			}, null, false, "Clear Skybox");
 		}
 
 		var materials = Resources.FindObjectsOfTypeAll<Material>();
@@ -573,12 +677,12 @@ public class OVRLint : EditorWindow
 					Material thisMaterial = (Material)obj;
 					thisMaterial.DisableKeyword("_SPECGLOSSMAP");
 					thisMaterial.DisableKeyword("_METALLICGLOSSMAP");
-				}, materials[i], "Fix");
+				}, materials[i], false, "Fix");
 			}
 
 			if (materials[i].passCount > 1)
 			{
-				AddFix("Material Passes", "Please use 2 or fewer passes in materials.", null, materials[i]);
+				AddFix("Material Passes", "Please use 2 or fewer passes in materials.", null, materials[i], false);
 			}
 		}
 
@@ -588,7 +692,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Scripting Backend", "For CPU performance, please use IL2CPP.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				PlayerSettings.SetScriptingBackend(UnityEditor.BuildTargetGroup.Android, UnityEditor.ScriptingImplementation.IL2CPP);
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		var monoBehaviours = GameObject.FindObjectsOfType<MonoBehaviour>();
@@ -599,7 +703,7 @@ public class OVRLint : EditorWindow
 			{
 				if (monoBehaviours[i].GetType().IsSubclassOf(effectBaseType))
 				{
-					AddFix("Image Effects", "Please don't use image effects.", null, monoBehaviours[i]);
+					AddFix("Image Effects", "Please don't use image effects.", null, monoBehaviours[i], false);
 				}
 			}
 		}
@@ -624,7 +728,7 @@ public class OVRLint : EditorWindow
 					{
 						SetTextureUseMips(thisTexture, true, last);
 					}
-				}, textures[i], "Switch to Bilinear", "Generate Mipmaps");
+				}, textures[i], false, "Switch to Bilinear", "Generate Mipmaps");
 			}
 		}
 
@@ -638,7 +742,7 @@ public class OVRLint : EditorWindow
 				{
 					thisProjectors[i].enabled = false;
 				}
-			}, null, "Disable Projectors");
+			}, null, false, "Disable Projectors");
 		}
 
 		if (EditorUserBuildSettings.androidBuildSubtarget != MobileTextureSubtarget.ASTC)
@@ -646,7 +750,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize Texture Compression", "For GPU performance, please use ASTC.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
-			}, null, "Fix");
+			}, null, false, "Fix");
 		}
 
 		var cameras = GameObject.FindObjectsOfType<Camera>();
@@ -659,7 +763,20 @@ public class OVRLint : EditorWindow
 
 		if (clearCount > 2)
 		{
-			AddFix("Camera Clears", "Please use 2 or fewer clears.", null, null);
+			AddFix("Camera Clears", "Please use 2 or fewer clears.", null, null, false);
+		}
+
+		for (int i = 0; i < cameras.Length; ++i)
+		{
+			if (cameras[i].forceIntoRenderTexture)
+			{
+				AddFix("Optimize Mobile Rendering", "For GPU performance, please don't enable forceIntoRenderTexture on your camera, this might be a flag pollution created by post process stack you used before, \nif your post process had already been turned off, we strongly encourage you to disable forceIntoRenderTexture. If you still want to use post process for some reasons, \nyou can leave this one on, but be warned, enabling this flag will introduce huge GPU performance cost. To view your flag status, please turn on you inspector's debug mode",
+				delegate (UnityEngine.Object obj, bool last, int selected)
+				{
+					Camera thisCamera = (Camera)obj;
+					thisCamera.forceIntoRenderTexture = false;
+				}, cameras[i], false, "Disable forceIntoRenderTexture");
+			}
 		}
 	}
 
@@ -667,7 +784,7 @@ public class OVRLint : EditorWindow
 	{
 		if (UnityStats.usedTextureMemorySize + UnityStats.vboTotalBytes > 1000000)
 		{
-			AddFix("Graphics Memory", "Please use less than 1GB of vertex and texture memory.", null, null);
+			AddFix("Graphics Memory", "Please use less than 1GB of vertex and texture memory.", null, null, false);
 		}
 
 		if (OVRManager.cpuLevel < 0 || OVRManager.cpuLevel > 3)
@@ -675,7 +792,7 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize CPU level", "For battery life, please use a safe CPU level.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				OVRManager.cpuLevel = 2;
-			}, null, "Set to CPU2");
+			}, null, false, "Set to CPU2");
 		}
 
 		if (OVRManager.gpuLevel < 0 || OVRManager.gpuLevel > 3)
@@ -683,18 +800,18 @@ public class OVRLint : EditorWindow
 			AddFix("Optimize GPU level", "For battery life, please use a safe GPU level.", delegate (UnityEngine.Object obj, bool last, int selected)
 			{
 				OVRManager.gpuLevel = 2;
-			}, null, "Set to GPU2");
+			}, null, false, "Set to GPU2");
 		}
 
 		if (UnityStats.triangles > 100000 || UnityStats.vertices > 100000)
 		{
-			AddFix("Triangles and Verts", "Please use less than 100000 triangles or vertices.", null, null);
+			AddFix("Triangles and Verts", "Please use less than 100000 triangles or vertices.", null, null, false);
 		}
 
 		// Warn for 50 if in non-VR mode?
 		if (UnityStats.drawCalls > 100)
 		{
-			AddFix("Draw Calls", "Please use less than 100 draw calls.", null, null);
+			AddFix("Draw Calls", "Please use less than 100 draw calls.", null, null, false);
 		}
 	}
 

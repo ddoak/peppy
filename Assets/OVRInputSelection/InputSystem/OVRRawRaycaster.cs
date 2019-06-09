@@ -329,24 +329,6 @@ namespace ControllerSelection {
 					tractorBeaming = false;
 				}
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // Gaze pointer fallback
-            else {
-                if (Input.GetMouseButtonDown(0) ) {
-                    triggerDown = lastHit;
-                }
-                else if (Input.GetMouseButtonUp(0) ) {
-                    if (triggerDown != null && triggerDown == lastHit) {
-                        if (onPrimarySelect != null) {
-                            onPrimarySelect.Invoke(triggerDown);
-                        }
-                    }
-                }
-                if (!Input.GetMouseButton(0)) {
-                    triggerDown = null;
-                }
-            }
-#endif
 
 				//REMOTE GRAB
 				if (!remoteGrab)
