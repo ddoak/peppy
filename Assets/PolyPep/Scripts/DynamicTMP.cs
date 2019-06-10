@@ -15,6 +15,7 @@ public class DynamicTMP : MonoBehaviour {
 		//Debug.Log(gameObject + " " + textComponent);
 		if (textComponent == null)
 		{
+			//Debug.Log(this + " failed ");
 			//textComponent = gameObject.GetComponent<TextMeshProUGUI>();
 		}
 	}
@@ -27,7 +28,11 @@ public class DynamicTMP : MonoBehaviour {
 	public void SetSliderValue(float sliderValue)
 	{
 		//Debug.Log(sliderValue);
-		textComponent.text = Mathf.Round(sliderValue/1).ToString();
+		if (textComponent) // fix for NullReference on Start() ?
+		{
+			textComponent.text = Mathf.Round(sliderValue/1).ToString();
+		}
+		
 	}
 
 	public void SetSliderValue10(float sliderValue)

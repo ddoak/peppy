@@ -37,8 +37,9 @@ namespace ControllerSelection {
         [Tooltip("How far away the gaze pointer should be from the camera.")]
         public float gazeDrawDistance = 3;
 
-        [HideInInspector]
         public OVRInput.Controller activeController = OVRInput.Controller.None;
+
+		[HideInInspector]
 
         void Awake() {
             if (trackingSpace == null) {

@@ -28551,6 +28551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd425c2d06f39bf4899d07c05d0f10eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hapticAudioClip: {fileID: 8300000, guid: 1bab9be4934373e47b0a1636c723f769, type: 3}
   grabBegin: 0.55
   grabEnd: 0.35
   m_parentHeldObject: 0
@@ -46949,6 +46950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd425c2d06f39bf4899d07c05d0f10eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hapticAudioClip: {fileID: 8300000, guid: 1bab9be4934373e47b0a1636c723f769, type: 3}
   grabBegin: 0.55
   grabEnd: 0.35
   m_parentHeldObject: 0

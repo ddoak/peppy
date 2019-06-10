@@ -557,8 +557,18 @@ public class PolyPepManager : MonoBehaviour {
 		phiTarget = phi;
 		psiTarget = psi;
 		
-		phiSliderUI.value = phi;
-		psiSliderUI.value = psi;
+		
+		// fix for NullReference on Start() race?
+		// ref should be set on Awake() above
+		if (phiSliderUI)
+		{
+			phiSliderUI.value = phi;
+		}
+		if (psiSliderUI)
+		{
+			psiSliderUI.value = psi;
+		}
+
 
 		UpdatePhiPsiForPolyPeptides();
 	}

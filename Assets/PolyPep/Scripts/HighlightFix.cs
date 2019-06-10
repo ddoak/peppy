@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using ControllerSelection;
 
 
 
@@ -24,10 +25,19 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public bool isHovered;
 
+	public AudioClip hapticAudioClip;
+
+	// keep track of active controller - 
+	public OVRInput.Controller activeController = OVRInput.Controller.None;
+
+
+
 	void Start()
 	{
 		SetUpRectTransformScales();
 		UpdateToggleLatch();
+
+		hapticAudioClip = Resources.Load("Audio/hap01_12", typeof(AudioClip)) as AudioClip;
 	}
 
 	private void SetUpRectTransformScales ()
@@ -85,6 +95,24 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		//}
 
 		isHovered = true;
+
+		{
+			OVRHapticsClip hapticsClip = new OVRHapticsClip(hapticAudioClip);
+
+			//Debug.Log(OVRInput.GetActiveController());
+
+
+			if (activeController == OVRInput.Controller.LTouch)
+			{
+				OVRHaptics.LeftChannel.Preempt(hapticsClip);
+			}
+			else if (activeController == OVRInput.Controller.RTouch)
+			{
+				OVRHaptics.RightChannel.Preempt(hapticsClip);
+			}
+		}
+
+
 		//EventSystem.current.SetSelectedGameObject(this.gameObject);
 
 		//Debug.Log("highlight fix enter");
@@ -191,11 +219,11 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		UpdateRTScale();
 		//Debug.Log(EventSystem.current.currentSelectedGameObject);
 		//Debug.Log(EventSystem.current.IsPointerOverGameObject());
-		
+
 
 		//Debug.Log(EventSystem.current.isFocused);
 
-
+		activeController = OVRInputHelpers.GetControllerForButton(OVRInput.Button.PrimaryIndexTrigger, activeController);
 	}
 }
 //
