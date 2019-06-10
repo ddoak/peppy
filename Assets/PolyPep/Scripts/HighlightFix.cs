@@ -25,19 +25,16 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public bool isHovered;
 
-	public AudioClip hapticAudioClip;
-
-	// keep track of active controller - 
-	public OVRInput.Controller activeController = OVRInput.Controller.None;
-
-
+	public HapticManager myHapticManager;
+	public AudioManager myAudioManager;
 
 	void Start()
 	{
 		SetUpRectTransformScales();
 		UpdateToggleLatch();
 
-		hapticAudioClip = Resources.Load("Audio/hap01_12", typeof(AudioClip)) as AudioClip;
+		myHapticManager = GameObject.Find("HapticManager").GetComponent<HapticManager>();
+		myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 	}
 
 	private void SetUpRectTransformScales ()
@@ -96,22 +93,8 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 		isHovered = true;
 
-		{
-			OVRHapticsClip hapticsClip = new OVRHapticsClip(hapticAudioClip);
-
-			//Debug.Log(OVRInput.GetActiveController());
-
-
-			if (activeController == OVRInput.Controller.LTouch)
-			{
-				OVRHaptics.LeftChannel.Preempt(hapticsClip);
-			}
-			else if (activeController == OVRInput.Controller.RTouch)
-			{
-				OVRHaptics.RightChannel.Preempt(hapticsClip);
-			}
-		}
-
+		myHapticManager.PlayHapticOnEnter();
+		myAudioManager.PlayAudioOnEnter();
 
 		//EventSystem.current.SetSelectedGameObject(this.gameObject);
 
@@ -179,6 +162,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 					ColorBlock colors = myToggle.colors;
 					colors.normalColor = myToggle.colors.highlightedColor;
 					myToggle.colors = colors;
+					
 				}
 			}
 			else
@@ -191,6 +175,9 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 				ColorBlock colors = myToggle.colors;
 				colors.normalColor = normalColor;
 				myToggle.colors = colors;
+
+
+
 			}
 		}
 	}
@@ -219,11 +206,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		UpdateRTScale();
 		//Debug.Log(EventSystem.current.currentSelectedGameObject);
 		//Debug.Log(EventSystem.current.IsPointerOverGameObject());
-
-
 		//Debug.Log(EventSystem.current.isFocused);
-
-		activeController = OVRInputHelpers.GetControllerForButton(OVRInput.Button.PrimaryIndexTrigger, activeController);
 	}
 }
 //

@@ -70,6 +70,9 @@ public class PolyPepManager : MonoBehaviour {
 
 	public GameObject myPlayerController;
 
+	public AudioManager myAudioManager;
+
+
 	public List<Toggle> aaTogglesList = new List<Toggle> { };
 
 
@@ -163,6 +166,7 @@ public class PolyPepManager : MonoBehaviour {
 
 		mySnapshotCamera = GameObject.Find("SnapshotCamera_pf");
 
+		myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 	}
 
 	void Start()
@@ -373,6 +377,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateCollidersFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
 		collidersOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
@@ -383,6 +388,8 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateFreezeFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+
+		myAudioManager.PlayOnOffSfx(value);
 
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
@@ -412,6 +419,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateHbondOnFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
 		hbondsOn = value;
 		PushHbondStrengthUpdate();
 	}
@@ -426,6 +434,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateShowDrivenBondsOnFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
 		showDrivenBondsOn = value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
@@ -608,21 +617,25 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateShowElectrostaticsFromUI(bool value)
 	{
 		electrostaticsManager.showElectrostatics = value;
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 	public void UpdateAllResidueLabelsOnFromUI(bool value)
 	{
 		allResLabelsOn = value;
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 	public void UpdateShowPeptidePlanesOnFromUI(bool value)
 	{
 		 showPeptidePlanes= value;
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 	public void UpdateShowPhiPsiTrailOnFromUI(bool value)
 	{
 		showPhiPsiTrail = value;
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 
@@ -750,6 +763,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void UpdateShowHAtomsFromUI(bool value)
 	{
 		//Debug.Log("Click from UI: " + value);
+		myAudioManager.PlayOnOffSfx(value);
 		// TODO - store value, bond rendering
 		showHydrogenAtoms = value;
 		{
@@ -787,6 +801,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void TogglePanel02FromUI(bool value)
 	{
 		//Debug.Log("Click from TogglePanel02FromUI: " + value);
+		myAudioManager.PlayOnOffSfx(value);
 		UIPanelSideChains.SetActive(value);
 		
 	}
@@ -806,6 +821,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void TogglePanel03FromUI(bool value)
 	{
 		//Debug.Log("Click from TogglePanel03FromUI: " + value);
+		myAudioManager.PlayOnOffSfx(value);
 		UIPanelCamera.SetActive(value);
 
 		mySnapshotCamera.transform.position = snapshotCameraResetTransform.position;
@@ -834,6 +850,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void TogglePanelInfoFromUI(bool value)
 	{
 		UIPanelInfo.SetActive(value);
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 	private void UpdatePanelInfoPos()
