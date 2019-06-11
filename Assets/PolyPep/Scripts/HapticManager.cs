@@ -17,7 +17,9 @@ public class HapticManager : MonoBehaviour
 	void Start()
     {
 		//hapticAudioClip = Resources.Load("Audio/Click_Soft_01", typeof(AudioClip)) as AudioClip;
-		hapticAudioClip = Resources.Load("Audio/Mouth_07", typeof(AudioClip)) as AudioClip;
+		//hapticAudioClip = Resources.Load("Audio/FX13 - Bleep 2", typeof(AudioClip)) as AudioClip;
+		//hapticAudioClip = Resources.Load("Audio/DM-CGS-21", typeof(AudioClip)) as AudioClip;
+		hapticAudioClip = Resources.Load("Audio/FX2", typeof(AudioClip)) as AudioClip;
 	}
 
 	public void PlayHapticOnEnter()
