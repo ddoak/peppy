@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-	public AudioSource audioSource;
+	public AudioSource audioSource1;
+	public AudioSource audioSource2;
 
 	public AudioClip enterAudioClip;
 	public AudioClip latchOnAudioClip;
 	public AudioClip latchOffAudioClip;
+
+	public AudioClip selectOnAudioClip;
+	public AudioClip selectOffAudioClip;
+	public AudioClip selectInvertAudioClip;
+
+	public AudioClip setSecondaryAudioClip;
+
+	public AudioClip spawnAudioClip;
+
+	public float masterVolume = 1.0f;
 
 	float lastEnterTime = 0f;
 	float retriggerThreshold = 0.2f;
@@ -16,21 +27,28 @@ public class AudioManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		enterAudioClip = Resources.Load("Audio/blip_over02", typeof(AudioClip)) as AudioClip;
-		latchOnAudioClip = Resources.Load("Audio/Pickup_on01", typeof(AudioClip)) as AudioClip;
-		latchOffAudioClip = Resources.Load("Audio/Pickup_off01", typeof(AudioClip)) as AudioClip;
+		enterAudioClip = Resources.Load("Audio/Click03a", typeof(AudioClip)) as AudioClip;
+
+		spawnAudioClip = Resources.Load("Audio/FX3", typeof(AudioClip)) as AudioClip;
+
+		latchOnAudioClip = Resources.Load("Audio/FX55", typeof(AudioClip)) as AudioClip;
+		latchOffAudioClip = Resources.Load("Audio/FX56", typeof(AudioClip)) as AudioClip;
+
+		selectOnAudioClip = Resources.Load("Audio/FX58", typeof(AudioClip)) as AudioClip;
+		selectOffAudioClip = Resources.Load("Audio/FX59", typeof(AudioClip)) as AudioClip;
+		selectInvertAudioClip = Resources.Load("Audio/FX60", typeof(AudioClip)) as AudioClip;
+
+		setSecondaryAudioClip = Resources.Load("Audio/FX10", typeof(AudioClip)) as AudioClip;
 	}
+
 
 	public void PlayAudioOnEnter()
 	{
 		if (Time.time > (lastEnterTime + retriggerThreshold))
 		{
 			lastEnterTime = Time.time;
-
-			audioSource.clip = enterAudioClip;
-			audioSource.volume = 0.25f;
-			audioSource.pitch = 1.0f;
-			audioSource.Play();
+			PlayAudio(audioSource1, enterAudioClip, 0.2f);
+			audioSource1.Play();
 		}
 	}
 
@@ -48,22 +66,62 @@ public class AudioManager : MonoBehaviour
 
 	public void PlayLatchOn()
 	{
-		audioSource.clip = latchOnAudioClip;
-		audioSource.volume = 0.2f;
-		audioSource.pitch = 1.0f;
-		audioSource.Play();
+		PlayAudio(audioSource2, latchOnAudioClip, 0.2f);
 	}
 
 	public void PlayLatchOff()
 	{
-		audioSource.clip = latchOffAudioClip;
-		audioSource.volume = 0.2f;
-		audioSource.pitch = 1.0f;
+		PlayAudio(audioSource2, latchOffAudioClip, 0.2f);
+	}
+
+
+	public void PlaySelectSfx(bool value)
+	{
+		if (value == true)
+		{
+			PlaySelectOn();
+		}
+		else
+		{
+			PlaySelectOff();
+		}
+	}
+
+	public void PlaySelectOn()
+	{
+		PlayAudio(audioSource2, selectOnAudioClip, 0.2f);
+	}
+
+	public void PlaySelectOff()
+	{
+		PlayAudio(audioSource2, selectOffAudioClip, 0.2f);
+	}
+
+	public void PlaySelectInvert()
+	{
+		PlayAudio(audioSource2, selectInvertAudioClip, 0.2f);
+	}
+
+	public void PlaySpawn()
+	{
+		PlayAudio(audioSource2, spawnAudioClip, 0.2f);
+	}
+
+	public void PlaySetSecondary()
+	{
+		PlayAudio(audioSource2, setSecondaryAudioClip, 0.1f);
+	}
+
+	private void PlayAudio(AudioSource audioSource, AudioClip audioclip, float volume)
+	{
+		audioSource.clip = audioclip;
+		audioSource.volume = volume * masterVolume;
+		audioSource.pitch = 1f;
 		audioSource.Play();
 	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
         
     }

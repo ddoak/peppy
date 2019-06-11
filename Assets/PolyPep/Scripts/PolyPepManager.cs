@@ -325,11 +325,21 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void SpawnSliderIncrement(int delta)
 	{
+		if (delta == 1)
+		{
+			myAudioManager.PlayLatchOn();
+		}
+		if (delta == -1)
+		{
+			myAudioManager.PlayLatchOff();
+		}
 		spawnLengthSliderUI.GetComponent<Slider>().value += delta;
 	}
 
 	public void SpawnPolypeptide(Transform spawnTransform)
 	{
+		myAudioManager.PlaySpawn();
+
 		//if (!collidersOn)
 		{
 			int numResidues = (int)spawnLengthSliderUI.GetComponent<Slider>().value;
@@ -467,6 +477,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void ZeroAllPhiPsiTorqueFromUI()
 	{
+		myAudioManager.PlaySelectOff();
 		phiPsiDriveSliderUI.value = 0;
 		phiPsiDriveTorqueFromUI = phiPsiDriveSliderUI.value;
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
@@ -479,6 +490,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void SelectAllFromUI(bool value)
 	{
 		//Debug.Log("Select All from the manager! ---> " +  value);
+		myAudioManager.PlaySelectSfx(value);
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.SetGlobalSelect(value);
@@ -487,6 +499,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void SelectionInvertFromUI()
 	{
+		myAudioManager.PlaySelectInvert();
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.InvertSelection();
@@ -518,6 +531,12 @@ public class PolyPepManager : MonoBehaviour {
 		float phi = phiTarget;
 		float psi = psiTarget;
 		//switch (UIDefinedSecondaryStructure)
+
+		if ((value > 0) && myAudioManager)
+		{
+			myAudioManager.PlaySetSecondary();
+		}
+
 		switch (value)
 		{
 			case 0:     
@@ -732,7 +751,8 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("Make Disulphide " + numSelectedCYS + " CYS residues selected");
 		if (numSelectedCYS == 2)
 		{
-				sideChainBuilder.MakeDisulphide(pp1, resid1, pp2, resid2);
+			myAudioManager.PlaySetSecondary();
+			sideChainBuilder.MakeDisulphide(pp1, resid1, pp2, resid2);
 		}
 	}
 
@@ -868,6 +888,7 @@ public class PolyPepManager : MonoBehaviour {
 	public void TogglePanelControlsFromUI(bool value)
 	{
 		UIPanelControls.SetActive(value);
+		myAudioManager.PlayOnOffSfx(value);
 	}
 
 	private void UpdatePanelControlsPos()

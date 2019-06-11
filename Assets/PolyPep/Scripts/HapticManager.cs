@@ -16,7 +16,8 @@ public class HapticManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		hapticAudioClip = Resources.Load("Audio/hap01_12", typeof(AudioClip)) as AudioClip;
+		//hapticAudioClip = Resources.Load("Audio/Click_Soft_01", typeof(AudioClip)) as AudioClip;
+		hapticAudioClip = Resources.Load("Audio/Mouth_07", typeof(AudioClip)) as AudioClip;
 	}
 
 	public void PlayHapticOnEnter()
