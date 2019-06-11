@@ -52,6 +52,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider jiggleStrengthSliderUI;
 	public Slider dragStrengthSliderUI;
 	public Slider electrostaticsStrengthSliderUI;
+	public Slider sfxVolumeSliderUI;
 
 	private int testCount = 0;
 	public GameObject snapshotCamera_pf;
@@ -130,6 +131,7 @@ public class PolyPepManager : MonoBehaviour {
 		temp = GameObject.Find("Slider_ElectrostaticsStrength");
 		electrostaticsStrengthSliderUI = temp.GetComponent<Slider>();
 
+		sfxVolumeSliderUI = GameObject.Find("Slider_SfxVolume").GetComponent<Slider>();
 
 		temp = GameObject.Find("SideChainBuilder");
 		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
@@ -153,7 +155,7 @@ public class PolyPepManager : MonoBehaviour {
 		UIPanelControls = GameObject.Find("UI_PanelControls");
 		UIControlsActiveTf = GameObject.Find("ControlsActivePos").transform;
 		UIControlsNotActiveTf = GameObject.Find("ControlsNotActivePos").transform;
-		UIPanelControls.SetActive(false);
+		//UIPanelControls.SetActive(false);
 
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
@@ -186,9 +188,9 @@ public class PolyPepManager : MonoBehaviour {
 			dragStrengthSliderUI.GetComponent<Slider>().value = 0;
 
 			electrostaticsStrengthSliderUI.GetComponent<Slider>().value = 0;
-
 			electrostaticsManager.electrostaticsStrength = electrostaticsStrengthSliderUI.GetComponent<Slider>().value;
 
+			sfxVolumeSliderUI.GetComponent<Slider>().value = 5;
 			//temp = GameObject.Find("Slider_ResStart");
 
 			//resStartSliderUI = temp.GetComponent<Slider>();
@@ -230,7 +232,7 @@ public class PolyPepManager : MonoBehaviour {
 		// hide inactive UI 
 		UIPanelSideChains.SetActive(false);
 		UIPanelCamera.SetActive(false);
-
+		UIPanelControls.SetActive(false);
 
 	}
 
@@ -306,6 +308,7 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (Slider _slider in sliders)
 		{
 			//Debug.Log(_toggle.colors.normalColor);
+			Debug.Log(_slider);
 
 			ColorBlock colors = _slider.colors;
 			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);

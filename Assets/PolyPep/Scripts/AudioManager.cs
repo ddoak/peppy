@@ -17,6 +17,8 @@ public class AudioManager : MonoBehaviour
 
 	public AudioClip setSecondaryAudioClip;
 
+	public AudioClip selectGenericAudioClip;
+
 	public AudioClip spawnAudioClip;
 
 	public float masterVolume = 1.0f;
@@ -39,15 +41,23 @@ public class AudioManager : MonoBehaviour
 		selectInvertAudioClip = Resources.Load("Audio/FX60", typeof(AudioClip)) as AudioClip;
 
 		setSecondaryAudioClip = Resources.Load("Audio/FX10", typeof(AudioClip)) as AudioClip;
+
+		selectGenericAudioClip = Resources.Load("Audio/FX51 - Select 4", typeof(AudioClip)) as AudioClip;
+
 	}
 
+	public void UpdateSfxVolumeFromUI(float sfxVolume)
+	{
+		masterVolume = sfxVolume * 10f / 25f;
+		PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
+	}
 
 	public void PlayAudioOnEnter()
 	{
 		if (Time.time > (lastEnterTime + retriggerThreshold))
 		{
 			lastEnterTime = Time.time;
-			PlayAudio(audioSource1, enterAudioClip, 0.2f);
+			PlayAudio(audioSource1, enterAudioClip, 0.1f);
 			audioSource1.Play();
 		}
 	}
