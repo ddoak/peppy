@@ -110,6 +110,8 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL
         passType: 5
+      - keywords: SHADOWS_DEPTH
+        passType: 8
   - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -148,6 +150,11 @@ ShaderVariantCollection:
       - keywords: 
         passType: 0
   - first: {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9006, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: 
@@ -209,11 +216,6 @@ ShaderVariantCollection:
       - keywords: 
         passType: 0
   - first: {fileID: 4800000, guid: ced943c76cb8fb8489bab18c3dfcdcd3, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 0
-  - first: {fileID: 9006, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: 

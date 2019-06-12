@@ -7,6 +7,15 @@
 /Assets/OVRInputSelection/Meshes/
 /Assets/Snapshots/*
 
+/Assets/Oculus/AudioManager
+/Assets/Oculus/Avatar
+/Assets/Oculus/LipSync
+/Assets/Oculus/Platform
+/Assets/Oculus/SampleFramework
+/Assets/Oculus/Spatializer
+/Assets/Oculus/VoiceMod
+/Assets/Oculus/VR
+
 # Visual Studio 2015 cache directory
 /.vs/
 
