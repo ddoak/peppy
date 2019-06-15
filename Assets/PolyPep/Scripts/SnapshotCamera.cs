@@ -31,6 +31,9 @@ public class SnapshotCamera : MonoBehaviour {
 
 	}
 
+
+
+
 	public void CamCapture()
 	{
 		Camera Cam = GetComponent<Camera>();
@@ -51,7 +54,7 @@ public class SnapshotCamera : MonoBehaviour {
 		string directoryPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/PeppySnapshots";
 
 		//check if directory doesn't exit
-		if (!Directory.Exists(directoryPath))
+		if (true) //(!Directory.Exists(directoryPath))
 		{
 			//if it doesn't, create it
 			Directory.CreateDirectory(directoryPath);
@@ -65,7 +68,7 @@ public class SnapshotCamera : MonoBehaviour {
 		//dateTime = dateTime.Replace(@"/", "_");
 		//dateTime = "xx";
 
-		string snapshotFilename = directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount  + ".png";
+		string snapshotFilename = directoryPath + "/" + userName + "_PeppySnapshot_" + imageCount + ".png";
 
 		bool validFilename = false;
 
@@ -87,14 +90,19 @@ public class SnapshotCamera : MonoBehaviour {
 		//imageCount++;
 	}
 
+
 	private void UpdateOverlay()
 	{
 		overlayTextTop.text = "Snapshot: " + imageCount.ToString();
 		overlayTextBottom.text = userName + " " + DateTime.Now.ToString();
 
-
-
+		// quest should use android filepath
+		// no useful info online
+		//overlayTextBottom.text = Application.persistentDataPath;
 		
+
+
+
 
 
 		//ToShortTimeString();
