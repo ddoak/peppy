@@ -6,6 +6,8 @@ public class AudioManager : MonoBehaviour
 {
 	public AudioSource audioSource1;
 	public AudioSource audioSource2;
+	public AudioSource audioSource3bgm;
+
 
 	public AudioClip enterAudioClip;
 	public AudioClip latchOnAudioClip;
@@ -21,10 +23,16 @@ public class AudioManager : MonoBehaviour
 
 	public AudioClip spawnAudioClip;
 
+	public AudioClip chirpAudioClip;
+
 	public float masterVolume = 1.0f;
+	public float bgmVolume = 0f;
 
 	float lastEnterTime = 0f;
 	float retriggerThreshold = 0.2f;
+
+	float lastSliderSoundTime = 0f;
+	float retriggerSliderSoundThreshold = 0.11f;
 
 	// Start is called before the first frame update
 	void Start()
@@ -44,12 +52,32 @@ public class AudioManager : MonoBehaviour
 
 		selectGenericAudioClip = Resources.Load("Audio/FX51 - Select 4", typeof(AudioClip)) as AudioClip;
 
+		chirpAudioClip = Resources.Load("Audio/chirp03", typeof(AudioClip)) as AudioClip;
+
 	}
 
 	public void UpdateSfxVolumeFromUI(float sfxVolume)
 	{
 		masterVolume = sfxVolume * 10f / 25f;
 		PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
+	}
+
+	public void UpdateBgmVolumeFromUI(float bgmVolume)
+	{
+		audioSource3bgm.volume = bgmVolume  / 50f;
+		PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
+	}
+
+	public void PlayGenericSliderSound(float value)
+	{
+		if (Time.time > (lastSliderSoundTime + retriggerSliderSoundThreshold))
+		{
+			lastSliderSoundTime = Time.time;
+			//if (value%10 == 0)
+			{
+				PlayAudio(audioSource1, chirpAudioClip, value/200f);
+			}
+		}
 	}
 
 	public void PlayAudioOnEnter()

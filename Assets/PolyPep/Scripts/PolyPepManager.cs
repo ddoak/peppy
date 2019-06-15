@@ -53,6 +53,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider dragStrengthSliderUI;
 	public Slider electrostaticsStrengthSliderUI;
 	public Slider sfxVolumeSliderUI;
+	public Slider bgmVolumeSliderUI;
 
 	private int testCount = 0;
 	public GameObject snapshotCamera_pf;
@@ -132,6 +133,7 @@ public class PolyPepManager : MonoBehaviour {
 		electrostaticsStrengthSliderUI = temp.GetComponent<Slider>();
 
 		sfxVolumeSliderUI = GameObject.Find("Slider_SfxVolume").GetComponent<Slider>();
+		bgmVolumeSliderUI = GameObject.Find("Slider_BgmVolume").GetComponent<Slider>();
 
 		temp = GameObject.Find("SideChainBuilder");
 		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
@@ -191,6 +193,7 @@ public class PolyPepManager : MonoBehaviour {
 			electrostaticsManager.electrostaticsStrength = electrostaticsStrengthSliderUI.GetComponent<Slider>().value;
 
 			sfxVolumeSliderUI.GetComponent<Slider>().value = 5;
+			bgmVolumeSliderUI.GetComponent<Slider>().value = 0;
 			//temp = GameObject.Find("Slider_ResStart");
 
 			//resStartSliderUI = temp.GetComponent<Slider>();
