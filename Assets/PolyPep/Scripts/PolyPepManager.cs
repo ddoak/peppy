@@ -70,6 +70,13 @@ public class PolyPepManager : MonoBehaviour {
 	private Transform UIControlsActiveTf;
 	private Transform UIControlsNotActiveTf;
 
+
+	//WIP
+	public GameObject testGO;
+	public Image testImage;
+
+
+
 	public GameObject myPlayerController;
 
 	public AudioManager myAudioManager;
@@ -159,6 +166,9 @@ public class PolyPepManager : MonoBehaviour {
 		UIControlsNotActiveTf = GameObject.Find("ControlsNotActivePos").transform;
 		//UIPanelControls.SetActive(false);
 
+		testGO = GameObject.Find("Panel bg controls");
+		testImage = testGO.GetComponent<Image>();
+
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
 
@@ -220,6 +230,10 @@ public class PolyPepManager : MonoBehaviour {
 			//UIPanelSideChains.SetActive(false);
 			//UIPanelCamera.SetActive(false);
 
+			testImage.color = Color.white;
+			var tempColor = testImage.color;
+			tempColor.a = 0.01f;
+			testImage.color = tempColor;
 
 		}
 
@@ -840,7 +854,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 		if (UIPanelSideChains.activeSelf == false)
 		{
-			UIPanelSideChains.transform.position = Vector3.Lerp(UIPanelSideChains.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelSideChains.transform.position = Vector3.Lerp(UIPanelSideChains.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * 1.0f)), ((Time.deltaTime / 0.01f) * 0.05f));
 		}
 	}
 
@@ -869,7 +883,7 @@ public class PolyPepManager : MonoBehaviour {
 		}
 		if (UIPanelCamera.activeSelf == false)
 		{
-			UIPanelCamera.transform.position = Vector3.Lerp(UIPanelCamera.transform.position, UI.transform.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelCamera.transform.position = Vector3.Lerp(UIPanelCamera.transform.position, (UI.transform.position + (UI.transform.forward * 0.01f) + (UI.transform.right * -1.0f)), ((Time.deltaTime / 0.01f) * 0.05f));
 		}
 	}
 
@@ -884,10 +898,12 @@ public class PolyPepManager : MonoBehaviour {
 		if (UIPanelInfo.activeSelf == true)
 		{
 			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelInfo.transform.localScale = Vector3.Lerp(UIPanelInfo.transform.localScale, UIInfoActiveTf.localScale, ((Time.deltaTime / 0.01f) * 0.15f));
 		}
 		if (UIPanelInfo.activeSelf == false)
 		{
 			UIPanelInfo.transform.position = Vector3.Lerp(UIPanelInfo.transform.position, UIInfoNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelInfo.transform.localScale = Vector3.Lerp(UIPanelInfo.transform.localScale, UIInfoNotActiveTf.localScale, ((Time.deltaTime / 0.01f) * 0.15f));
 		}
 	}
 
@@ -902,12 +918,23 @@ public class PolyPepManager : MonoBehaviour {
 		if (UIPanelControls.activeSelf == true)
 		{
 			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelControls.transform.localScale = Vector3.Lerp(UIPanelControls.transform.localScale, UIControlsActiveTf.localScale, ((Time.deltaTime / 0.01f) * 0.15f));
 		}
 		if (UIPanelControls.activeSelf == false)
 		{
 			UIPanelControls.transform.position = Vector3.Lerp(UIPanelControls.transform.position, UIControlsNotActiveTf.position + (UI.transform.forward * 0.01f), ((Time.deltaTime / 0.01f) * 0.05f));
+			UIPanelControls.transform.localScale = Vector3.Lerp(UIPanelControls.transform.localScale, UIControlsNotActiveTf.localScale, ((Time.deltaTime / 0.01f) * 0.15f));
 		}
 	}
+
+	public void UpdateUIAlphaFromUI(float value)
+	{
+		testImage.color = Color.white;
+		var tempColor = testImage.color;
+		tempColor.a = value/100f;
+		testImage.color = tempColor;
+	}
+
 
 	private void UpdateKeepGameObjectAccessible(GameObject go, float minY, float maxY)
 	{
