@@ -54,6 +54,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Slider electrostaticsStrengthSliderUI;
 	public Slider sfxVolumeSliderUI;
 	public Slider bgmVolumeSliderUI;
+	public Slider uiAlphaSliderUI;
 
 	private int testCount = 0;
 	public GameObject snapshotCamera_pf;
@@ -72,8 +73,8 @@ public class PolyPepManager : MonoBehaviour {
 
 
 	//WIP
-	public GameObject testGO;
-	public Image testImage;
+	public List<Image> uiBgImages = new List<Image>();
+	//public Image UIControlsBgImage;
 
 
 
@@ -141,6 +142,7 @@ public class PolyPepManager : MonoBehaviour {
 
 		sfxVolumeSliderUI = GameObject.Find("Slider_SfxVolume").GetComponent<Slider>();
 		bgmVolumeSliderUI = GameObject.Find("Slider_BgmVolume").GetComponent<Slider>();
+		uiAlphaSliderUI = GameObject.Find("Slider_UI_Alpha").GetComponent<Slider>();
 
 		temp = GameObject.Find("SideChainBuilder");
 		sideChainBuilder = temp.GetComponent<SideChainBuilder>();
@@ -148,7 +150,16 @@ public class PolyPepManager : MonoBehaviour {
 		temp = GameObject.Find("ElectrostaticsManager");
 		electrostaticsManager = temp.GetComponent<ElectrostaticsManager>();
 
+
+
 		UI = GameObject.Find("UI");
+
+		// get UI bg images 
+		uiBgImages.Add(GameObject.Find("Panel bg Controls").GetComponent<Image>());
+		uiBgImages.Add(GameObject.Find("Panel bg Sidechains").GetComponent<Image>());
+		uiBgImages.Add(GameObject.Find("Panel bg Camera").GetComponent<Image>());
+		uiBgImages.Add(GameObject.Find("Panel bg Info").GetComponent<Image>());
+		uiBgImages.Add(GameObject.Find("Panel bg Main").GetComponent<Image>());
 
 		UIPanelSideChains = GameObject.Find("UI_PanelSideChains");
 		//UIPanelSideChains.SetActive(false);
@@ -165,9 +176,6 @@ public class PolyPepManager : MonoBehaviour {
 		UIControlsActiveTf = GameObject.Find("ControlsActivePos").transform;
 		UIControlsNotActiveTf = GameObject.Find("ControlsNotActivePos").transform;
 		//UIPanelControls.SetActive(false);
-
-		testGO = GameObject.Find("Panel bg controls");
-		testImage = testGO.GetComponent<Image>();
 
 
 		snapshotCameraResetTransform = GameObject.Find("CameraResetPos").transform;
@@ -204,6 +212,9 @@ public class PolyPepManager : MonoBehaviour {
 
 			sfxVolumeSliderUI.GetComponent<Slider>().value = 5;
 			bgmVolumeSliderUI.GetComponent<Slider>().value = 0;
+
+			uiAlphaSliderUI.GetComponent<Slider>().value = 50;
+
 			//temp = GameObject.Find("Slider_ResStart");
 
 			//resStartSliderUI = temp.GetComponent<Slider>();
@@ -230,10 +241,12 @@ public class PolyPepManager : MonoBehaviour {
 			//UIPanelSideChains.SetActive(false);
 			//UIPanelCamera.SetActive(false);
 
-			testImage.color = Color.white;
-			var tempColor = testImage.color;
-			tempColor.a = 0.01f;
-			testImage.color = tempColor;
+			//SetAllUIBgImageAlpha(0.1f);
+
+			//UIControlsBgImage.color = Color.white;
+			//var tempColor = UIControlsBgImage.color;
+			//tempColor.a = 0.01f;
+			//UIControlsBgImage.color = tempColor;
 
 		}
 
@@ -929,10 +942,18 @@ public class PolyPepManager : MonoBehaviour {
 
 	public void UpdateUIAlphaFromUI(float value)
 	{
-		testImage.color = Color.white;
-		var tempColor = testImage.color;
-		tempColor.a = value/100f;
-		testImage.color = tempColor;
+		SetAllUIBgImageAlpha(value / 100f);
+	}
+
+	private void SetAllUIBgImageAlpha(float alpha)
+	{
+		foreach (Image _image in uiBgImages)
+		{
+			_image.color = Color.white;
+			var tempColor = _image.color;
+			tempColor.a = alpha;
+			_image.color = tempColor;
+		}
 	}
 
 
