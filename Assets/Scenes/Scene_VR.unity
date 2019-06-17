@@ -5492,7 +5492,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &197267054
 GameObject:
   m_ObjectHideFlags: 0
@@ -39981,7 +39981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 158226, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 463470, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51077,7 +51077,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1715164038
 GameObject:
   m_ObjectHideFlags: 0
@@ -56159,6 +56159,7 @@ MonoBehaviour:
   backIdle: {fileID: 0}
   backACtive: {fileID: 0}
   outText: {fileID: 0}
+  myHapticManager: {fileID: 59879571}
 --- !u!1 &1919917514
 GameObject:
   m_ObjectHideFlags: 0

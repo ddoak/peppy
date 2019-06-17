@@ -30,6 +30,8 @@ public class RawInteraction : MonoBehaviour {
     public Material backACtive;
     public UnityEngine.UI.Text outText;
 
+	public HapticManager myHapticManager;
+
     public void OnHoverEnter(Transform t) {
         if (t.gameObject.name == "BackButton") {
             t.gameObject.GetComponent<Renderer>().material = backACtive;
@@ -42,6 +44,10 @@ public class RawInteraction : MonoBehaviour {
 			if (bu != null)
 			{
 				//Debug.Log("      --> script");
+				if (bu.controllerHoverOn == false)
+				{
+					myHapticManager.PlayHapticOnEnter();
+				}
 				bu.SetBackboneUnitControllerHover(true);
 			}
 
