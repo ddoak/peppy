@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7963475641608674137}
   - component: {fileID: 7963475641608674138}
   - component: {fileID: 7963475641608674139}
+  - component: {fileID: 1227130069}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -44,9 +45,10 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -82,6 +84,23 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7963475641608674132}
   m_Enabled: 1
+--- !u!114 &1227130069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7963475641608674132}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 980ec56338046294f9789afcd84d1b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MouseSensitivity: 4
+  ScrollSensitvity: 2
+  OrbitDampening: 10
+  ScrollDampening: 6
+  CameraDisabled: 0
 --- !u!1 &7963475641953327513
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,9 +111,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7963475641953327512}
   - component: {fileID: 7963475641953327519}
-  - component: {fileID: 7963475641953327518}
+  - component: {fileID: 1587617339}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerNonVR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,7 +153,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7963475641953327518
+--- !u!114 &1587617339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,12 +162,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 7963475641953327513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b89ded445d4fc4c66871891558d00226, type: 3}
+  m_Script: {fileID: 11500000, guid: 326a5abc37e1be1499b2a56c2aea590d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
   gravity: 20
   controller: {fileID: 0}
+  sensitivity: 2.5
+  smoothing: 10
+  myMI: {fileID: 0}
+  lastHit: {fileID: 0}
+  hitPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &7963475641976263136
 GameObject:
   m_ObjectHideFlags: 0

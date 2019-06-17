@@ -70,7 +70,7 @@ public class MouseInteraction : MonoBehaviour
 
 		if (tractorBeamActive)
 		{
-			TractorBeam(go, ray.origin, attract, tractorBeamScale);
+			GetComponent<TractorBeam>().DoTractorBeam(go, ray.origin, attract, tractorBeamScale);
 		}
 
 
@@ -327,39 +327,40 @@ public class MouseInteraction : MonoBehaviour
 		{
 			//Debug.Log("      --> script");
 			//bu.TractorBeam(destination, true, 3.0f);
-			TractorBeam(go, destination, true, 5.0f);
+			//TractorBeam(go, destination, true, 5.0f);
+			GetComponent<TractorBeam>().DoTractorBeam(go, destination, true, 5.0f);
 		}
 
 
 	}
 
-	public void TractorBeam(GameObject go, Vector3 position, bool attract, float scale)
-	{
+	//public void TractorBeam(GameObject go, Vector3 position, bool attract, float scale)
+	//{
 
-		//Debug.Log("tractor beam me!");
+	//	//Debug.Log("tractor beam me!");
 
-		float tractorBeamAttractionFactor = scale * 100.0f;
-		float tractorBeamMin = scale * 100.0f;
-		float tractorBeamDistanceRatio = 400f / scale; // larger = weaker
-
-
-		Vector3 tractorBeam = position - go.transform.position;
-		float tractorBeamMagnitude = Vector3.Magnitude(tractorBeam);
-		//tractorBeamMagnitude = Mathf.Min(1.0f, tractorBeamMagnitude);
-
-		if (!attract)
-		{
-			// repel
-			tractorBeam = go.transform.position - position;
-		}
-		float tractorBeamScale = Mathf.Max(tractorBeamMin, (tractorBeamAttractionFactor * tractorBeamMagnitude / tractorBeamDistanceRatio));
+	//	float tractorBeamAttractionFactor = scale * 100.0f;
+	//	float tractorBeamMin = scale * 100.0f;
+	//	float tractorBeamDistanceRatio = 400f / scale; // larger = weaker
 
 
-		go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
-		// add scaling for 'size' of target?
+	//	Vector3 tractorBeam = position - go.transform.position;
+	//	float tractorBeamMagnitude = Vector3.Magnitude(tractorBeam);
+	//	//tractorBeamMagnitude = Mathf.Min(1.0f, tractorBeamMagnitude);
+
+	//	if (!attract)
+	//	{
+	//		// repel
+	//		tractorBeam = go.transform.position - position;
+	//	}
+	//	float tractorBeamScale = Mathf.Max(tractorBeamMin, (tractorBeamAttractionFactor * tractorBeamMagnitude / tractorBeamDistanceRatio));
 
 
-	}
+	//	go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+	//	// add scaling for 'size' of target?
+
+
+	//}
 
 
 }
