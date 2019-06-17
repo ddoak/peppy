@@ -338,7 +338,7 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (Slider _slider in sliders)
 		{
 			//Debug.Log(_toggle.colors.normalColor);
-			Debug.Log(_slider);
+			//Debug.Log(_slider);
 
 			ColorBlock colors = _slider.colors;
 			colors.normalColor = new Color(0.7f, 0.7f, 0.6f); //(0.7f, 0.7f, 0.6f);

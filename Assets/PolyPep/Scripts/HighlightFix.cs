@@ -33,7 +33,15 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		SetUpRectTransformScales();
 		UpdateToggleLatch();
 
-		myHapticManager = GameObject.Find("HapticManager").GetComponent<HapticManager>();
+		if (GameObject.Find("HapticManager"))
+		{
+			myHapticManager = GameObject.Find("HapticManager").GetComponent<HapticManager>();
+		}
+		else
+		{
+			Debug.Log("No Haptic Manager - expected for nonVR");
+		}
+		
 		myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 	}
 
@@ -93,7 +101,10 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 		isHovered = true;
 
-		myHapticManager.PlayHapticOnEnter();
+		if (myHapticManager)
+		{
+			myHapticManager.PlayHapticOnEnter();
+		}
 		myAudioManager.PlayAudioOnEnter();
 
 		//EventSystem.current.SetSelectedGameObject(this.gameObject);
