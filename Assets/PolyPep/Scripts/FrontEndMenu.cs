@@ -8,12 +8,12 @@ public class FrontEndMenu : MonoBehaviour
     
 	public void LoadSceneVR()
 	{
-		SceneManager.LoadScene("Scene_VR");
+		SceneManager.LoadScene("Splash");
 	}
 
 	public void LoadSceneNonVR()
 	{
-		SceneManager.LoadScene("Scene_nonVR");
+		SceneManager.LoadScene("nonVR");
 	}
 
 	// Start is called before the first frame update

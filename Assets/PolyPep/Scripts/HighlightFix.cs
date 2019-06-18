@@ -42,7 +42,16 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 			Debug.Log("No Haptic Manager - expected for nonVR");
 		}
 		
-		myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+
+		if (GameObject.Find("AudioManager"))
+		{
+			myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+		}
+		else
+		{
+			Debug.Log("No Haptic Manager - expected for nonVR / FrontEnd");
+		}
+		
 	}
 
 	private void SetUpRectTransformScales ()
@@ -105,7 +114,11 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		{
 			myHapticManager.PlayHapticOnEnter();
 		}
-		myAudioManager.PlayAudioOnEnter();
+		if (myAudioManager)
+		{
+			myAudioManager.PlayAudioOnEnter();
+		}
+		
 
 		//EventSystem.current.SetSelectedGameObject(this.gameObject);
 
