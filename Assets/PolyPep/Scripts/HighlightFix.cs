@@ -39,7 +39,7 @@ public class HighlightFix : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		}
 		else
 		{
-			Debug.Log("No Haptic Manager - expected for nonVR");
+			//Debug.Log("No Haptic Manager - expected for nonVR");
 		}
 		
 

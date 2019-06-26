@@ -10849,6 +10849,14 @@ MonoBehaviour:
   allPolyPepBuilders: []
   sideChainBuilder: {fileID: 0}
   electrostaticsManager: {fileID: 0}
+  atomMesh: {fileID: 2540817853737639666, guid: 5d74c3b184732964eb0a6464093190d1,
+    type: 3}
+  testMaterial: {fileID: 2100000, guid: 47b1d8aef35d4ab48958fbe1a7bd4154, type: 2}
+  CMaterial: {fileID: 2100000, guid: 1f7626e3b1d06d648861abedc84f87da, type: 2}
+  NMaterial: {fileID: 2100000, guid: 8e7c51985cb3d614197f0102f4699ff3, type: 2}
+  HMaterial: {fileID: 2100000, guid: 3abdbc84295522140b6c773a2fd1484c, type: 2}
+  OMaterial: {fileID: 2100000, guid: 89883594098a26946a03b6ace8ceef32, type: 2}
+  RMaterial: {fileID: 2100000, guid: fe21d9a15d2893d4eaa806c4a09db2ce, type: 2}
   collidersOn: 0
   vdwScale: 1
   dragHigh: 0
@@ -25523,7 +25531,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &854369889
 GameObject:
   m_ObjectHideFlags: 0
@@ -37870,7 +37878,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1348354639
 GameObject:
   m_ObjectHideFlags: 0

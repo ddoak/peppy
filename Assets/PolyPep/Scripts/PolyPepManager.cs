@@ -13,6 +13,14 @@ public class PolyPepManager : MonoBehaviour {
 	public SideChainBuilder sideChainBuilder;
 	public ElectrostaticsManager electrostaticsManager;
 
+	public Mesh atomMesh;
+	public Material testMaterial;
+	public Material CMaterial;
+	public Material NMaterial;
+	public Material HMaterial;
+	public Material OMaterial;
+	public Material RMaterial;
+
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
 
@@ -390,6 +398,8 @@ public class PolyPepManager : MonoBehaviour {
 			allPolyPepBuilders.Add(ppb_cs);
 
 			ppb_cs.sideChainBuilder = sideChainBuilder;
+
+			ppb_cs.perfTestMat = testMaterial;
 		}
 
 	}
@@ -1033,6 +1043,41 @@ public class PolyPepManager : MonoBehaviour {
 		SceneManager.LoadScene("FrontEnd");
 	}
 
+	void UpdateRenderAllAtoms()
+	{
+		Vector3 _scale = new Vector3(vdwScale, vdwScale, vdwScale);
+		_scale = _scale * 5f;
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			RenderAtomsList(CMaterial, _ppb.myCAtomTransforms, _scale);
+			RenderAtomsList(NMaterial, _ppb.myNAtomTransforms, _scale);
+			RenderAtomsList(HMaterial, _ppb.myHAtomTransforms, _scale*0.6f);
+			RenderAtomsList(OMaterial, _ppb.myOAtomTransforms, _scale);
+			RenderAtomsList(RMaterial, _ppb.myRAtomTransforms, _scale);
+
+			//RenderAtomsListInstanced(CMaterial, _ppb.myCAtomMatrices);
+
+		}
+
+		
+	}
+
+	void RenderAtomsList(Material _mat, List<Transform> _atomTransforms, Vector3 _scale)
+	{
+		
+		foreach (Transform _tf in _atomTransforms)
+		{
+			//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+			Matrix4x4 _matrix = Matrix4x4.TRS(_tf.position, _tf.rotation, _scale);
+			Graphics.DrawMesh(atomMesh, _matrix, _mat, 0, null);
+		}
+	}
+
+	void RenderAtomsListInstanced(Material _mat, List<Matrix4x4> _atomMatrices)
+	{
+		Graphics.DrawMeshInstanced(atomMesh, 0, _mat, _atomMatrices);
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -1052,5 +1097,6 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			SwitchLevel();
 		}
+		UpdateRenderAllAtoms();
 	}
 }

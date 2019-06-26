@@ -29,6 +29,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public Transform buildTransform;
 
+	public Material perfTestMat;
+
 	// bond lengths used in backbone configurable joints
 	// values are replicated in the prefabs (Carbonyl_pf, Amide_pf, Calpha_pf)
 	float bondLengthPeptide = 1.33f;
@@ -45,7 +47,17 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	public int numResidues = 0;
 
-	public List<PeptideData> myPeptideDataList = new List<PeptideData>(); 
+	public List<PeptideData> myPeptideDataList = new List<PeptideData>();
+
+	public List<Transform> myAtomTransforms = new List<Transform>();
+
+	public List<Transform> myCAtomTransforms = new List<Transform>();
+	public List<Transform> myNAtomTransforms = new List<Transform>();
+	public List<Transform> myHAtomTransforms = new List<Transform>();
+	public List<Transform> myOAtomTransforms = new List<Transform>();
+	public List<Transform> myRAtomTransforms = new List<Transform>();
+
+	public List<Matrix4x4> myCAtomMatrices = new List<Matrix4x4>();
 
 
 	public GameObject[] polyArr;
@@ -259,6 +271,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				// turn off shadows / renderer
 				// makes surprisingly little difference
+
 				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
 				foreach (Renderer child in allChildren)
 				{
@@ -268,12 +281,16 @@ public class PolyPepBuilder : MonoBehaviour {
 					// performance ?
 					myRenderer.allowOcclusionWhenDynamic = false;
 
+					//myRenderer.material = perfTestMat;
+
+					myRenderer.enabled = false;
+
 				}
 			}
 
 	
 			SetRbDrag(polyArr[i]);
-			
+
 			// BackboneUnit script handles setup of UI parameters (collisions / vdw scale etc.)
 		}
 
@@ -306,6 +323,34 @@ public class PolyPepBuilder : MonoBehaviour {
 		InitBackboneHbondConstraints();
 
 		//ReCentrePolyPep();
+
+		// atom list setup
+
+		//Transform tf_H = donorGO.transform.Find("tf_H");
+
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+
+			myHAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/H_amide"));
+			myNAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("N_amide"));
+
+			myRAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/R_sidechain"));
+
+			myCAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("C_alpha"));
+			myHAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/H"));
+
+			myCAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl"));
+			myOAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/O_carbonyl"));
+
+			myCAtomMatrices.Add(GetCalphaForResidue(resid).transform.Find("C_alpha").localToWorldMatrix);
+			myCAtomMatrices.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl").localToWorldMatrix);
+
+			//SetRbDrag(GetAmideForResidue(resid));
+			//SetRbDrag(GetCalphaForResidue(resid));
+			//SetRbDrag(GetCarbonylForResidue(resid));
+		}
+
+
 	}
 
 	void AddResidueToChain(int index)
