@@ -222,7 +222,7 @@ public class Csp3 : MonoBehaviour {
 		_H.tag = "UnusedAtom";
 
 		Destroy(_H.GetComponent<Renderer>());
-		//Destroy(_H.GetComponent<Collider>());
+		Destroy(_H.GetComponent<Collider>());
 		Destroy(_H.GetComponent<MeshFilter>());
 	}
 
@@ -525,6 +525,7 @@ public class Csp3 : MonoBehaviour {
 			if (child.name == "C")
 			{
 				child.name = "S";
+				child.tag = "S";
 				child.GetComponent<Renderer>().material.color = Color.yellow;
 				child.localScale = new Vector3(1.2f, 1.2f, 1.2f);
 			}
@@ -907,6 +908,8 @@ public class Csp3 : MonoBehaviour {
 				case "H_2":
 					//_H.GetComponent<Renderer>().enabled = false;
 					//_H.GetComponent<Collider>().enabled = false;
+
+
 					SetHAtomUnused(_H);
 					break;
 				default:
@@ -929,14 +932,10 @@ public class Csp3 : MonoBehaviour {
 					}
 					break;
 				case "tf_bond_H1":
-					{
-						SetBondUnused(_bond);
-					}
-					break;
 				case "tf_bond_H2":
-					{
-						SetBondUnused(_bond);
-					}
+					Debug.Log(_Btf.name);
+					_bond.GetComponent<Renderer>().material.color = Color.green;
+					SetBondUnused(_bond);
 					break;
 				default:
 					break;
@@ -1145,8 +1144,11 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H3":
 					//BtfList.Add(child);
 					Transform _bond = child.GetChild(0); // only one child in pf
-					_bond.GetComponent<Renderer>().enabled = false;
-					_bond.GetComponent<Collider>().enabled = false;
+
+					//_bond.GetComponent<Renderer>().enabled = false;
+					//_bond.GetComponent<Collider>().enabled = false;
+
+					SetBondUnused(_bond);
 					addSocketOffset = false;
 					break;
 

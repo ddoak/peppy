@@ -4890,7 +4890,7 @@ GameObject:
   - component: {fileID: 136308795077527184}
   m_Layer: 0
   m_Name: bond_CA_CO
-  m_TagString: Untagged
+  m_TagString: bond
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9999,7 +9999,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe21d9a15d2893d4eaa806c4a09db2ce, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10091,7 +10091,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe21d9a15d2893d4eaa806c4a09db2ce, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10183,7 +10183,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe21d9a15d2893d4eaa806c4a09db2ce, type: 2}
+  - {fileID: 2100000, guid: d1f66a5cf744e7d43bbce458e33c2d6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10230,7 +10230,7 @@ GameObject:
   - component: {fileID: 136134991783556162}
   m_Layer: 0
   m_Name: bond_CA_R
-  m_TagString: Untagged
+  m_TagString: bond
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

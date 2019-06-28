@@ -62,8 +62,19 @@ public class OVRManagerEditor : Editor
 
 		DrawDefaultInspector();
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_ANDROID
 		OVRManager manager = (OVRManager)target;
+#endif
+
+#if UNITY_ANDROID
+		EditorGUILayout.Space();
+		EditorGUILayout.LabelField("Mixed Reality Capture for Quest (experimental)", EditorStyles.boldLabel);
+		EditorGUI.indentLevel++;
+		SetupMrcActivationModeField("ActivationMode", ref manager.mrcActivationMode);
+		EditorGUI.indentLevel--;
+#endif
+
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("Mixed Reality Capture", EditorStyles.boldLabel);
 		SetupBoolField("Show Properties", ref manager.expandMixedRealityCapturePropertySheet);
@@ -85,6 +96,15 @@ public class OVRManagerEditor : Editor
 			SetupBoolField("enableMixedReality", ref manager.enableMixedReality);
 			SetupCompositoinMethodField("compositionMethod", ref manager.compositionMethod);
 			SetupLayerMaskField("extraHiddenLayers", ref manager.extraHiddenLayers, layerMaskOptions);
+
+			if (manager.compositionMethod == OVRManager.CompositionMethod.External)
+			{
+				EditorGUILayout.Space();
+				EditorGUILayout.LabelField("External Composition", EditorStyles.boldLabel);
+				EditorGUI.indentLevel++;
+
+				SetupColorField("backdropColor", ref manager.externalCompositionBackdropColor);
+			}
 
 			if (manager.compositionMethod == OVRManager.CompositionMethod.Direct || manager.compositionMethod == OVRManager.CompositionMethod.Sandwich)
 			{
@@ -143,7 +163,7 @@ public class OVRManagerEditor : Editor
 #endif
 	}
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_ANDROID
 	void SetupBoolField(string name, ref bool member)
 	{
 		EditorGUI.BeginChangeCheck();
@@ -252,5 +272,17 @@ public class OVRManagerEditor : Editor
 			virtualGreenScreenType = value;
 		}
 	}
+
+	void SetupMrcActivationModeField(string name, ref OVRManager.MrcActivationMode mrcActivationMode)
+	{
+		EditorGUI.BeginChangeCheck();
+		OVRManager.MrcActivationMode value = (OVRManager.MrcActivationMode)EditorGUILayout.EnumPopup(name, mrcActivationMode);
+		if (EditorGUI.EndChangeCheck())
+		{
+			Undo.RecordObject(target, "Changed " + name);
+			mrcActivationMode = value;
+		}
+	}
+
 #endif
 }

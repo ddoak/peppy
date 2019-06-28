@@ -24,6 +24,7 @@ public class OVRMixedRealityCaptureSettings : ScriptableObject
 	public bool enableMixedReality = false;
 	public LayerMask extraHiddenLayers;
 	public OVRManager.CompositionMethod compositionMethod = OVRManager.CompositionMethod.External;
+	public Color externalCompositionBackdropColor = Color.clear;
 	public OVRManager.CameraDevice capturingCameraDevice = OVRManager.CameraDevice.WebCamera0;
 	public bool flipCameraFrameHorizontally = false;
 	public bool flipCameraFrameVertically = false;
@@ -49,6 +50,7 @@ public class OVRMixedRealityCaptureSettings : ScriptableObject
 		enableMixedReality = manager.enableMixedReality;
 		compositionMethod = manager.compositionMethod;
 		extraHiddenLayers = manager.extraHiddenLayers;
+		externalCompositionBackdropColor = manager.externalCompositionBackdropColor;
 		capturingCameraDevice = manager.capturingCameraDevice;
 		flipCameraFrameHorizontally = manager.flipCameraFrameHorizontally;
 		flipCameraFrameVertically = manager.flipCameraFrameVertically;
@@ -74,6 +76,7 @@ public class OVRMixedRealityCaptureSettings : ScriptableObject
 		manager.enableMixedReality = enableMixedReality;
 		manager.compositionMethod = compositionMethod;
 		manager.extraHiddenLayers = extraHiddenLayers;
+		manager.externalCompositionBackdropColor = externalCompositionBackdropColor;
 		manager.capturingCameraDevice = capturingCameraDevice;
 		manager.flipCameraFrameHorizontally = flipCameraFrameHorizontally;
 		manager.flipCameraFrameVertically = flipCameraFrameVertically;

@@ -424,6 +424,26 @@ public static class OVRInput
 	}
 
 	/// <summary>
+	/// Returns true if the given Controller's orientation is currently valid.
+	/// Only supported for Oculus LTouch and RTouch controllers. Non-tracked controllers will return false.
+	/// </summary>
+	public static bool GetControllerOrientationValid(OVRInput.Controller controllerType)
+	{
+		switch (controllerType)
+		{
+			case Controller.LTouch:
+			case Controller.LTrackedRemote:
+				return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.HandLeft);
+			case Controller.RTouch:
+			case Controller.RTrackedRemote:
+				return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.HandRight);
+			default:
+				return false;
+		}
+	}
+
+
+	/// <summary>
 	/// Returns true if the given Controller's position is currently tracked.
 	/// Only supported for Oculus LTouch and RTouch controllers. Non-tracked controllers will return false.
 	/// </summary>
@@ -437,6 +457,25 @@ public static class OVRInput
 			case Controller.RTouch:
 			case Controller.RTrackedRemote:
 				return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.HandRight);
+			default:
+				return false;
+		}
+	}
+
+	/// <summary>
+	/// Returns true if the given Controller's position is currently valid.
+	/// Only supported for Oculus LTouch and RTouch controllers. Non-tracked controllers will return false.
+	/// </summary>
+	public static bool GetControllerPositionValid(OVRInput.Controller controllerType)
+	{
+		switch (controllerType)
+		{
+			case Controller.LTouch:
+			case Controller.LTrackedRemote:
+				return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.HandLeft);
+			case Controller.RTouch:
+			case Controller.RTrackedRemote:
+				return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.HandRight);
 			default:
 				return false;
 		}
@@ -457,7 +496,12 @@ public static class OVRInput
 				else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
 					return openVRControllerDetails[0].localPosition;
 				else
-					return InputTracking.GetLocalPosition(Node.LeftHand);
+				{
+					Vector3 retVec;
+					if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand, NodeStatePropertyType.Position, OVRPlugin.Node.HandLeft, stepType, out retVec))
+						return retVec;
+					return Vector3.zero;				//Will never be hit, but is a final fallback.
+				}
 			case Controller.RTouch:
 			case Controller.RTrackedRemote:
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
@@ -465,7 +509,12 @@ public static class OVRInput
 				else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
 					return openVRControllerDetails[1].localPosition;
 				else
-					return InputTracking.GetLocalPosition(Node.RightHand);
+				{
+					Vector3 retVec;
+					if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand, NodeStatePropertyType.Position, OVRPlugin.Node.HandRight, stepType, out retVec))
+						return retVec;
+					return Vector3.zero;
+				}
 			default:
 				return Vector3.zero;
 		}
@@ -556,7 +605,12 @@ public static class OVRInput
 				else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
 					return openVRControllerDetails[0].localOrientation;
 				else
-					return InputTracking.GetLocalRotation(Node.LeftHand);
+				{
+					Quaternion retQuat;
+					if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.LeftHand, NodeStatePropertyType.Orientation, OVRPlugin.Node.HandLeft, stepType, out retQuat))
+						return retQuat;
+					return Quaternion.identity;
+				}
 			case Controller.RTouch:
 			case Controller.RTrackedRemote:
 				if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
@@ -564,7 +618,12 @@ public static class OVRInput
 				else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
 					return openVRControllerDetails[1].localOrientation;
 				else
-					return InputTracking.GetLocalRotation(Node.RightHand);
+				{
+					Quaternion retQuat;
+					if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.RightHand, NodeStatePropertyType.Orientation, OVRPlugin.Node.HandRight, stepType, out retQuat))
+						return retQuat;
+					return Quaternion.identity;
+				}
 			default:
 				return Quaternion.identity;
 		}

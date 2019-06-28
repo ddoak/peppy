@@ -53,7 +53,8 @@ public abstract class OVRCameraComposition : OVRComposition {
 		{
 			OVRPlugin.CameraExtrinsics extrinsics;
 			OVRPlugin.CameraIntrinsics intrinsics;
-			if (OVRPlugin.GetExternalCameraCount() > 0 && OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics))
+			OVRPlugin.Posef calibrationRawPose;
+			if (OVRPlugin.GetExternalCameraCount() > 0 && OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics, out calibrationRawPose))
 			{
 				OVRPlugin.SetCameraDevicePreferredColorFrameSize(cameraDevice, intrinsics.ImageSensorPixelResolution.w, intrinsics.ImageSensorPixelResolution.h);
 			}
@@ -81,9 +82,11 @@ public abstract class OVRCameraComposition : OVRComposition {
 				OVRPlugin.SetCameraDevicePreferredDepthQuality(cameraDevice, quality);
 			}
 
+			Debug.LogFormat("Opening camera device {0}", cameraDevice);
 			OVRPlugin.OpenCameraDevice(cameraDevice);
 			if (OVRPlugin.HasCameraDeviceOpened(cameraDevice))
 			{
+				Debug.LogFormat("Opened camera device {0}", cameraDevice);
 				hasCameraDeviceOpened = true;
 			}
 		}
@@ -94,6 +97,7 @@ public abstract class OVRCameraComposition : OVRComposition {
 		OVRCompositionUtil.SafeDestroy(ref cameraFramePlaneObject);
 		if (hasCameraDeviceOpened)
 		{
+			Debug.LogFormat("Close camera device {0}", cameraDevice);
 			OVRPlugin.CloseCameraDevice(cameraDevice);
 		}
 	}

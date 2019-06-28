@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 136308795077527184}
   m_Layer: 0
   m_Name: bond_N_CA
-  m_TagString: Untagged
+  m_TagString: bond
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

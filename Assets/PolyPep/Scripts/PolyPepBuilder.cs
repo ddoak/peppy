@@ -57,6 +57,8 @@ public class PolyPepBuilder : MonoBehaviour {
 	public List<Transform> myOAtomTransforms = new List<Transform>();
 	public List<Transform> myRAtomTransforms = new List<Transform>();
 
+	public List<Transform> myBondTransforms = new List<Transform>();
+
 	public List<Matrix4x4> myCAtomMatrices = new List<Matrix4x4>();
 
 
@@ -268,25 +270,27 @@ public class PolyPepBuilder : MonoBehaviour {
 				AddBackboneTopologyConstraint(i);
 			}
 
-			{
-				// turn off shadows / renderer
-				// makes surprisingly little difference
+			//EnableRenderers(true);
+			//{
+			//	// turn off shadows / renderer
+			//	// makes surprisingly little difference
 
-				Renderer[] allChildren = GetComponentsInChildren<Renderer>();
-				foreach (Renderer child in allChildren)
-				{
-					Renderer myRenderer = child.GetComponent<Renderer>();
-					myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-					myRenderer.receiveShadows = false;
-					// performance ?
-					myRenderer.allowOcclusionWhenDynamic = false;
+			//	Renderer[] allChildren = GetComponentsInChildren<Renderer>();
+			//	foreach (Renderer child in allChildren)
+			//	{
+			//		Renderer myRenderer = child.GetComponent<Renderer>();
+			//		myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			//		myRenderer.receiveShadows = false;
+			//		// performance ?
+			//		myRenderer.allowOcclusionWhenDynamic = false;
 
-					//myRenderer.material = perfTestMat;
+			//		//myRenderer.material = perfTestMat;
 
-					myRenderer.enabled = false;
+			//		// turn off all mesh renderers
+			//		myRenderer.enabled = false;
 
-				}
-			}
+			//	}
+			//}
 
 	
 			SetRbDrag(polyArr[i]);
@@ -325,9 +329,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		//ReCentrePolyPep();
 
 		// atom list setup
-
-		//Transform tf_H = donorGO.transform.Find("tf_H");
-
 		for (int resid = 0; resid < numResidues; resid++)
 		{
 
@@ -342,6 +343,16 @@ public class PolyPepBuilder : MonoBehaviour {
 			myCAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl"));
 			myOAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/O_carbonyl"));
 
+			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_bond_N_CA/bond_N_CA"));
+			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
+
+			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/tf_bond_CA_R/bond_CA_R"));
+			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_bond_CA_CO/bond_CA_CO"));
+			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/tf_bond_CA_H/bond_CA_H"));
+
+			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_bond_C_N/bond_CO_N"));
+			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/tf_bond_C_O/bond_C_O"));
+
 			myCAtomMatrices.Add(GetCalphaForResidue(resid).transform.Find("C_alpha").localToWorldMatrix);
 			myCAtomMatrices.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl").localToWorldMatrix);
 
@@ -350,8 +361,54 @@ public class PolyPepBuilder : MonoBehaviour {
 			//SetRbDrag(GetCarbonylForResidue(resid));
 		}
 
-
+		EnableRenderers(true);
 	}
+
+	public void EnableRenderers(bool value)
+	{
+		// turn off shadows / renderer
+		// makes surprisingly little difference
+
+		Renderer[] allChildren = GetComponentsInChildren<Renderer>();
+		foreach (Renderer child in allChildren)
+		{
+			Renderer myRenderer = child.GetComponent<Renderer>();
+			myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			myRenderer.receiveShadows = false;
+			// performance ?
+			myRenderer.allowOcclusionWhenDynamic = false;
+
+			// excluding meshes by name
+			//if (myRenderer.transform.name != "Freeze" && myRenderer.transform.name != "PlotCube"
+			//		&& myRenderer.transform.name != "hb_backbone_ps" && myRenderer.transform.name != "chargedParticle_ps(Clone)"
+			//		&& myRenderer.transform.name != "PeptidePlane")
+			//{
+			//	myRenderer.enabled = value;
+			//	Debug.Log(myRenderer.transform.name);
+			//	Debug.Log(myRenderer.transform.tag);
+			//}
+
+			switch (myRenderer.transform.tag)
+			{
+				case "N":
+				case "C":
+				case "O":
+				case "H":
+				case "R":
+				case "S":
+				case "bondToH":
+				case "bond":
+					myRenderer.enabled = value;
+					break;
+				default:
+					break;
+
+			}
+		}
+			UpdateRenderModeAllBbu();
+	}
+
+
 
 	void AddResidueToChain(int index)
 	{
@@ -834,7 +891,7 @@ public void SetAllColliderIsTrigger(bool value)
 
 		hbondBackbonePsPf[resid] = Instantiate(hBondPsPf, donorHLocation, tf_H.rotation, tf_H); //HBond2_ps_pf
 		hbondBackbonePsPf[resid].transform.localScale = transform.localScale;
-		hbondBackbonePsPf[resid].name = "hb_backbone " + resid;
+		hbondBackbonePsPf[resid].name = "hb_backbone_ps";// + resid;
 	}
 
 

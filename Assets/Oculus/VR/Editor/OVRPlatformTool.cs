@@ -1,5 +1,3 @@
-#define DISABLE_EXTRA_ASSET_CONFIG 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -404,7 +402,7 @@ namespace Assets.Oculus.VR.Editor
 		{
 			string dataPath = Application.dataPath;
 			string toolPath = dataPath + "/Oculus/VR/Editor/Tools/";
-
+			
 			// If we already have a copy of the platform util, check if it needs to be updated
 			if (!ranSelfUpdate && File.Exists(toolPath + "ovr-platform-util.exe"))
 			{
@@ -712,39 +710,39 @@ namespace Assets.Oculus.VR.Editor
 
 						if (config.required)
 						{
-							configParameters.Add("\"required\": true");
+							configParameters.Add("\\\"required\\\":true");
 						}
 						if (config.type > AssetConfig.AssetType.DEFAULT)
 						{
-							string typeCommand = "\"type\": ";
+							string typeCommand = "\\\"type\\\":";
 							switch (config.type)
 							{
 								case AssetConfig.AssetType.LANGUAGE_PACK:
-									configParameters.Add(typeCommand + "LANGUAGE_PACK");
+									configParameters.Add(typeCommand + "\\\"LANGUAGE_PACK\\\"");
 									break;
 								case AssetConfig.AssetType.STORE:
-									configParameters.Add(typeCommand + "STORE");
+									configParameters.Add(typeCommand + "\\\"STORE\\\"");
 									break;
 								default:
-									configParameters.Add(typeCommand + "DEFAULT");
+									configParameters.Add(typeCommand + "\\\"DEFAULT\\\"");
 									break;
 							}
 						}
 						if (!string.IsNullOrEmpty(config.sku))
 						{
-							configParameters.Add("\"sku\": " + config.sku);
+							configParameters.Add("\\\"sku\\\":\\\"" + config.sku + "\\\"");
 						}
 
 						if (configParameters.Count > 0)
 						{
-							string configString = "\"" + config.name + "\": {" + string.Join(",", configParameters.ToArray()) + "}";
+							string configString = "\\\"" + config.name + "\\\":{" + string.Join(",", configParameters.ToArray()) + "}";
 							assetConfigs.Add(configString);
 						}
 					}
 
 					if (assetConfigs.Count > 0)
 					{
-						command += " --asset_files_config='{" + string.Join(",", assetConfigs.ToArray()) + "}'";
+						command += " --asset_files_config {" + string.Join(",", assetConfigs.ToArray()) + "}";
 					}
 				}
 			}
@@ -962,7 +960,8 @@ namespace Assets.Oculus.VR.Editor
 			webRequest.downloadHandler = new DownloadHandlerFile(path);
 			// WWW request timeout in seconds
 			webRequest.timeout = 60;
-			yield return webRequest.SendWebRequest();
+			UnityWebRequestAsyncOperation webOp = webRequest.SendWebRequest();
+			while (!webOp.isDone) { }
 			if (webRequest.isNetworkError || webRequest.isHttpError)
 			{
 				var networkErrorMsg = "Failed to provision Oculus Platform Util\n";
@@ -974,6 +973,7 @@ namespace Assets.Oculus.VR.Editor
 				OVRPlatformTool.log = "Completed Provisioning Oculus Platform Util\n";
 			}
 			SetDirtyOnGUIChange();
+			yield return webOp;
 		}
 
 		private static void DrawAssetConfigList(Rect rect)

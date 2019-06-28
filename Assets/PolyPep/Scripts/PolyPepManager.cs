@@ -14,12 +14,22 @@ public class PolyPepManager : MonoBehaviour {
 	public ElectrostaticsManager electrostaticsManager;
 
 	public Mesh atomMesh;
+	public Mesh bondMesh;
 	public Material testMaterial;
-	public Material CMaterial;
-	public Material NMaterial;
-	public Material HMaterial;
-	public Material OMaterial;
-	public Material RMaterial;
+	public Material matC;
+	public Material matN;
+	public Material matH;
+	public Material matO;
+	public Material matR;
+	public Material matBond;
+
+	Shader shaderStandard;
+	Shader shaderToonOutline;
+
+	public bool doRenderDrawMesh = false;
+
+	public Light skylight;
+	private Quaternion skylightTargetRot;
 
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
@@ -121,6 +131,20 @@ public class PolyPepManager : MonoBehaviour {
 
 	void Awake()
 	{
+		{
+			//rendering
+			matC = Resources.Load("Materials/mBlack", typeof(Material)) as Material;
+			matH = Resources.Load("Materials/mWhite", typeof(Material)) as Material;
+			matO = Resources.Load("Materials/mRed", typeof(Material)) as Material;
+			matN = Resources.Load("Materials/mBlue", typeof(Material)) as Material;
+			matR = Resources.Load("Materials/mPurple", typeof(Material)) as Material;
+			matBond = Resources.Load("Materials/mGrey2", typeof(Material)) as Material;
+
+			shaderStandard = Shader.Find("Standard");
+			shaderToonOutline = Shader.Find("Toon/Basic Outline");
+		}
+
+
 		GameObject temp = GameObject.Find("Slider_Phi");
 		phiSliderUI = temp.GetComponent<Slider>();
 
@@ -197,6 +221,8 @@ public class PolyPepManager : MonoBehaviour {
 		mySnapshotCamera = GameObject.Find("SnapshotCamera_pf");
 
 		myAudioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+
+		skylightTargetRot = skylight.transform.rotation;
 	}
 
 	void Start()
@@ -448,6 +474,37 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.UpdateAllFreeze(value);
 			_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
+	public void UpdateLightingFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
+		//lightDayOn = value;
+		if (value == true)
+		{
+			skylightTargetRot = Quaternion.Euler(60, -30, 0);
+		}
+		else
+		{
+			skylightTargetRot = Quaternion.Euler(-5, -30, 0);
+		}
+	}
+
+	public void UpdateRendertestFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
+		doRenderDrawMesh = value;
+		UpdateRenderingMode(value);
+	}
+
+	private void UpdateRenderingMode(bool value)
+	{
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.EnableRenderers(!value);
 		}
 	}
 
@@ -1043,40 +1100,54 @@ public class PolyPepManager : MonoBehaviour {
 		SceneManager.LoadScene("FrontEnd");
 	}
 
-	void UpdateRenderAllAtoms()
+	void UpdateLerpSkylight()
 	{
-		Vector3 _scale = new Vector3(vdwScale, vdwScale, vdwScale);
-		_scale = _scale * 5f;
-		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
-		{
-			RenderAtomsList(CMaterial, _ppb.myCAtomTransforms, _scale);
-			RenderAtomsList(NMaterial, _ppb.myNAtomTransforms, _scale);
-			RenderAtomsList(HMaterial, _ppb.myHAtomTransforms, _scale*0.6f);
-			RenderAtomsList(OMaterial, _ppb.myOAtomTransforms, _scale);
-			RenderAtomsList(RMaterial, _ppb.myRAtomTransforms, _scale);
-
-			//RenderAtomsListInstanced(CMaterial, _ppb.myCAtomMatrices);
-
-		}
-
-		
+		Quaternion newRot = Quaternion.Slerp(skylight.transform.rotation, skylightTargetRot, Time.deltaTime*2f);
+		skylight.transform.rotation = newRot;
 	}
 
-	void RenderAtomsList(Material _mat, List<Transform> _atomTransforms, Vector3 _scale)
+	void UpdateRenderAllAtoms()
+	{
+		if (doRenderDrawMesh)
+		{
+			Vector3 _scale = new Vector3(vdwScale, vdwScale, vdwScale);
+			_scale = _scale * 5f;
+			Vector3 _scaleBonds = new Vector3(1.25f, 5.5f, 1.25f); // eyeballed to match original
+
+			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+			{
+				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, _scale*0.75f);
+				RenderMeshTransformList(atomMesh, matO, _ppb.myOAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, _scale*1.1f);
+
+				matBond.shader = shaderStandard;
+				//matBond.SetColor("_OutlineColor", Color.cyan);
+
+				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
+			}
+		}
+	}
+
+	void RenderMeshTransformList(Mesh _mesh, Material _mat, List<Transform> _atomTransforms, Vector3 _scale)
 	{
 		
 		foreach (Transform _tf in _atomTransforms)
 		{
 			//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
 			Matrix4x4 _matrix = Matrix4x4.TRS(_tf.position, _tf.rotation, _scale);
-			Graphics.DrawMesh(atomMesh, _matrix, _mat, 0, null);
+			Graphics.DrawMesh(_mesh, _matrix, _mat, 0, null);
 		}
 	}
+
+
 
 	void RenderAtomsListInstanced(Material _mat, List<Matrix4x4> _atomMatrices)
 	{
 		Graphics.DrawMeshInstanced(atomMesh, 0, _mat, _atomMatrices);
 	}
+
 
 	// Update is called once per frame
 	void Update ()
@@ -1089,6 +1160,9 @@ public class PolyPepManager : MonoBehaviour {
 		UpdateKeepGameObjectCloseToPlayer(UI, 6.0f);
 		UpdateKeepGameObjectAccessible(mySnapshotCamera, 0.2f, 5.0f);
 		UpdateKeepGameObjectCloseToPlayer(mySnapshotCamera, 10.0f);
+
+		UpdateLerpSkylight();
+
 		if (Input.GetKey(KeyCode.Escape))
 		{
 			AppQuit();
@@ -1097,6 +1171,7 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			SwitchLevel();
 		}
+
 		UpdateRenderAllAtoms();
 	}
 }
