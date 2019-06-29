@@ -889,6 +889,8 @@ public class PolyPepManager : MonoBehaviour {
 		// TODO - store value, bond rendering
 		showHydrogenAtoms = value;
 		UpdateHAtomRenderers(showHydrogenAtoms);
+		//
+
 	}
 
 	private void UpdateHAtomRenderers(bool value)
@@ -906,6 +908,12 @@ public class PolyPepManager : MonoBehaviour {
 			{
 				_bondToH.GetComponent<Renderer>().enabled = value;
 			}
+		}
+
+		// selection outlines
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
 

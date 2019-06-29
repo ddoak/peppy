@@ -56,8 +56,6 @@ public class BackboneUnit : MonoBehaviour {
 				//atoms
 				if (childRenderer.transform.gameObject.layer == LayerMask.NameToLayer("Atom"))
 				{
-					//Debug.Log("got one!");
-
 					renderersAtoms.Add(childRenderer);
 				}
 			}
@@ -176,6 +174,11 @@ public class BackboneUnit : MonoBehaviour {
 
 		foreach (Renderer _rendererAtom in renderersAtoms)
 		{
+			if ((_rendererAtom.transform.gameObject.tag == "H" && !myPolyPepManager.showHydrogenAtoms))
+			{
+				_rendererAtom.enabled = false;
+			}
+			else
 			{
 				if (myPolyPepManager.doRenderDrawMesh)
 				{
