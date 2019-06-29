@@ -57,6 +57,7 @@ public class BackboneUnit : MonoBehaviour {
 				if (childRenderer.transform.gameObject.layer == LayerMask.NameToLayer("Atom"))
 				{
 					//Debug.Log("got one!");
+
 					renderersAtoms.Add(childRenderer);
 				}
 			}
@@ -257,9 +258,19 @@ public class BackboneUnit : MonoBehaviour {
 			{
 				if (myPolyPepManager.showDrivenBondsOn)
 				{
-					rendererPhi.material.shader = shaderToonOutline;
 					rendererPhi.material.SetColor("_OutlineColor", Color.cyan);
-					rendererPhi.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * bondToonRenderScale);
+					if (myPolyPepManager.doRenderDrawMesh)
+					{
+						rendererPhi.material.shader = shaderOutlinedSilhouette;
+						rendererPhi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPhi.enabled = true;
+					}
+					else
+					{
+						rendererPhi.material.shader = shaderToonOutline;
+						rendererPhi.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * bondToonRenderScale);
+					}
+
 				}
 				else
 				{
@@ -269,12 +280,21 @@ public class BackboneUnit : MonoBehaviour {
 
 			if (rendererPsi)
 			{
+
 				if (myPolyPepManager.showDrivenBondsOn)
 				{
-					rendererPsi.material.shader = shaderToonOutline;
 					rendererPsi.material.SetColor("_OutlineColor", Color.magenta);
-					rendererPsi.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale
-						* bondToonRenderScale);
+					if (myPolyPepManager.doRenderDrawMesh)
+					{
+						rendererPsi.material.shader = shaderOutlinedSilhouette;
+						rendererPsi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPsi.enabled = true;
+					}
+					else
+					{
+						rendererPsi.material.shader = shaderToonOutline;
+						rendererPsi.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * bondToonRenderScale);
+					}
 				}
 				else
 				{
@@ -286,9 +306,18 @@ public class BackboneUnit : MonoBehaviour {
 			{
 				if (myPolyPepManager.showDrivenBondsOn)
 				{
-					rendererPeptide.material.shader = shaderToonOutline;
 					rendererPeptide.material.SetColor("_OutlineColor", Color.black);
-					rendererPeptide.material.SetFloat("_Outline", 0.005f);
+					if (myPolyPepManager.doRenderDrawMesh)
+					{
+						rendererPeptide.material.shader = shaderOutlinedSilhouette;
+						rendererPeptide.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPeptide.enabled = true;
+					}
+					else
+					{
+						rendererPeptide.material.shader = shaderToonOutline;
+						rendererPeptide.material.SetFloat("_Outline", 0.005f);
+					}
 				}
 				else
 				{
