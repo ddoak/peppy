@@ -58,6 +58,7 @@ public class PolyPepBuilder : MonoBehaviour {
 	public List<Transform> myRAtomTransforms = new List<Transform>();
 
 	public List<Transform> myBondTransforms = new List<Transform>();
+	public List<Transform> myBondToHTransforms = new List<Transform>();
 
 	public List<Matrix4x4> myCAtomMatrices = new List<Matrix4x4>();
 
@@ -344,11 +345,11 @@ public class PolyPepBuilder : MonoBehaviour {
 			myOAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/O_carbonyl"));
 
 			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_bond_N_CA/bond_N_CA"));
-			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
+			myBondToHTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
 
 			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/tf_bond_CA_R/bond_CA_R"));
 			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_bond_CA_CO/bond_CA_CO"));
-			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/tf_bond_CA_H/bond_CA_H"));
+			myBondToHTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/tf_bond_CA_H/bond_CA_H"));
 
 			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_bond_C_N/bond_CO_N"));
 			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/tf_bond_C_O/bond_C_O"));
@@ -361,7 +362,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			//SetRbDrag(GetCarbonylForResidue(resid));
 		}
 
-		EnableRenderers(true);
+		EnableRenderers(!myPolyPepManager.doRenderDrawMesh);
 	}
 
 	public void EnableRenderers(bool value)

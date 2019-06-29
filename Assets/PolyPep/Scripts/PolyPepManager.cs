@@ -506,6 +506,8 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			_ppb.EnableRenderers(!value);
 		}
+		// H atoms might be off
+		UpdateHAtomRenderers(showHydrogenAtoms);
 	}
 
 	public void UpdateDragFromUI(bool value)
@@ -886,6 +888,12 @@ public class PolyPepManager : MonoBehaviour {
 		myAudioManager.PlayOnOffSfx(value);
 		// TODO - store value, bond rendering
 		showHydrogenAtoms = value;
+		UpdateHAtomRenderers(showHydrogenAtoms);
+	}
+
+	private void UpdateHAtomRenderers(bool value)
+	{
+		if (!doRenderDrawMesh)
 		{
 			GameObject[] gos;
 			gos = GameObject.FindGameObjectsWithTag("H");
@@ -900,6 +908,8 @@ public class PolyPepManager : MonoBehaviour {
 			}
 		}
 	}
+
+
 	public void TakeSnapshotFromUI()
 	{
 		mySnapshotCamera.GetComponent<SnapshotCamera>().CamCapture();
@@ -1118,14 +1128,19 @@ public class PolyPepManager : MonoBehaviour {
 			{
 				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, _scale);
 				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, _scale);
-				RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, _scale*0.75f);
 				RenderMeshTransformList(atomMesh, matO, _ppb.myOAtomTransforms, _scale);
-				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, _scale*1.1f);
-
+				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, _scale * 1.1f);
+				if (showHydrogenAtoms)
+				{
+					RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, _scale*0.75f);
+				}
+				
 				matBond.shader = shaderStandard;
-				//matBond.SetColor("_OutlineColor", Color.cyan);
-
 				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
+				if (showHydrogenAtoms)
+				{
+					RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, _scaleBonds);
+				}	
 			}
 		}
 	}

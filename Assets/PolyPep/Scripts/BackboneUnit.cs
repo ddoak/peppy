@@ -6,8 +6,9 @@ public class BackboneUnit : MonoBehaviour {
 
 	public int residue = -1;
 
-	Shader shaderStandard;
-	Shader shaderToonOutline;
+	public Shader shaderStandard;
+	public Shader shaderToonOutline;
+	public Shader shaderOutlinedSilhouette;
 
 	public bool activeSequenceSelect = false;
 	private bool activeSequenceSelectLast = false;
@@ -71,6 +72,7 @@ public class BackboneUnit : MonoBehaviour {
 
 		shaderStandard = Shader.Find("Standard");
 		shaderToonOutline = Shader.Find("Toon/Basic Outline");
+		shaderOutlinedSilhouette = Shader.Find("Outlined/Silhouette Only");
 	}
 
 	void Start()
@@ -174,47 +176,68 @@ public class BackboneUnit : MonoBehaviour {
 		foreach (Renderer _rendererAtom in renderersAtoms)
 		{
 			{
+				if (myPolyPepManager.doRenderDrawMesh)
+				{
+					_rendererAtom.material.shader = shaderOutlinedSilhouette;
+					_rendererAtom.material.SetFloat("_Outline", 0.005f * myPolyPepManager.vdwScale);
+					_rendererAtom.enabled = true;
+				}
+				else
+				{
+					_rendererAtom.material.shader = shaderToonOutline;
+				}
 				switch (shaderName)
-
 				{
 					case "ToonOutlineGreen":
+						//{
+						//	_rendererAtom.material.shader = shaderStandard;
+						//}
 						{
-							_rendererAtom.material.shader = shaderStandard;
-						}
-						{
-							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.green);
-							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 2.0f);
+							if (!myPolyPepManager.doRenderDrawMesh)
+							{ 
+								_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 2.0f);
+							}
 						}
 						break;
 
 					case "ToonOutlineRed":
 						{
-							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.red);
-							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 1.5f);
+							if (!myPolyPepManager.doRenderDrawMesh)
+							{
+								_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 1.5f);
+							}
 						}
 						break;
 
 					case "ToonOutlineYellow":
 						{
-							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.yellow);
-							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale);
+							if (!myPolyPepManager.doRenderDrawMesh)
+							{ 
+								_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale);
+							}
 						}
 						break;
 
 					case "ToonOutlineCyan":
 						{
-							_rendererAtom.material.shader = shaderToonOutline;
 							_rendererAtom.material.SetColor("_OutlineColor", Color.cyan);
-							_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 0.8f);
+							if (!myPolyPepManager.doRenderDrawMesh)
+							{
+								_rendererAtom.material.SetFloat("_Outline", myPolyPepManager.toonRenderScale * 0.8f);
+							}
 						}
 						break;
 
 					case "Standard":
 						{
 							_rendererAtom.material.shader = shaderStandard;
+							if (myPolyPepManager.doRenderDrawMesh)
+							{
+								_rendererAtom.enabled = false;
+							}
 						}
 						break;
 				}
