@@ -57,8 +57,17 @@ public class PolyPepBuilder : MonoBehaviour {
 	public List<Transform> myOAtomTransforms = new List<Transform>();
 	public List<Transform> myRAtomTransforms = new List<Transform>();
 
+	public List<Transform> mySideChainCAtomTransforms = new List<Transform>();
+	public List<Transform> mySideChainNAtomTransforms = new List<Transform>();
+	public List<Transform> mySideChainHAtomTransforms = new List<Transform>();
+	public List<Transform> mySideChainOAtomTransforms = new List<Transform>();
+	public List<Transform> mySideChainSAtomTransforms = new List<Transform>();
+
 	public List<Transform> myBondTransforms = new List<Transform>();
 	public List<Transform> myBondToHTransforms = new List<Transform>();
+
+	public List<Transform> mySideChainBondTransforms = new List<Transform>();
+	public List<Transform> mySideChainBondToHTransforms = new List<Transform>();
 
 	public List<Matrix4x4> myCAtomMatrices = new List<Matrix4x4>();
 

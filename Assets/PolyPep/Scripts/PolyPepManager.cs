@@ -21,6 +21,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Material matH;
 	public Material matO;
 	public Material matR;
+	public Material matS;
 	public Material matBond;
 
 	Shader shaderStandard;
@@ -138,6 +139,7 @@ public class PolyPepManager : MonoBehaviour {
 			matO = Resources.Load("Materials/mRed", typeof(Material)) as Material;
 			matN = Resources.Load("Materials/mBlue", typeof(Material)) as Material;
 			matR = Resources.Load("Materials/mPurple", typeof(Material)) as Material;
+			matS = Resources.Load("Materials/mYellow", typeof(Material)) as Material;
 			matBond = Resources.Load("Materials/mGrey2", typeof(Material)) as Material;
 
 			shaderStandard = Shader.Find("Standard");
@@ -808,12 +810,77 @@ public class PolyPepManager : MonoBehaviour {
 			//push update of scale and colliders
 			_ppb.ScaleVDW(vdwScale);
 			_ppb.SetAllColliderIsTrigger(!collidersOn);
-			
+
 			//force update of H Atom rendering
 			UpdateShowHAtomsFromUI(showHydrogenAtoms);
-		}
 
+			//Update sidechain atomtransform lists
+
+			_ppb.mySideChainCAtomTransforms.Clear();
+			_ppb.mySideChainNAtomTransforms.Clear();
+			_ppb.mySideChainHAtomTransforms.Clear();
+			_ppb.mySideChainOAtomTransforms.Clear();
+			_ppb.mySideChainSAtomTransforms.Clear();
+
+			_ppb.mySideChainBondTransforms.Clear();
+			_ppb.mySideChainBondToHTransforms.Clear();
+
+			foreach (GameObject _residueGo in _ppb.chainArr)
+			{
+				foreach (GameObject _sideChainAtomGo in _residueGo.GetComponent<Residue>().sideChainList)
+				{
+					foreach (Transform _child in _sideChainAtomGo.transform)
+					{
+						Debug.Log(_child.name + " " + _child.tag);
+						//if (_child.name.Substring(0,6) == "tf_bond")
+						// can just use string length ;)
+						if (_child.name.Length > 3)
+						{
+							foreach (Transform _bond in _child.GetComponentsInChildren<Transform>())
+							{
+								switch (_bond.tag)
+								{
+									case "bond":
+										_ppb.mySideChainBondTransforms.Add(_bond);
+										break;
+									case "bondToH":
+										_ppb.mySideChainBondToHTransforms.Add(_bond);
+										break;
+									default:
+										break;
+								}
+							}
+						}
+						else
+						{
+							switch (_child.tag)
+							{
+								case "C":
+									_ppb.mySideChainCAtomTransforms.Add(_child);
+									break;
+								case "N":
+									_ppb.mySideChainNAtomTransforms.Add(_child);
+									break;
+								case "H":
+									_ppb.mySideChainHAtomTransforms.Add(_child);
+									break;
+								case "O":
+									_ppb.mySideChainOAtomTransforms.Add(_child);
+									break;
+								case "S":
+									_ppb.mySideChainSAtomTransforms.Add(_child);
+									break;
+								default:
+									break;
+						}
+
+						}
+					}
+				}
+			}
+		}
 	}
+
 
 	public void MakeDisulphideFromUI()
 	{
@@ -1134,20 +1201,34 @@ public class PolyPepManager : MonoBehaviour {
 
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
+				// render ATOMS
 				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matC, _ppb.mySideChainCAtomTransforms, _scale);
+
 				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matN, _ppb.mySideChainNAtomTransforms, _scale);
+
 				RenderMeshTransformList(atomMesh, matO, _ppb.myOAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matO, _ppb.mySideChainOAtomTransforms, _scale);
+
 				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, _scale * 1.1f);
+
+				RenderMeshTransformList(atomMesh, matS, _ppb.mySideChainSAtomTransforms, _scale);
+
 				if (showHydrogenAtoms)
 				{
 					RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, _scale*0.75f);
+					RenderMeshTransformList(atomMesh, matH, _ppb.mySideChainHAtomTransforms, _scale*0.75f);
 				}
 				
+				// render BONDS
 				matBond.shader = shaderStandard;
 				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
+				RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondTransforms, _scaleBonds);
 				if (showHydrogenAtoms)
 				{
 					RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, _scaleBonds);
+					RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondToHTransforms, _scaleBonds);
 				}	
 			}
 		}

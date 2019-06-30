@@ -231,6 +231,7 @@ public class Csp3 : MonoBehaviour {
 	{
 		_bond.GetComponent<Renderer>().enabled = false;
 		_bond.GetComponent<Collider>().enabled = false;
+		_bond.tag = "UnusedBond";
 
 		Destroy(_bond.GetComponent<Renderer>());
 		Destroy(_bond.GetComponent<Collider>());
@@ -627,6 +628,7 @@ public class Csp3 : MonoBehaviour {
 			if (child.name == "C")
 			{
 				child.name = "N";
+				child.tag = "N";
 				child.GetComponent<Renderer>().material.color = Color.blue;
 			}
 		}
