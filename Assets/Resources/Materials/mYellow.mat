@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mBlue
+  m_Name: mYellow
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -91,7 +91,7 @@ Material:
     - _premultiply: 1
     m_Colors:
     - _BackgroundColor: {r: 0.225, g: 0.225, b: 0.225, a: 1}
-    - _Color: {r: 0, g: 0, b: 0.895, a: 1}
+    - _Color: {r: 0.89411765, g: 0.88949835, b: 0, a: 1}
     - _DestRectLeft: {r: 0, g: 0, b: 1, a: 1}
     - _DestRectRight: {r: 0, g: 0, b: 1, a: 1}
     - _EmissionColor: {r: 0.0000804228, g: 0.00008808211, b: 0.0004978554, a: 1}

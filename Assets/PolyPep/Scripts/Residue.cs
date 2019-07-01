@@ -236,9 +236,10 @@ public class Residue : MonoBehaviour {
 	public void DisableProxySideChain()
 	{
 		// switch off the proxy sidechain renderer
+		Debug.Log("disable proxy sidechain");
 		foreach (Renderer renderer in calpha_pf.GetComponentsInChildren<Renderer>())
 		{
-			//Debug.Log(renderer);
+			
 			if (renderer.name == "R_sidechain" || renderer.name == "bond_CA_R")
 			{
 				renderer.enabled = false;

@@ -23,6 +23,7 @@ TagManager:
   - AAtoggle
   - freeze
   - bond
+  - UnusedBond
   layers:
   - Default
   - TransparentFX

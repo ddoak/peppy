@@ -28,9 +28,10 @@ public class PolyPepManager : MonoBehaviour {
 	Shader shaderToonOutline;
 
 	public bool doRenderDrawMesh = false;
-
+	public bool shadowsOn = true;
 	public Light skylight;
 	private Quaternion skylightTargetRot;
+
 
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
@@ -499,17 +500,26 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
 		myAudioManager.PlayOnOffSfx(value);
 		doRenderDrawMesh = value;
-		UpdateRenderingMode(value);
+		UpdateRenderingMode();
 	}
 
-	private void UpdateRenderingMode(bool value)
+	private void UpdateRenderingMode()
 	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.EnableRenderers(!value);
+			_ppb.EnableRenderers(!doRenderDrawMesh);
 		}
 		// H atoms might be off
 		UpdateHAtomRenderers(showHydrogenAtoms);
+	}
+
+
+
+	public void UpdateShadowsFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
+		shadowsOn = value;
 	}
 
 	public void UpdateDragFromUI(bool value)
@@ -814,8 +824,19 @@ public class PolyPepManager : MonoBehaviour {
 			//force update of H Atom rendering
 			UpdateShowHAtomsFromUI(showHydrogenAtoms);
 
-			//Update sidechain atomtransform lists
+			UpdateSideChainRenderTransformLists();
 
+			UpdateRAtomTransformList();
+			UpdateRenderingMode();
+
+		}
+	}
+
+	public void UpdateSideChainRenderTransformLists()
+	{
+		//Update sidechain atom and bond transform lists
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
 			_ppb.mySideChainCAtomTransforms.Clear();
 			_ppb.mySideChainNAtomTransforms.Clear();
 			_ppb.mySideChainHAtomTransforms.Clear();
@@ -831,7 +852,7 @@ public class PolyPepManager : MonoBehaviour {
 				{
 					foreach (Transform _child in _sideChainAtomGo.transform)
 					{
-						Debug.Log(_child.name + " " + _child.tag);
+						//Debug.Log(_child.name + " " + _child.tag);
 						//if (_child.name.Substring(0,6) == "tf_bond")
 						// can just use string length ;)
 						if (_child.name.Length > 3)
@@ -872,7 +893,7 @@ public class PolyPepManager : MonoBehaviour {
 									break;
 								default:
 									break;
-						}
+							}
 
 						}
 					}
@@ -881,6 +902,21 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void UpdateRAtomTransformList()
+	{
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{
+			_ppb.myRAtomTransforms.Clear();
+
+			foreach (GameObject _residueGo in _ppb.chainArr)
+			{
+				if (_residueGo.GetComponent<Residue>().type == "XXX")
+				{
+					_ppb.myRAtomTransforms.Add(_ppb.GetCalphaForResidue(_residueGo.GetComponent<Residue>().resid).transform.Find("tf_sidechain/R_sidechain"));
+				}
+			}
+		}
+	}
 
 	public void MakeDisulphideFromUI()
 	{
@@ -922,6 +958,7 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			myAudioManager.PlaySetSecondary();
 			sideChainBuilder.MakeDisulphide(pp1, resid1, pp2, resid2);
+			UpdateSideChainRenderTransformLists();
 		}
 	}
 
@@ -1241,7 +1278,8 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
 			Matrix4x4 _matrix = Matrix4x4.TRS(_tf.position, _tf.rotation, _scale);
-			Graphics.DrawMesh(_mesh, _matrix, _mat, 0, null);
+			//Graphics.DrawMesh(_mesh, _matrix, _mat, 0, null);
+			Graphics.DrawMesh(_mesh, _matrix, _mat, 0, null, 0, null, shadowsOn, shadowsOn);
 		}
 	}
 

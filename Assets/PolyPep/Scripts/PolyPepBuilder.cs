@@ -330,6 +330,7 @@ public class PolyPepBuilder : MonoBehaviour {
 			residue.calpha_pf = polyArr[(resid * 3) + 1];
 			residue.carbonyl_pf = polyArr[(resid * 3) + 2];
 
+			residue.type = "XXX";
 			//electrostatics - WIP - with goal to model hbonds
 			sideChainBuilder.AddBackboneElectrostatics(residue);
 		}
@@ -404,11 +405,24 @@ public class PolyPepBuilder : MonoBehaviour {
 				case "C":
 				case "O":
 				case "H":
-				case "R":
 				case "S":
 				case "bondToH":
 				case "bond":
 					myRenderer.enabled = value;
+					break;
+				case "R":
+					// messy (to accomodate switchable render modes)
+					{
+						if (value && !myPolyPepManager.doRenderDrawMesh && myRenderer.transform.parent.parent.parent.GetComponent<Residue>().type == "XXX")
+						{
+							myRenderer.enabled = true;
+						}
+						else
+						{
+							myRenderer.enabled = false;
+						}
+					}
+
 					break;
 				default:
 					break;
