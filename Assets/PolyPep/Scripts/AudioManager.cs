@@ -37,7 +37,7 @@ public class AudioManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		enterAudioClip = Resources.Load("Audio/Click03a", typeof(AudioClip)) as AudioClip;
+		enterAudioClip = Resources.Load("Audio/chirp04_enter", typeof(AudioClip)) as AudioClip;
 
 		spawnAudioClip = Resources.Load("Audio/FX3", typeof(AudioClip)) as AudioClip;
 
@@ -59,23 +59,56 @@ public class AudioManager : MonoBehaviour
 	public void UpdateSfxVolumeFromUI(float sfxVolume)
 	{
 		masterVolume = sfxVolume * 10f / 25f;
-		PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
+		PlayScaledSliderSound((sfxVolume + 1f), 20f);
+		//PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
 	}
 
 	public void UpdateBgmVolumeFromUI(float bgmVolume)
 	{
 		audioSource3bgm.volume = bgmVolume  / 50f;
-		PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
+		PlayScaledSliderSound((bgmVolume + 1f), 20f);
+		//PlayAudio(audioSource1, selectGenericAudioClip, 0.1f);
 	}
 
 	public void PlayGenericSliderSound(float value)
 	{
+		PlayScaledSliderSound(value, 200f);
+		//if (Time.time > (lastSliderSoundTime + retriggerSliderSoundThreshold))
+		//{
+		//	lastSliderSoundTime = Time.time;
+		//	//if (value%10 == 0)
+		//	{
+		//		PlayAudio(audioSource1, chirpAudioClip, value/200f);
+		//	}
+		//}
+	}
+
+	public void PlaySpawnSliderSound(float value)
+	{
+		// min 1 max 32
+		PlayScaledSliderSound(value, 64f);
+	}
+
+	public void PlayVdwSliderSound(float value)
+	{
+		// min 5 max 30
+		PlayScaledSliderSound(value - 4f, 30f);
+	}
+
+	public void PlayTorqueSliderSound(float value)
+	{
+		// min 0 max 400
+		PlayScaledSliderSound(value + 10f, 800f);
+	}
+
+
+	private void PlayScaledSliderSound(float value, float scale)
+	{
 		if (Time.time > (lastSliderSoundTime + retriggerSliderSoundThreshold))
 		{
 			lastSliderSoundTime = Time.time;
-			//if (value%10 == 0)
 			{
-				PlayAudio(audioSource1, chirpAudioClip, value/200f);
+				PlayAudio(audioSource1, chirpAudioClip, value / scale);
 			}
 		}
 	}

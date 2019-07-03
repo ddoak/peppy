@@ -27,7 +27,7 @@ public class PolyPepManager : MonoBehaviour {
 	Shader shaderStandard;
 	Shader shaderToonOutline;
 
-	public bool doRenderDrawMesh = false;
+	public bool doRenderDrawMesh = true;
 	public bool shadowsOn = true;
 	public Light skylight;
 	private Quaternion skylightTargetRot;
