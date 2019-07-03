@@ -507,7 +507,7 @@ public class PolyPepManager : MonoBehaviour {
 	{
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.EnableRenderers(!doRenderDrawMesh);
+			_ppb.EnableOriginalPrefabRenderers(!doRenderDrawMesh);
 		}
 		// H atoms might be off
 		UpdateHAtomRenderers(showHydrogenAtoms);
@@ -824,99 +824,32 @@ public class PolyPepManager : MonoBehaviour {
 			//force update of H Atom rendering
 			UpdateShowHAtomsFromUI(showHydrogenAtoms);
 
-			UpdateSideChainRenderTransformLists();
+			UpdateAllBackboneRenderTransformLists();
+			UpdateAllSidechainRenderTransformLists();
 
-			UpdateRAtomTransformList();
 			UpdateRenderingMode();
 
 		}
 	}
 
-	public void UpdateSideChainRenderTransformLists()
+	public void UpdateAllBackboneRenderTransformLists()
 	{
 		//Update sidechain atom and bond transform lists
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.mySideChainCAtomTransforms.Clear();
-			_ppb.mySideChainNAtomTransforms.Clear();
-			_ppb.mySideChainHAtomTransforms.Clear();
-			_ppb.mySideChainOAtomTransforms.Clear();
-			_ppb.mySideChainSAtomTransforms.Clear();
-
-			_ppb.mySideChainBondTransforms.Clear();
-			_ppb.mySideChainBondToHTransforms.Clear();
-
-			foreach (GameObject _residueGo in _ppb.chainArr)
-			{
-				foreach (GameObject _sideChainAtomGo in _residueGo.GetComponent<Residue>().sideChainList)
-				{
-					foreach (Transform _child in _sideChainAtomGo.transform)
-					{
-						//Debug.Log(_child.name + " " + _child.tag);
-						//if (_child.name.Substring(0,6) == "tf_bond")
-						// can just use string length ;)
-						if (_child.name.Length > 3)
-						{
-							foreach (Transform _bond in _child.GetComponentsInChildren<Transform>())
-							{
-								switch (_bond.tag)
-								{
-									case "bond":
-										_ppb.mySideChainBondTransforms.Add(_bond);
-										break;
-									case "bondToH":
-										_ppb.mySideChainBondToHTransforms.Add(_bond);
-										break;
-									default:
-										break;
-								}
-							}
-						}
-						else
-						{
-							switch (_child.tag)
-							{
-								case "C":
-									_ppb.mySideChainCAtomTransforms.Add(_child);
-									break;
-								case "N":
-									_ppb.mySideChainNAtomTransforms.Add(_child);
-									break;
-								case "H":
-									_ppb.mySideChainHAtomTransforms.Add(_child);
-									break;
-								case "O":
-									_ppb.mySideChainOAtomTransforms.Add(_child);
-									break;
-								case "S":
-									_ppb.mySideChainSAtomTransforms.Add(_child);
-									break;
-								default:
-									break;
-							}
-
-						}
-					}
-				}
-			}
+			_ppb.UpdateBackboneRenderTransformLists();
 		}
 	}
 
-	public void UpdateRAtomTransformList()
+	public void UpdateAllSidechainRenderTransformLists()
 	{
+		//Update sidechain atom and bond transform lists
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
-			_ppb.myRAtomTransforms.Clear();
-
-			foreach (GameObject _residueGo in _ppb.chainArr)
-			{
-				if (_residueGo.GetComponent<Residue>().type == "XXX")
-				{
-					_ppb.myRAtomTransforms.Add(_ppb.GetCalphaForResidue(_residueGo.GetComponent<Residue>().resid).transform.Find("tf_sidechain/R_sidechain"));
-				}
-			}
+			_ppb.UpdateSideChainRenderTransformLists();
 		}
 	}
+
 
 	public void MakeDisulphideFromUI()
 	{
@@ -958,7 +891,7 @@ public class PolyPepManager : MonoBehaviour {
 		{
 			myAudioManager.PlaySetSecondary();
 			sideChainBuilder.MakeDisulphide(pp1, resid1, pp2, resid2);
-			UpdateSideChainRenderTransformLists();
+			UpdateAllSidechainRenderTransformLists();
 		}
 	}
 

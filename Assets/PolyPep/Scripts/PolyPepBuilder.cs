@@ -279,29 +279,6 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				AddBackboneTopologyConstraint(i);
 			}
-
-			//EnableRenderers(true);
-			//{
-			//	// turn off shadows / renderer
-			//	// makes surprisingly little difference
-
-			//	Renderer[] allChildren = GetComponentsInChildren<Renderer>();
-			//	foreach (Renderer child in allChildren)
-			//	{
-			//		Renderer myRenderer = child.GetComponent<Renderer>();
-			//		myRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-			//		myRenderer.receiveShadows = false;
-			//		// performance ?
-			//		myRenderer.allowOcclusionWhenDynamic = false;
-
-			//		//myRenderer.material = perfTestMat;
-
-			//		// turn off all mesh renderers
-			//		myRenderer.enabled = false;
-
-			//	}
-			//}
-
 	
 			SetRbDrag(polyArr[i]);
 
@@ -339,43 +316,11 @@ public class PolyPepBuilder : MonoBehaviour {
 
 		//ReCentrePolyPep();
 
-		// atom list setup
-		for (int resid = 0; resid < numResidues; resid++)
-		{
-
-			myHAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/H_amide"));
-			myNAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("N_amide"));
-
-			myRAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/R_sidechain"));
-
-			myCAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("C_alpha"));
-			myHAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/H"));
-
-			myCAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl"));
-			myOAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/O_carbonyl"));
-
-			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_bond_N_CA/bond_N_CA"));
-			myBondToHTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
-
-			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/tf_bond_CA_R/bond_CA_R"));
-			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_bond_CA_CO/bond_CA_CO"));
-			myBondToHTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/tf_bond_CA_H/bond_CA_H"));
-
-			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_bond_C_N/bond_CO_N"));
-			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/tf_bond_C_O/bond_C_O"));
-
-			myCAtomMatrices.Add(GetCalphaForResidue(resid).transform.Find("C_alpha").localToWorldMatrix);
-			myCAtomMatrices.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl").localToWorldMatrix);
-
-			//SetRbDrag(GetAmideForResidue(resid));
-			//SetRbDrag(GetCalphaForResidue(resid));
-			//SetRbDrag(GetCarbonylForResidue(resid));
-		}
-
-		EnableRenderers(!myPolyPepManager.doRenderDrawMesh);
+		UpdateBackboneRenderTransformLists();
+		EnableOriginalPrefabRenderers(!myPolyPepManager.doRenderDrawMesh);
 	}
 
-	public void EnableRenderers(bool value)
+	public void EnableOriginalPrefabRenderers(bool value)
 	{
 		// turn off shadows / renderer
 		// makes surprisingly little difference
@@ -432,7 +377,128 @@ public class PolyPepBuilder : MonoBehaviour {
 			UpdateRenderModeAllBbu();
 	}
 
+	public void UpdateBackboneRenderTransformLists()
+	{
+		myRAtomTransforms.Clear();
+		myCAtomTransforms.Clear();
+		myNAtomTransforms.Clear();
+		myOAtomTransforms.Clear();
+		myHAtomTransforms.Clear();
+		myBondTransforms.Clear();
+		myBondToHTransforms.Clear();
 
+		//foreach (GameObject _residueGo in chainArr)
+		//{
+		//	if (_residueGo.GetComponent<Residue>().type == "XXX")
+		//	{
+		//		myRAtomTransforms.Add(GetCalphaForResidue(_residueGo.GetComponent<Residue>().resid).transform.Find("tf_sidechain/R_sidechain"));
+		//	}
+		//}
+
+		for (int resid = 0; resid < numResidues; resid++)
+		{
+			Residue residue = chainArr[resid].GetComponent<Residue>();
+
+			myNAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("N_amide"));
+
+			myCAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("C_alpha"));
+			myHAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/H"));
+
+			myCAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("C_carbonyl"));
+			myOAtomTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/O_carbonyl"));
+
+			myBondTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_bond_N_CA/bond_N_CA"));
+			myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_bond_CA_CO/bond_CA_CO"));
+			myBondToHTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_H/tf_bond_CA_H/bond_CA_H"));
+
+			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_bond_C_N/bond_CO_N"));
+			myBondTransforms.Add(GetCarbonylForResidue(resid).transform.Find("tf_O/tf_bond_C_O/bond_C_O"));
+
+			if (residue.type == "XXX")
+			{
+				myRAtomTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/R_sidechain"));
+			}
+
+			if (residue.type != "PRO")
+			{
+				myHAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/H_amide"));
+				myBondToHTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
+				
+			}
+	
+			if (residue.type != "GLY" && residue.type != "GLY")
+			{
+				myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/tf_bond_CA_R/bond_CA_R"));
+			}
+		}
+
+	}
+
+	public void UpdateSideChainRenderTransformLists()
+	{
+		mySideChainCAtomTransforms.Clear();
+		mySideChainNAtomTransforms.Clear();
+		mySideChainHAtomTransforms.Clear();
+		mySideChainOAtomTransforms.Clear();
+		mySideChainSAtomTransforms.Clear();
+
+		mySideChainBondTransforms.Clear();
+		mySideChainBondToHTransforms.Clear();
+
+		foreach (GameObject _residueGo in chainArr)
+		{
+			foreach (GameObject _sideChainAtomGo in _residueGo.GetComponent<Residue>().sideChainList)
+			{
+				foreach (Transform _child in _sideChainAtomGo.transform)
+				{
+					//Debug.Log(_child.name + " " + _child.tag);
+					//if (_child.name.Substring(0,6) == "tf_bond")
+					// can just use string length ;)
+					if (_child.name.Length > 3)
+					{
+						foreach (Transform _bond in _child.GetComponentsInChildren<Transform>())
+						{
+							switch (_bond.tag)
+							{
+								case "bond":
+									mySideChainBondTransforms.Add(_bond);
+									break;
+								case "bondToH":
+									mySideChainBondToHTransforms.Add(_bond);
+									break;
+								default:
+									break;
+							}
+						}
+					}
+					else
+					{
+						switch (_child.tag)
+						{
+							case "C":
+								mySideChainCAtomTransforms.Add(_child);
+								break;
+							case "N":
+								mySideChainNAtomTransforms.Add(_child);
+								break;
+							case "H":
+								mySideChainHAtomTransforms.Add(_child);
+								break;
+							case "O":
+								mySideChainOAtomTransforms.Add(_child);
+								break;
+							case "S":
+								mySideChainSAtomTransforms.Add(_child);
+								break;
+							default:
+								break;
+						}
+
+					}
+				}
+			}
+		}
+	}
 
 	void AddResidueToChain(int index)
 	{
