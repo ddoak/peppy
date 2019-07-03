@@ -92,7 +92,7 @@ public class AudioManager : MonoBehaviour
 	public void PlayVdwSliderSound(float value)
 	{
 		// min 5 max 30
-		PlayScaledSliderSound(value - 4f, 30f);
+		PlayScaledSliderSound(value - 4f, 60f);
 	}
 
 	public void PlayTorqueSliderSound(float value)
