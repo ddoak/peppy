@@ -453,6 +453,7 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.ScaleVDW(vdwScale);
+			_ppb.UpdateRenderModeAllBbu();
 		}
 	}
 

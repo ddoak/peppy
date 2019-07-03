@@ -54,10 +54,28 @@ public class BackboneUnit : MonoBehaviour {
 				}
 
 				//atoms
-				if (childRenderer.transform.gameObject.layer == LayerMask.NameToLayer("Atom"))
+				//if (childRenderer.transform.gameObject.layer == LayerMask.NameToLayer("Atom"))
+				//{
+				//	renderersAtoms.Add(childRenderer);
+				//}
+
+				switch (childRenderer.transform.gameObject.tag)
 				{
-					renderersAtoms.Add(childRenderer);
+					case "C":
+					case "N":
+					case "O":
+					case "H":
+						renderersAtoms.Add(childRenderer);
+						break;
+					case "R":
+					default:
+						break;
+
 				}
+
+
+
+
 			}
 			//Debug.Log("bu " + gameObject + " --> " + gameObject.transform.parent.parent.gameObject);
 
