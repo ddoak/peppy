@@ -295,6 +295,7 @@ public class BackboneUnit : MonoBehaviour {
 				}
 				else
 				{
+					rendererPhi.enabled = !myPolyPepManager.doRenderDrawMesh;
 					rendererPhi.material.shader = shaderStandard;
 				}
 			}
@@ -319,6 +320,7 @@ public class BackboneUnit : MonoBehaviour {
 				}
 				else
 				{
+					rendererPsi.enabled = !myPolyPepManager.doRenderDrawMesh;
 					rendererPsi.material.shader = shaderStandard;
 				}
 			}
@@ -342,6 +344,7 @@ public class BackboneUnit : MonoBehaviour {
 				}
 				else
 				{
+					rendererPeptide.enabled = !myPolyPepManager.doRenderDrawMesh;
 					rendererPeptide.material.shader = shaderStandard;
 				}
 			}
