@@ -25,8 +25,11 @@ public class TractorBeam : MonoBehaviour
 		}
 		float tractorBeamScale = Mathf.Max(tractorBeamMin, (tractorBeamAttractionFactor * tractorBeamMagnitude / tractorBeamDistanceRatio));
 
-
-		go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+		if (go.GetComponent<Rigidbody>())
+		{
+			go.GetComponent<Rigidbody>().AddForce((tractorBeam * tractorBeamScale), ForceMode.Acceleration);
+		}
+		
 		// add scaling for 'size' of target?
 
 

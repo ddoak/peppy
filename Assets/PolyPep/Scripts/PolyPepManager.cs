@@ -453,6 +453,15 @@ public class PolyPepManager : MonoBehaviour {
 		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 		{
 			_ppb.ScaleVDW(vdwScale);
+			// fixes selection highlight scaling but expensive
+			//_ppb.UpdateRenderModeAllBbu();
+		}
+	}
+
+	public void UpdateVDWScalesEndDragUI()
+	{
+		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		{		
 			_ppb.UpdateRenderModeAllBbu();
 		}
 	}

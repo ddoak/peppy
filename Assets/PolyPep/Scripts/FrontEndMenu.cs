@@ -13,7 +13,7 @@ public class FrontEndMenu : MonoBehaviour
 
 	public void LoadSceneNonVR()
 	{
-		SceneManager.LoadScene("nonVR");
+		SceneManager.LoadScene("Peppy_nonVR");
 	}
 
 	// Start is called before the first frame update
