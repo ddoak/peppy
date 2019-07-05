@@ -1788,20 +1788,24 @@ public void SetAllColliderIsTrigger(bool value)
 			//backbone
 			for (int i = 0; i < polyLength; i++)
 			{
-				Rigidbody rb = polyArr[i].GetComponent<Rigidbody>();
-				rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+				JiggleRb(polyArr[i].GetComponent<Rigidbody>());
 			}
 			//sidechains
 			for (int resid = 0; resid < numResidues; resid++)
 			{ 
 				foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
 				{
-					Rigidbody rb = _sidechainGO.GetComponent<Rigidbody>();
-					rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+					JiggleRb(_sidechainGO.GetComponent<Rigidbody>());
 				}
 			}
 		}
 
+	}
+
+	private void JiggleRb(Rigidbody rb)
+	{
+		rb.AddForce(UnityEngine.Random.onUnitSphere * 0.01f * myPolyPepManager.jiggleStrength, ForceMode.Impulse);
+		//rb.AddTorque((0.1f * new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f))), ForceMode.Impulse);
 	}
 	
 	// Update is called once per frame
