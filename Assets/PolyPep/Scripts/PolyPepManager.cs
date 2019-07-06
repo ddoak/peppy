@@ -1205,16 +1205,19 @@ public class PolyPepManager : MonoBehaviour {
 
 	private void UpdateRenderAllBonds()
 	{
-		Vector3 _scaleBonds = new Vector3(1.25f, 5.5f, 1.25f); // eyeballed to match original
-		foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+		if (doRenderDrawMesh)
 		{
-			//matBond.shader = shaderStandard;
-			RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
-			RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondTransforms, _scaleBonds);
-			if (showHydrogenAtoms)
+			Vector3 _scaleBonds = new Vector3(1.25f, 5.5f, 1.25f); // eyeballed to match original
+			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
-				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, _scaleBonds);
-				RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondToHTransforms, _scaleBonds);
+				//matBond.shader = shaderStandard;
+				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
+				RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondTransforms, _scaleBonds);
+				if (showHydrogenAtoms)
+				{
+					RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, _scaleBonds);
+					RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondToHTransforms, _scaleBonds);
+				}
 			}
 		}
 	}

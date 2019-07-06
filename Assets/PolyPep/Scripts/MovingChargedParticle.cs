@@ -23,16 +23,32 @@ public class MovingChargedParticle : ChargedParticle {
 			rb = gameObject.GetComponent<Rigidbody>();
 		}
 		// 
-		myPPBChain = residueGO.GetComponent<Residue>().myPolyPepBuilder;
-		resid = residueGO.GetComponent<Residue>().resid;
-		if (rb.tag == "amide")
+		if (residueGO)
 		{
-			isBBAmide = true;
+			myPPBChain = residueGO.GetComponent<Residue>().myPolyPepBuilder;
+			resid = residueGO.GetComponent<Residue>().resid;
+			if (rb.tag == "amide")
+			{
+				isBBAmide = true;
+			}
+			if (rb.tag == "carbonyl")
+			{
+				isBBCarbonyl = true;
+			}
 		}
-		if (rb.tag == "carbonyl")
+
+
+		ParticleSystem.MainModule _psMain = myChargedParticle_ps.main;
+		Debug.Log(gameObject + " " + charge);
+		if (charge < 0)
 		{
-			isBBCarbonyl = true;
+			_psMain.startColor = new Color(0.7f, 0.3f, 0.3f, 0.8f); //Color.red;
 		}
+		else if (charge > 0)
+		{
+			_psMain.startColor = new Color(0.4f, 0.4f, 1.0f, 0.8f); //Color.blue;
+		}
+
 	}
 	
 	// Update is called once per frame
