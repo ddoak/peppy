@@ -112,7 +112,7 @@ public class Residue : MonoBehaviour {
 		// plot particle trail
 		myPlotTrail_psMain.startSize = 0.02f;
 		myPlotTrail_psMain.customSimulationSpace = ramaPlotOrigin.transform;
-		myPlotTrail_psEmission.rateOverTime = 200;
+		myPlotTrail_psEmission.rateOverTime = 50;
 
 		myPlotCubeLabel.GetComponent<TextMesh>().color = Color.black;
 		myPlotCubeLabel.GetComponent<TextMesh>().characterSize = 0.0008f;
@@ -177,8 +177,8 @@ public class Residue : MonoBehaviour {
 			_myPlotCubeRenderer.material.SetColor("_Color", Color.green);
 			//deltaPos += ramaPlot.transform.forward * -0.015f;
 			targetDeltaScale = 1.6f;
-			myPlotTrail_psMain.startColor = new Color(0.5f, 1f, 0.5f, 1f); // Color.green;
-			myPlotTrail_psMain.startSize = 0.02f;
+			myPlotTrail_psMain.startColor = new Color(0.5f, 1f, 0.5f, 0.8f); // Color.green;
+			//myPlotTrail_psMain.startSize = 0.02f;
 		}
 		else
 		{
@@ -187,8 +187,8 @@ public class Residue : MonoBehaviour {
 				_myPlotCubeRenderer.material.SetColor("_Color", Color.red);
 				//deltaPos += ramaPlot.transform.forward * -0.01f;
 				targetDeltaScale = 1.4f;
-				myPlotTrail_psMain.startColor = new Color(1f, 0.5f, 0.5f, 1f); //Color.red;
-				myPlotTrail_psMain.startSize = 0.02f;
+				myPlotTrail_psMain.startColor = new Color(1f, 0.5f, 0.5f, 0.8f); //Color.red;
+				//myPlotTrail_psMain.startSize = 0.02f;
 			}
 			else
 			{
@@ -196,8 +196,8 @@ public class Residue : MonoBehaviour {
 				{
 					_myPlotCubeRenderer.material.SetColor("_Color", Color.yellow);
 					targetDeltaScale = 1.2f;
-					myPlotTrail_psMain.startColor = new Color(0.7f, 0.6f, 0f, 1f); // Color.yellow;
-					myPlotTrail_psMain.startSize = 0.02f;
+					myPlotTrail_psMain.startColor = new Color(0.7f, 0.7f, 0f, 0.8f); // Color.yellow;
+					//myPlotTrail_psMain.startSize = 0.02f;
 				}
 				else
 				{
@@ -212,8 +212,8 @@ public class Residue : MonoBehaviour {
 					{
 						_myPlotCubeRenderer.material.SetColor("_Color", Color.white);
 						targetDeltaScale = 1.0f;
-						myPlotTrail_psMain.startColor = new Color(1f, 1f, 1f, 0.8f);  //white;
-						myPlotTrail_psMain.startSize = 0.01f;
+						myPlotTrail_psMain.startColor = new Color(1f, 1f, 1f, 0.4f);  //white;
+						//myPlotTrail_psMain.startSize = 0.01f;
 					}
 
 				}

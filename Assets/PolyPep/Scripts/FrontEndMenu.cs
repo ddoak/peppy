@@ -29,6 +29,9 @@ public class FrontEndMenu : MonoBehaviour
 		{
 			LoadSceneVR();
 		}
-
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 	}
 }

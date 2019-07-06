@@ -222,7 +222,9 @@ public class Csp3 : MonoBehaviour {
 		_H.tag = "UnusedAtom";
 
 		Destroy(_H.GetComponent<Renderer>());
-		Destroy(_H.GetComponent<Collider>());
+		//Destroy(_H.GetComponent<Collider>());
+		// destroying collider leaves empty element in OVRGrabbable array
+		_H.GetComponent<Collider>().enabled = false;
 		Destroy(_H.GetComponent<MeshFilter>());
 	}
 
