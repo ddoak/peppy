@@ -116,48 +116,13 @@ public class ElectrostaticsManager : MonoBehaviour {
 								}
 							}
 						}
-
-						//if (mcp.rb.tag == "amide")
-						//{
-						//	if (mcp2.rb.tag == "carbonyl")
-						//	{
-
-						//		if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
-						//		{
-						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
-						//			{
-						//				continue;
-						//			}
-						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
-						//			{
-						//				continue;
-						//			}
-						//		}
-
-						//	}
-						//}
-						//if (mcp.rb.tag == "carbonyl")
-						//{
-						//	if (mcp2.rb.tag == "amide")
-						//	{
-
-						//		if (mcp.residueGO.GetComponent<Residue>().myPolyPepBuilder == mcp2.residueGO.GetComponent<Residue>().myPolyPepBuilder)
-						//		{
-						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid - 1))
-						//			{
-						//				continue;
-						//			}
-						//			if (mcp.residueGO.GetComponent<Residue>().resid == (mcp2.residueGO.GetComponent<Residue>().resid + 1))
-						//			{
-						//				continue;
-						//			}
-						//		}
-
-						//	}
-
-						//}
 					}
 
+					// 4. Water - if both mcp have same rb
+					if (mcp.rb == mcp2.rb)
+					{
+						continue;
+					}
 
 
 					float distance = Vector3.Distance(mcp.transform.position, mcp2.transform.position);
