@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FrontEnd.unity
     guid: 94f52cd6336596f429b7dc4fba3f3144
   - enabled: 1
@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Peppy_VR.unity
     guid: 5e30fed2660967845b30ee9a7b8c01ee
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Peppy_nonVR.unity
     guid: fc849e1b104f08144a0b22feb5a5c3ed
   m_configObjects: {}

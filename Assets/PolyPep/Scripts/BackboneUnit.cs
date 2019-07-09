@@ -201,7 +201,7 @@ public class BackboneUnit : MonoBehaviour {
 				if (myPolyPepManager.doRenderDrawMesh)
 				{
 					_rendererAtom.material.shader = shaderOutlinedSilhouette;
-					_rendererAtom.material.SetFloat("_Outline", 0.005f * myPolyPepManager.vdwScale);
+					_rendererAtom.material.SetFloat("_Outline", 0.005f * myPolyPepManager.vdwScale); // quest * 0.05f);
 					_rendererAtom.enabled = true;
 				}
 				else
