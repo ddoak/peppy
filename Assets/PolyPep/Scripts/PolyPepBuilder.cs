@@ -68,7 +68,16 @@ public class PolyPepBuilder : MonoBehaviour {
 	public List<Transform> mySideChainBondTransforms = new List<Transform>();
 	public List<Transform> mySideChainBondToHTransforms = new List<Transform>();
 
-	public List<Matrix4x4> myCAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllBondMatrices = new List<Matrix4x4>();
+
+	public List<Matrix4x4> myAllCAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllNAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllOAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllHAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllRAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllSAtomMatrices = new List<Matrix4x4>();
+
 
 
 	public GameObject[] polyArr;
@@ -386,13 +395,6 @@ public class PolyPepBuilder : MonoBehaviour {
 		myBondTransforms.Clear();
 		myBondToHTransforms.Clear();
 
-		//foreach (GameObject _residueGo in chainArr)
-		//{
-		//	if (_residueGo.GetComponent<Residue>().type == "XXX")
-		//	{
-		//		myRAtomTransforms.Add(GetCalphaForResidue(_residueGo.GetComponent<Residue>().resid).transform.Find("tf_sidechain/R_sidechain"));
-		//	}
-		//}
 
 		for (int resid = 0; resid < numResidues; resid++)
 		{
@@ -422,9 +424,9 @@ public class PolyPepBuilder : MonoBehaviour {
 			{
 				myHAtomTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/H_amide"));
 				myBondToHTransforms.Add(GetAmideForResidue(resid).transform.Find("tf_H/tf_bond_N_H/bond_N_H"));
-				
+
 			}
-	
+
 			if (residue.type != "GLY" && residue.type != "GLY")
 			{
 				myBondTransforms.Add(GetCalphaForResidue(resid).transform.Find("tf_sidechain/tf_bond_CA_R/bond_CA_R"));
@@ -569,8 +571,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		// physics collider should be constant radius and independent of rendering scale
 		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
 		// SO apply inverse scaling to SphereCollider to compensate
-		myAtom.GetComponent<SphereCollider>().radius = 1.23f * relativeRadiusAtomType / scaleVDW; 
-		// 1.1f is magic number
+		myAtom.GetComponent<SphereCollider>().radius = 1.2f * relativeRadiusAtomType / scaleVDW; 
+		// 1.2f is magic number
 
 	}
 
