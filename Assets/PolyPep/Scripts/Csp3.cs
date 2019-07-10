@@ -795,8 +795,6 @@ public class Csp3 : MonoBehaviour {
 			{
 				case "H_0":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				case "H_1":
@@ -833,8 +831,6 @@ public class Csp3 : MonoBehaviour {
 					break;
 				case "tf_bond_H2":
 					SetBondUnused(_bond);
-					//_bond.GetComponent<Renderer>().enabled = false;
-					//_bond.GetComponent<Collider>().enabled = false;
 					break;
 				default:
 					break;
@@ -851,8 +847,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(_H);
 					break;
 				default:
@@ -878,8 +872,6 @@ public class Csp3 : MonoBehaviour {
 					else
 					{
 						SetBondUnused(_bond);
-						//_bond.GetComponent<Renderer>().enabled = false;
-						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				case "tf_bond_H2":
@@ -890,8 +882,6 @@ public class Csp3 : MonoBehaviour {
 					else
 					{
 						SetBondUnused(_bond);
-						//_bond.GetComponent<Renderer>().enabled = false;
-						//_bond.GetComponent<Collider>().enabled = false;
 					}
 					break;
 				default:
@@ -910,10 +900,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_0":
 				case "H_1":
 				case "H_2":
-					//_H.GetComponent<Renderer>().enabled = false;
-					//_H.GetComponent<Collider>().enabled = false;
-
-
 					SetHAtomUnused(_H);
 					break;
 				default:
@@ -1132,9 +1118,6 @@ public class Csp3 : MonoBehaviour {
 					socketPos = new Vector3(Mathf.Cos((sp2ThetaH1 + sp2ThetaH2) * Mathf.Deg2Rad), 0, Mathf.Sin((sp2ThetaH1 + sp2ThetaH2) * Mathf.Deg2Rad));
 					break;
 				case "H_3":
-					//HtfList.Add(child);
-					//child.GetComponent<Renderer>().enabled = false;
-					//child.GetComponent<Collider>().enabled = false;
 					SetHAtomUnused(child);
 					addSocketOffset = false;
 					break;
@@ -1148,10 +1131,6 @@ public class Csp3 : MonoBehaviour {
 				case "tf_bond_H3":
 					//BtfList.Add(child);
 					Transform _bond = child.GetChild(0); // only one child in pf
-
-					//_bond.GetComponent<Renderer>().enabled = false;
-					//_bond.GetComponent<Collider>().enabled = false;
-
 					SetBondUnused(_bond);
 					addSocketOffset = false;
 					break;

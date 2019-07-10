@@ -42,7 +42,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	float hBondModelInnerLength = 1.2f;
 	float hBondModelOuterLength = 3.5f;
 
-
 	public int secondaryStructure { get; set; } // = 0;
 
 	public int numResidues = 0;
@@ -513,14 +512,14 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		{
 			float scaleVDW = scale;
-			// relative atom radii
-			float radiusN = 1.0f;
-			float radiusC = 1.0f;
-			float radiusO = 1.0f;
-			float radiusH = 0.75f;
-			float radiusS = 1.1f;
-			float radiusR = 1.1f;
-			float radiusFreeze = 70.0f;
+			//// relative atom radii
+			//float radiusN = 1.0f * 1.55f / 1.7f;
+			//float radiusC = 1.0f;
+			//float radiusO = 1.0f * 1.52f / 1.7f;
+			//float radiusH = 1.0f * 1.2f / 1.7f; //0.75f;
+			//float radiusS = 1.0f * 1.8f / 1.7f; // 1.1f;
+			//float radiusR = 1.1f;
+			//float radiusFreeze = 70.0f;
 
 			Transform[] allChildren = GetComponentsInChildren<Transform>();
 			foreach (Transform child in allChildren)
@@ -530,31 +529,31 @@ public class PolyPepBuilder : MonoBehaviour {
 				{
 					case "N":
 						//atomDisplayScale = radiusN * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusN);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusN);
 						break;
 					case "C":
 						//atomDisplayScale = radiusC * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusC);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusC);
 						break;
 					case "O":
 						//atomDisplayScale = radiusO * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusO);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusO);
 						break;
 					case "H":
 						//atomDisplayScale = radiusH * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusH);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusH);
 						break;
 					case "R":
 						//atomDisplayScale = radiusR * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusR);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusR);
 						break;
 					case "S":
 						//atomDisplayScale = radiusS * scaleVDW;
-						ScaleAtom(child, scaleVDW, radiusS);
+						ScaleAtom(child, scaleVDW, myPolyPepManager.radiusS);
 						break;
 					case "freeze":
 						//atomDisplayScale = radiusS * scaleVDW;
-						ScaleFreeze(child, scaleVDW, radiusFreeze);
+						ScaleFreeze(child, scaleVDW, myPolyPepManager.radiusFreeze);
 						break;
 				}
 
@@ -570,7 +569,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		// physics collider should be constant radius and independent of rendering scale
 		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
 		// SO apply inverse scaling to SphereCollider to compensate
-		myAtom.GetComponent<SphereCollider>().radius = 1.1f * relativeRadiusAtomType / scaleVDW; 
+		myAtom.GetComponent<SphereCollider>().radius = 1.23f * relativeRadiusAtomType / scaleVDW; 
 		// 1.1f is magic number
 
 	}

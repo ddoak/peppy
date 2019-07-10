@@ -13,6 +13,15 @@ public class PolyPepManager : MonoBehaviour {
 	public SideChainBuilder sideChainBuilder;
 	public ElectrostaticsManager electrostaticsManager;
 
+	// relative atom radii
+	public float radiusN = 1.0f * 1.55f / 1.7f;
+	public float radiusC = 1.0f;
+	public float radiusO = 1.0f * 1.52f / 1.7f;
+	public float radiusH = 1.0f * 1.2f / 1.7f; //0.75f;
+	public float radiusS = 1.0f * 1.8f / 1.7f; // 1.1f;
+	public float radiusR = 1.1f;
+	public float radiusFreeze = 70.0f;
+
 	public Mesh atomMesh;
 	public Mesh bondMesh;
 	public Material testMaterial;
@@ -23,15 +32,23 @@ public class PolyPepManager : MonoBehaviour {
 	public Material matR;
 	public Material matS;
 	public Material matBond;
+	public Material matTrans;
+
+	private Vector3 drawMeshAtomScale = new Vector3(0.1f, 0.1f, 0.1f); // matches prefabs
+	//private Vector3 drawMeshAtomScale = new Vector3(5f, 5f, 5f); // if use maya sphere
+	private Vector3 drawMeshBondScale = new Vector3(0.025f, 0.05f, 0.025f); // matches prefabs
+	//private Vector3 drawMeshBondScale = new Vector3(1.25f, 5.5f, 1.25f); // eyeballed to match original for maya cylinder
 
 	Shader shaderStandard;
 	Shader shaderToonOutline;
 
 	public bool doRenderDrawMesh = true;
 	public bool shadowsOn = true;
+	public bool renderAtoms = true;
+	public bool renderBonds = true;
+
 	public Light skylight;
 	private Quaternion skylightTargetRot;
-
 
 	public bool collidersOn = false;
 	public float vdwScale = 1.0f;
@@ -142,6 +159,7 @@ public class PolyPepManager : MonoBehaviour {
 			matR = Resources.Load("Materials/mPurple", typeof(Material)) as Material;
 			matS = Resources.Load("Materials/mYellow", typeof(Material)) as Material;
 			matBond = Resources.Load("Materials/mGrey2", typeof(Material)) as Material;
+			matTrans = Resources.Load("Materials/mTrans", typeof(Material)) as Material;
 
 			shaderStandard = Shader.Find("Standard");
 			shaderToonOutline = Shader.Find("Toon/Basic Outline");
@@ -530,6 +548,18 @@ public class PolyPepManager : MonoBehaviour {
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
 		myAudioManager.PlayOnOffSfx(value);
 		shadowsOn = value;
+	}
+
+	public void UpdateRenderAtomsFromUI(bool value)
+	{
+		myAudioManager.PlayOnOffSfx(value);
+		renderAtoms = value;
+	}
+
+	public void UpdateRenderBondsFromUI(bool value)
+	{
+		myAudioManager.PlayOnOffSfx(value);
+		renderBonds = value;
 	}
 
 	public void UpdateDragFromUI(bool value)
@@ -1173,31 +1203,28 @@ public class PolyPepManager : MonoBehaviour {
 
 	private void UpdateRenderAllAtoms()
 	{
-		if (doRenderDrawMesh)
-		{
-			Vector3 _scale = new Vector3(vdwScale, vdwScale, vdwScale);
-			_scale = _scale * 5f;
-			
+		if (renderAtoms && doRenderDrawMesh)
+		{			
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
 				// render ATOMS
-				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, _scale);
-				RenderMeshTransformList(atomMesh, matC, _ppb.mySideChainCAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, drawMeshAtomScale * vdwScale);
+				RenderMeshTransformList(atomMesh, matC, _ppb.mySideChainCAtomTransforms, drawMeshAtomScale * vdwScale);
 
-				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, _scale);
-				RenderMeshTransformList(atomMesh, matN, _ppb.mySideChainNAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, drawMeshAtomScale * radiusN * vdwScale);
+				RenderMeshTransformList(atomMesh, matN, _ppb.mySideChainNAtomTransforms, drawMeshAtomScale * radiusN * vdwScale);
 
-				RenderMeshTransformList(atomMesh, matO, _ppb.myOAtomTransforms, _scale);
-				RenderMeshTransformList(atomMesh, matO, _ppb.mySideChainOAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matO, _ppb.myOAtomTransforms, drawMeshAtomScale * radiusO * vdwScale);
+				RenderMeshTransformList(atomMesh, matO, _ppb.mySideChainOAtomTransforms, drawMeshAtomScale * radiusO * vdwScale);
 
-				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, _scale * 1.1f);
+				RenderMeshTransformList(atomMesh, matR, _ppb.myRAtomTransforms, drawMeshAtomScale * radiusR * vdwScale);
 
-				RenderMeshTransformList(atomMesh, matS, _ppb.mySideChainSAtomTransforms, _scale);
+				RenderMeshTransformList(atomMesh, matS, _ppb.mySideChainSAtomTransforms, drawMeshAtomScale * radiusS * vdwScale);
 
 				if (showHydrogenAtoms)
 				{
-					RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, _scale*0.75f);
-					RenderMeshTransformList(atomMesh, matH, _ppb.mySideChainHAtomTransforms, _scale*0.75f);
+					RenderMeshTransformList(atomMesh, matH, _ppb.myHAtomTransforms, drawMeshAtomScale * radiusH * vdwScale);
+					RenderMeshTransformList(atomMesh, matH, _ppb.mySideChainHAtomTransforms, drawMeshAtomScale * radiusH * vdwScale);
 				}
 			}
 		}
@@ -1205,18 +1232,17 @@ public class PolyPepManager : MonoBehaviour {
 
 	private void UpdateRenderAllBonds()
 	{
-		if (doRenderDrawMesh)
+		if (renderBonds && doRenderDrawMesh)
 		{
-			Vector3 _scaleBonds = new Vector3(1.25f, 5.5f, 1.25f); // eyeballed to match original
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
 				//matBond.shader = shaderStandard;
-				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, _scaleBonds);
-				RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondTransforms, _scaleBonds);
+				RenderMeshTransformList(bondMesh, matBond, _ppb.myBondTransforms, drawMeshBondScale);
+				RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondTransforms, drawMeshBondScale);
 				if (showHydrogenAtoms)
 				{
-					RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, _scaleBonds);
-					RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondToHTransforms, _scaleBonds);
+					RenderMeshTransformList(bondMesh, matBond, _ppb.myBondToHTransforms, drawMeshBondScale);
+					RenderMeshTransformList(bondMesh, matBond, _ppb.mySideChainBondToHTransforms, drawMeshBondScale);
 				}
 			}
 		}
