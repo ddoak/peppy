@@ -78,8 +78,6 @@ public class PolyPepBuilder : MonoBehaviour {
 	public List<Matrix4x4> myAllRAtomMatrices = new List<Matrix4x4>();
 	public List<Matrix4x4> myAllSAtomMatrices = new List<Matrix4x4>();
 
-
-
 	public GameObject[] polyArr;
 	private int polyLength;
 

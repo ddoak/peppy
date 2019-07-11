@@ -34,6 +34,15 @@ public class PolyPepManager : MonoBehaviour {
 	public Material matBond;
 	public Material matTrans;
 
+	public List<Matrix4x4> myAllBondMatrices = new List<Matrix4x4>();
+
+	public List<Matrix4x4> myAllCAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllNAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllOAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllHAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllRAtomMatrices = new List<Matrix4x4>();
+	public List<Matrix4x4> myAllSAtomMatrices = new List<Matrix4x4>();
+
 	public Vector3 drawMeshAtomScale = new Vector3(0.1f, 0.1f, 0.1f); // matches prefabs
 	//private Vector3 drawMeshAtomScale = new Vector3(5f, 5f, 5f); // if use maya sphere
 	public Vector3 drawMeshBondScale = new Vector3(0.025f, 0.05f, 0.025f); // matches prefabs
@@ -44,8 +53,8 @@ public class PolyPepManager : MonoBehaviour {
 
 	public bool doRenderDrawMesh = true;
 	public bool shadowsOn = true;
-	public bool renderAtoms = true;
-	public bool renderBonds = true;
+	public bool renderAtoms = false;
+	public bool renderBonds = false;
 	public bool renderMat4x4 = true;
 
 	public Light skylight;
@@ -1210,7 +1219,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	private void UpdateRenderAllAtoms()
 	{
-		if (renderAtoms && doRenderDrawMesh)
+		if (renderAtoms && doRenderDrawMesh && !renderMat4x4)
 		{			
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
@@ -1239,7 +1248,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	private void UpdateRenderAllBonds()
 	{
-		if (renderBonds && doRenderDrawMesh)
+		if (renderBonds && doRenderDrawMesh && !renderMat4x4)
 		{
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
@@ -1271,9 +1280,135 @@ public class PolyPepManager : MonoBehaviour {
 
 	void DrawMeshInstancedTest()
 	{
+		// matrices stored in ppm
 		// was not expecting this to be faster but...
 		if (renderMat4x4)
 		{
+				myAllCAtomMatrices.Clear();
+				myAllNAtomMatrices.Clear();
+				myAllOAtomMatrices.Clear();
+				myAllHAtomMatrices.Clear();
+				myAllRAtomMatrices.Clear();
+				myAllSAtomMatrices.Clear();
+				myAllBondMatrices.Clear();
+
+			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
+			{
+				if (renderAtoms)
+				{
+					foreach (Transform _tf in _ppb.myCAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+					}
+					foreach (Transform _tf in _ppb.myNAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
+					}
+					foreach (Transform _tf in _ppb.myOAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
+					}
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.myHAtomTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						}
+					}
+
+					foreach (Transform _tf in _ppb.myRAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllRAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusR));
+					}
+
+					foreach (Transform _tf in _ppb.mySideChainCAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+					}
+					foreach (Transform _tf in _ppb.mySideChainNAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
+					}
+					foreach (Transform _tf in _ppb.mySideChainOAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
+					}
+					foreach (Transform _tf in _ppb.mySideChainSAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllSAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusS));
+					}
+
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.mySideChainHAtomTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						}
+					}
+				}
+
+				//if (renderBonds)
+				if ( (renderBonds && vdwScale < 1.9f) || (renderBonds && !renderAtoms) )
+				{
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.myBondToHTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+						}
+						foreach (Transform _tf in _ppb.mySideChainBondToHTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+						}
+					}
+					foreach (Transform _tf in _ppb.myBondTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+					}
+					foreach (Transform _tf in _ppb.mySideChainBondTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+					}
+				}
+			}
+
+			if (renderAtoms)
+			{
+				DoDrawMeshInstanced(atomMesh, myAllCAtomMatrices.ToArray(), matC);
+				DoDrawMeshInstanced(atomMesh, myAllNAtomMatrices.ToArray(), matN);
+				DoDrawMeshInstanced(atomMesh, myAllOAtomMatrices.ToArray(), matO);
+				DoDrawMeshInstanced(atomMesh, myAllHAtomMatrices.ToArray(), matH);
+				DoDrawMeshInstanced(atomMesh, myAllRAtomMatrices.ToArray(), matR);
+				DoDrawMeshInstanced(atomMesh, myAllSAtomMatrices.ToArray(), matS);
+			}
+			if (renderBonds)
+			{
+				DoDrawMeshInstanced(bondMesh, myAllBondMatrices.ToArray(), matBond);
+			}	
+		}	
+	}
+
+	void DrawMeshInstancedTest_ppb()
+	{
+		// matrices stored in ppbs
+		// was not expecting this to be faster but...
+		if (renderMat4x4)
+		{
+
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
 				_ppb.myAllCAtomMatrices.Clear();
@@ -1283,111 +1418,123 @@ public class PolyPepManager : MonoBehaviour {
 				_ppb.myAllRAtomMatrices.Clear();
 				_ppb.myAllSAtomMatrices.Clear();
 
-
-				foreach (Transform _tf in _ppb.myCAtomTransforms)
+				if (renderAtoms)
 				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
-				}
-				foreach (Transform _tf in _ppb.myNAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
-				}
-				foreach (Transform _tf in _ppb.myOAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
-				}
-				if (showHydrogenAtoms)
-				{
-					foreach (Transform _tf in _ppb.myHAtomTransforms)
+					foreach (Transform _tf in _ppb.myCAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						_ppb.myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
 					}
-				}
-
-				foreach (Transform _tf in _ppb.myRAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllRAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusR));
-				}
-
-				foreach (Transform _tf in _ppb.mySideChainCAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
-				}
-				foreach (Transform _tf in _ppb.mySideChainNAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
-				}
-				foreach (Transform _tf in _ppb.mySideChainOAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
-				}
-				foreach (Transform _tf in _ppb.mySideChainSAtomTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllSAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusS));
-				}
-
-				if (showHydrogenAtoms)
-				{
-					foreach (Transform _tf in _ppb.mySideChainHAtomTransforms)
+					foreach (Transform _tf in _ppb.myNAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						_ppb.myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						_ppb.myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
+					}
+					foreach (Transform _tf in _ppb.myOAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
+					}
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.myHAtomTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							_ppb.myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						}
+					}
+
+					foreach (Transform _tf in _ppb.myRAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllRAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusR));
+					}
+
+					foreach (Transform _tf in _ppb.mySideChainCAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+					}
+					foreach (Transform _tf in _ppb.mySideChainNAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllNAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusN));
+					}
+					foreach (Transform _tf in _ppb.mySideChainOAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllOAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusO));
+					}
+					foreach (Transform _tf in _ppb.mySideChainSAtomTransforms)
+					{
+						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+						_ppb.myAllSAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusS));
+					}
+
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.mySideChainHAtomTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							_ppb.myAllHAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusH));
+						}
 					}
 				}
-
 
 				_ppb.myAllBondMatrices.Clear();
 
-				if (showHydrogenAtoms)
+				if (renderBonds)
 				{
-					foreach (Transform _tf in _ppb.myBondToHTransforms)
+					if (showHydrogenAtoms)
+					{
+						foreach (Transform _tf in _ppb.myBondToHTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+						}
+						foreach (Transform _tf in _ppb.mySideChainBondToHTransforms)
+						{
+							//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
+							_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
+						}
+					}
+					foreach (Transform _tf in _ppb.myBondTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
 						_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
 					}
-					foreach (Transform _tf in _ppb.mySideChainBondToHTransforms)
+					foreach (Transform _tf in _ppb.mySideChainBondTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
 						_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
 					}
 				}
-				foreach (Transform _tf in _ppb.myBondTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
-				}
-				foreach (Transform _tf in _ppb.mySideChainBondTransforms)
-				{
-					//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-					_ppb.myAllBondMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshBondScale));
-				}
 
-				var _matrixCAtomsArray = _ppb.myAllCAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matC, _matrixCAtomsArray);
-				var _matrixNAtomsArray = _ppb.myAllNAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matN, _matrixNAtomsArray);
-				var _matrixOAtomsArray = _ppb.myAllOAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matO, _matrixOAtomsArray);
-				var _matrixHAtomsArray = _ppb.myAllHAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matH, _matrixHAtomsArray);
-				var _matrixRAtomsArray = _ppb.myAllRAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matR, _matrixRAtomsArray);
-				var _matrixSAtomsArray = _ppb.myAllSAtomMatrices.ToArray();
-				Graphics.DrawMeshInstanced(atomMesh, 0, matR, _matrixSAtomsArray);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllCAtomMatrices.ToArray(), matC);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllNAtomMatrices.ToArray(), matN);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllOAtomMatrices.ToArray(), matO);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllHAtomMatrices.ToArray(), matH);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllRAtomMatrices.ToArray(), matR);
+				DoDrawMeshInstanced(atomMesh, _ppb.myAllSAtomMatrices.ToArray(), matS);
 
-				var _matrixBondsArray = _ppb.myAllBondMatrices.ToArray();
-				Graphics.DrawMeshInstanced(bondMesh, 0, matBond, _matrixBondsArray);
+				DoDrawMeshInstanced(bondMesh, _ppb.myAllBondMatrices.ToArray(), matBond);
 			}
-		}	
+		}
+	}
+
+	private void DoDrawMeshInstanced(Mesh _mesh, Matrix4x4[] _matrixArray, Material _mat)
+	{
+		if (_matrixArray.Length < 1024) // max array size for DrawMeshInstanced !
+		{
+			if (shadowsOn)
+			{
+				Graphics.DrawMeshInstanced(_mesh, 0, _mat, _matrixArray, _matrixArray.Length, null, UnityEngine.Rendering.ShadowCastingMode.On, true);
+			}
+			else
+			{
+				Graphics.DrawMeshInstanced(_mesh, 0, _mat, _matrixArray, _matrixArray.Length, null, UnityEngine.Rendering.ShadowCastingMode.Off, false);
+			}
+		}
 	}
 
 

@@ -11315,14 +11315,14 @@ MonoBehaviour:
   atomMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   bondMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   testMaterial: {fileID: 0}
-  matC: {fileID: 0}
-  matN: {fileID: 0}
-  matH: {fileID: 0}
-  matO: {fileID: 0}
-  matR: {fileID: 0}
-  matS: {fileID: 0}
-  matBond: {fileID: 0}
-  matTrans: {fileID: 0}
+  matC: {fileID: 2100000, guid: 1f7626e3b1d06d648861abedc84f87da, type: 2}
+  matN: {fileID: 2100000, guid: 8e7c51985cb3d614197f0102f4699ff3, type: 2}
+  matH: {fileID: 2100000, guid: 3abdbc84295522140b6c773a2fd1484c, type: 2}
+  matO: {fileID: 2100000, guid: 89883594098a26946a03b6ace8ceef32, type: 2}
+  matR: {fileID: 2100000, guid: d1f66a5cf744e7d43bbce458e33c2d6a, type: 2}
+  matS: {fileID: 2100000, guid: 45c48d3e020c39f408b9215f5b982480, type: 2}
+  matBond: {fileID: 2100000, guid: 61333d64793e471489042f2d25266ba4, type: 2}
+  matTrans: {fileID: 2100000, guid: dc04c2b499478324ea246aded1523303, type: 2}
   drawMeshAtomScale: {x: 0.1, y: 0.1, z: 0.1}
   drawMeshBondScale: {x: 0.025, y: 0.05, z: 0.025}
   doRenderDrawMesh: 1
@@ -11635,7 +11635,7 @@ Transform:
   - {fileID: 1388124658}
   - {fileID: 1654893870}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &393419978
 GameObject:
@@ -38344,7 +38344,7 @@ Transform:
   - {fileID: 2117203876}
   - {fileID: 1082519096}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1257479172
 GameObject:
@@ -41205,7 +41205,7 @@ Transform:
   - {fileID: 1721689789}
   - {fileID: 1030857660}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1365934991
 GameObject:
@@ -44593,45 +44593,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448654023}
   m_CullTransparentMesh: 0
---- !u!1 &1451683155
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1451683157}
-  - component: {fileID: 1451683156}
-  m_Layer: 0
-  m_Name: Sphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!33 &1451683156
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451683155}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1451683157
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451683155}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2324032, y: -1.1851333, z: 6.1895294}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1457769604
 GameObject:
   m_ObjectHideFlags: 0
@@ -55807,7 +55768,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1813908620
 MonoBehaviour:
@@ -63546,7 +63507,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: ' "Peppy" v0.62 (2019.07.08)'
+  m_text: ' "Peppy" v0.63 (2019.07.11)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

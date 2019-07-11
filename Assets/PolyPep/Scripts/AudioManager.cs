@@ -34,6 +34,9 @@ public class AudioManager : MonoBehaviour
 	float lastSliderSoundTime = 0f;
 	float retriggerSliderSoundThreshold = 0.11f;
 
+	float lastSelectSoundTime = 0f;
+	float retriggerSelectSoundThreshold = 0.2f;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -148,13 +151,18 @@ public class AudioManager : MonoBehaviour
 
 	public void PlaySelectSfx(bool value)
 	{
-		if (value == true)
+		if (Time.time > (lastSelectSoundTime + retriggerSelectSoundThreshold))
 		{
-			PlaySelectOn();
-		}
-		else
-		{
-			PlaySelectOff();
+			lastSelectSoundTime = Time.time;
+
+			if (value == true)
+			{
+				PlaySelectOn();
+			}
+			else
+			{
+				PlaySelectOff();
+			}
 		}
 	}
 

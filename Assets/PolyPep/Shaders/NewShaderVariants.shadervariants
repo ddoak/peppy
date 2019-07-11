@@ -33,6 +33,8 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _EMISSION
+        passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
@@ -43,11 +45,23 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _NORMALMAP
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _EMISSION
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION _METALLICGLOSSMAP
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _METALLICGLOSSMAP _NORMALMAP
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION _METALLICGLOSSMAP _NORMALMAP
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 4
@@ -68,9 +82,14 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
       - keywords: DIRECTIONAL _GLOSSYREFLECTIONS_OFF
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _GLOSSYREFLECTIONS_OFF
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF
         passType: 4
@@ -91,6 +110,9 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN _GLOSSYREFLECTIONS_OFF
           _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION _GLOSSYREFLECTIONS_OFF
+          _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
         passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
@@ -109,7 +131,13 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
           _SPECULARHIGHLIGHTS_OFF
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _GLOSSYREFLECTIONS_OFF
+          _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+        passType: 4
       - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN _GLOSSYREFLECTIONS_OFF
+          _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION _GLOSSYREFLECTIONS_OFF
           _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
         passType: 4
       - keywords: SPOT
@@ -117,6 +145,8 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL
         passType: 5
       - keywords: POINT
+        passType: 5
+      - keywords: SHADOWS_DEPTH SPOT
         passType: 5
       - keywords: DIRECTIONAL SHADOWS_SCREEN
         passType: 5
@@ -128,7 +158,15 @@ ShaderVariantCollection:
         passType: 5
       - keywords: DIRECTIONAL _NORMALMAP
         passType: 5
+      - keywords: DIRECTIONAL _ALPHATEST_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHABLEND_ON
+        passType: 5
       - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: DIRECTIONAL _METALLICGLOSSMAP
+        passType: 5
+      - keywords: DIRECTIONAL _METALLICGLOSSMAP _NORMALMAP
         passType: 5
       - keywords: DIRECTIONAL _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 5
@@ -147,6 +185,9 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL SHADOWS_SCREEN _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
           _SPECULARHIGHLIGHTS_OFF
         passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 5
       - keywords: SHADOWS_DEPTH
         passType: 8
       - keywords: SHADOWS_CUBE
@@ -155,13 +196,23 @@ ShaderVariantCollection:
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_CUBE
         passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHATEST_ON
+        passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHATEST_ON
         passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _METALLICGLOSSMAP
         passType: 8
       - keywords: SHADOWS_DEPTH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
       - keywords: INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 8
@@ -211,17 +262,12 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL
         passType: 5
-  - first: {fileID: 2, guid: 0000000000000000f000000000000000, type: 0}
-    second:
-      variants:
-      - keywords: DIRECTIONAL LIGHTPROBE_SH
-        passType: 4
-      - keywords: DIRECTIONAL
-        passType: 5
   - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
       - keywords: _SUNDISK_SIMPLE
+        passType: 0
+      - keywords: _SUNDISK_HIGH_QUALITY
         passType: 0
   - first: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
     second:
@@ -233,6 +279,40 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 210, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 4
+      - keywords: _ALPHABLEND_ON
+        passType: 4
+      - keywords: _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: _ALPHABLEND_ON _COLORADDSUBDIFF_ON
+        passType: 4
+      - keywords: _ALPHAPREMULTIPLY_ON _COLORADDSUBDIFF_ON
+        passType: 4
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHABLEND_ON _COLORADDSUBDIFF_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _COLORADDSUBDIFF_ON
+        passType: 8
+      - keywords: 
+        passType: 13
   - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -297,6 +377,11 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: ETC1_EXTERNAL_ALPHA
+        passType: 0
   - first: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
@@ -309,10 +394,17 @@ ShaderVariantCollection:
         passType: 0
       - keywords: UNITY_UI_ALPHACLIP
         passType: 0
+  - first: {fileID: 4800000, guid: 38ad33c152e32ee46a9bbbb0e656f7e1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
   - first: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
     second:
       variants:
       - keywords: 
+        passType: 0
+      - keywords: OUTLINE_ON
         passType: 0
   - first: {fileID: 4800000, guid: a02a7d8c237544f1962732b55a9aebf1, type: 3}
     second:
@@ -324,6 +416,15 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 4800000, guid: d6708eb99dec8334fb83db57b764097a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
   - first: {fileID: 4800000, guid: 36b8b481cf607814a8cec318f0148d63, type: 3}
     second:
       variants:
@@ -337,8 +438,13 @@ ShaderVariantCollection:
         passType: 5
       - keywords: DIRECTIONAL SHADOWS_SCREEN
         passType: 5
-      - keywords: SHADOWS_DEPTH
-        passType: 8
+  - first: {fileID: 4800000, guid: 5e52aa58207bbf24d8eb8ec969e9ae88, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
   - first: {fileID: 4800000, guid: 8392f54e79937ed4bb1b692a143dc02b, type: 3}
     second:
       variants:
@@ -349,6 +455,11 @@ ShaderVariantCollection:
       variants:
       - keywords: DIRECTIONAL LIGHTPROBE_SH
         passType: 4
+  - first: {fileID: 4800000, guid: c26fc51e445dcfd4db09305d861dc11c, type: 3}
+    second:
+      variants:
+      - keywords: SECONDARY_LIGHT_OFF
+        passType: 0
   - first: {fileID: 4800000, guid: 05a61fa9096530b4c80684da7011ff86, type: 3}
     second:
       variants:
