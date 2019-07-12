@@ -2,11 +2,11 @@
 Latest versions:
 
 <b>Oculus Rift / PC</b><p>
-https://github.com/ddoak/peppy/releases/tag/0.62
+https://github.com/ddoak/peppy/releases/tag/v0.63
 
 <b>Oculus Quest</b><p>
   
-https://github.com/ddoak/peppy/releases/tag/v0.62-q
+https://github.com/ddoak/peppy/releases/tag/v0.63-q
 
 A virtual reality application which allows the user to create and directly manipulate dynamic
 models of polypeptide molecules in real time.
