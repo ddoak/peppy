@@ -1,12 +1,9 @@
 # “Peppy” Interactive Peptide
 Latest versions:
 
-<b>Oculus Rift / PC</b><p>
-https://github.com/ddoak/peppy/releases/tag/v0.63
+<b>Oculus Rift / PC</b> https://github.com/ddoak/peppy/releases/tag/v0.63
 
-<b>Oculus Quest</b><p>
-  
-https://github.com/ddoak/peppy/releases/tag/v0.63-q
+<b>Oculus Quest</b> https://github.com/ddoak/peppy/releases/tag/v0.63-q
 
 A virtual reality application which allows the user to create and directly manipulate dynamic
 models of polypeptide molecules in real time.
