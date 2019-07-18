@@ -186,9 +186,9 @@ public class BackboneUnit : MonoBehaviour {
 
 	private void SetRenderingMode(GameObject go, string shaderName)
 	{
-
-		//Renderer[] allChildRenderers = go.GetComponentsInChildren<Renderer>();
-		//if (_type.ToString() != "UnityEngine.ParticleSystemRenderer")
+		// dodgy cut and paste shaderOutlinedSilhouette renders differently on Rift/Quest/desktop so needs rescaling
+		// 1.0f for Rift, 0.05f for Quest
+		float shaderScalingForQuest = 1f; // 0.05f;
 
 		foreach (Renderer _rendererAtom in renderersAtoms)
 		{
@@ -201,7 +201,7 @@ public class BackboneUnit : MonoBehaviour {
 				if (myPolyPepManager.doRenderDrawMesh)
 				{
 					_rendererAtom.material.shader = shaderOutlinedSilhouette;
-					_rendererAtom.material.SetFloat("_Outline", 0.005f * myPolyPepManager.vdwScale); // quest * 0.05f);
+					_rendererAtom.material.SetFloat("_Outline", 0.005f * myPolyPepManager.vdwScale * shaderScalingForQuest);
 					_rendererAtom.enabled = true;
 				}
 				else
@@ -283,7 +283,7 @@ public class BackboneUnit : MonoBehaviour {
 					if (myPolyPepManager.doRenderDrawMesh)
 					{
 						rendererPhi.material.shader = shaderOutlinedSilhouette;
-						rendererPhi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPhi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale * shaderScalingForQuest));
 						rendererPhi.enabled = true;
 					}
 					else
@@ -309,7 +309,7 @@ public class BackboneUnit : MonoBehaviour {
 					if (myPolyPepManager.doRenderDrawMesh)
 					{
 						rendererPsi.material.shader = shaderOutlinedSilhouette;
-						rendererPsi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPsi.material.SetFloat("_Outline", (0.001f * bondToonRenderScale * shaderScalingForQuest));
 						rendererPsi.enabled = true;
 					}
 					else
@@ -333,7 +333,7 @@ public class BackboneUnit : MonoBehaviour {
 					if (myPolyPepManager.doRenderDrawMesh)
 					{
 						rendererPeptide.material.shader = shaderOutlinedSilhouette;
-						rendererPeptide.material.SetFloat("_Outline", (0.001f * bondToonRenderScale));
+						rendererPeptide.material.SetFloat("_Outline", (0.001f * bondToonRenderScale * shaderScalingForQuest));
 						rendererPeptide.enabled = true;
 					}
 					else

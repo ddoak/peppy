@@ -81,7 +81,8 @@ namespace ControllerSelection {
 
 		public Transform remoteGrab = null;
 		public float remoteGrabTargetDistance;
-		
+
+		public GameObject hitIndicator;
 
 		private Vector3 remoteGrabStartPos = new Vector3(0f, 0f, 0f);
 		private Vector3 remoteGrabTargetPos = new Vector3(0f, 0f, 0f);
@@ -168,8 +169,12 @@ namespace ControllerSelection {
 			{
 
 				myHitPos = hit.point;
-				myOVRPointerVisualizer.rayDrawDistance = hit.distance;
+				myOVRPointerVisualizer.rayDrawDistance = hit.distance * 0.4f;
 				//Debug.Log(hit.distance);
+
+
+				hitIndicator.transform.position = hit.point;
+				hitIndicator.GetComponent<MeshRenderer>().enabled = true;
 
 
 				if (lastHit != null && lastHit != hit.transform)
@@ -382,8 +387,8 @@ namespace ControllerSelection {
 			// Nothing was hit, handle exit callback
 			else
 			{
-				myOVRPointerVisualizer.rayDrawDistance = 10.0f;
-
+				myOVRPointerVisualizer.rayDrawDistance = 1f;
+				hitIndicator.GetComponent<MeshRenderer>().enabled = false;
 				if (lastHit != null) {
 					if (onHoverExit != null) {
 						onHoverExit.Invoke(lastHit);
@@ -489,6 +494,7 @@ namespace ControllerSelection {
 						{
 							
 							// UI - make the 'front' face the pointer
+
 							// flipped because UI GO was initially set up with z facing away
 
 							//Use pointer position
@@ -500,6 +506,7 @@ namespace ControllerSelection {
 							// use the transform of the GO this script is attached to (RawInteraction) as proxy for storing target rotation :)
 							transform.position = remoteGrab.position;
 							transform.LookAt(lookAwayPos, Vector3.up);
+							
 
 							// lerp to target - eases the rotation of the UI - useful when remote grab just initiated
 							remoteGrab.gameObject.transform.rotation = Quaternion.Lerp(remoteGrab.gameObject.transform.rotation, transform.rotation, Time.deltaTime * 10.0f);
