@@ -144,7 +144,8 @@ public class ElectrostaticsManager : MonoBehaviour {
 			//Debug.Log(mcp.rb);
 			if (mcp.rb)
 			{
-				mcp.rb.AddForce(newForce, ForceMode.Impulse);
+				//mcp.rb.AddForce(newForce, ForceMode.Impulse);
+				mcp.rb.AddForceAtPosition(newForce, mcp.transform.position, ForceMode.Impulse);
 			}
 
 			// particle system update

@@ -14,13 +14,15 @@ public class PolyPepManager : MonoBehaviour {
 	public ElectrostaticsManager electrostaticsManager;
 
 	// relative atom radii
-	public float radiusN = 1.0f * 1.55f / 1.7f;
-	public float radiusC = 1.0f;
-	public float radiusO = 1.0f * 1.52f / 1.7f;
-	public float radiusH = 1.0f * 1.2f / 1.7f; //0.75f;
-	public float radiusS = 1.0f * 1.8f / 1.7f; // 1.1f;
-	public float radiusR = 1.1f;
-	public float radiusFreeze = 70.0f;
+	// values set in Awake()
+	public float radiusN;
+	public float radiusC;
+	public float radiusO;
+	public float radiusH;
+	public float radiusS;
+	public float radiusR;
+	public float radiusFreeze;
+	public float radiusGlobalScale;
 
 	public Mesh atomMesh;
 	public Mesh bondMesh;
@@ -160,6 +162,18 @@ public class PolyPepManager : MonoBehaviour {
 
 	void Awake()
 	{
+		{
+			radiusN = 1.0f * 1.55f / 1.7f;
+			radiusC = 1.0f;
+			radiusO = 1.0f * 1.52f / 1.7f;
+			radiusH = 1.0f * 1.2f / 1.7f; //0.75f;
+			radiusS = 1.0f * 1.8f / 1.7f; // 1.1f;
+			radiusR = 1.1f;
+			radiusFreeze = 70.0f;
+			radiusGlobalScale = 1.0f; // magic number
+		}
+
+
 		{
 			//rendering
 			matC = Resources.Load("Materials/mBlack", typeof(Material)) as Material;

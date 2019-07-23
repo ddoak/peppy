@@ -568,10 +568,8 @@ public class PolyPepBuilder : MonoBehaviour {
 		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
 		// physics collider should be constant radius and independent of rendering scale
 		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
-		// SO apply inverse scaling to SphereCollider to compensate
-		myAtom.GetComponent<SphereCollider>().radius = 1.2f * relativeRadiusAtomType / scaleVDW; 
-		// 1.2f is magic number
-
+		// SO apply inverse scaling to SphereCollider to compensate 
+		myAtom.GetComponent<SphereCollider>().radius = myPolyPepManager.radiusGlobalScale * relativeRadiusAtomType / scaleVDW;
 	}
 
 	private void ScaleFreeze(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
@@ -682,6 +680,7 @@ public class PolyPepBuilder : MonoBehaviour {
 		}
 		else
 		{
+			// TODO should go back to slider value
 			go.GetComponent<Rigidbody>().mass = 1;
 			go.GetComponent<Rigidbody>().drag = 5;
 			go.GetComponent<Rigidbody>().angularDrag = 5;
