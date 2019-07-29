@@ -22,7 +22,7 @@ public class PolyPepManager : MonoBehaviour {
 	public float radiusS;
 	public float radiusR;
 	public float radiusFreeze;
-	public float radiusGlobalScale;
+	public float radiusColliderGlobalScale;
 
 	public Mesh atomMesh;
 	public Mesh bondMesh;
@@ -45,6 +45,7 @@ public class PolyPepManager : MonoBehaviour {
 	public List<Matrix4x4> myAllRAtomMatrices = new List<Matrix4x4>();
 	public List<Matrix4x4> myAllSAtomMatrices = new List<Matrix4x4>();
 
+	public Vector3 refMeshAtomScale = new Vector3(0.1f, 0.1f, 0.1f); // matches prefabs
 	public Vector3 drawMeshAtomScale = new Vector3(0.1f, 0.1f, 0.1f); // matches prefabs
 	//private Vector3 drawMeshAtomScale = new Vector3(5f, 5f, 5f); // if use maya sphere
 	public Vector3 drawMeshBondScale = new Vector3(0.025f, 0.05f, 0.025f); // matches prefabs
@@ -163,14 +164,21 @@ public class PolyPepManager : MonoBehaviour {
 	void Awake()
 	{
 		{
-			radiusN = 1.0f * 1.55f / 1.7f;
-			radiusC = 1.0f;
-			radiusO = 1.0f * 1.52f / 1.7f;
-			radiusH = 1.0f * 1.2f / 1.7f; //0.75f;
-			radiusS = 1.0f * 1.8f / 1.7f; // 1.1f;
-			radiusR = 1.1f;
-			radiusFreeze = 70.0f;
-			radiusGlobalScale = 1.0f; // magic number
+			radiusC = 1.7f;
+			radiusN = 1.55f;
+			radiusO = 1.52f;
+			radiusH = 1.2f; 
+			radiusS = 1.8f; 
+			radiusR = 1.8f; 
+
+
+			radiusColliderGlobalScale = 0.675f; // empirical magic number
+
+
+			radiusFreeze = 70.0f; // cosmetic - keep freeze shell visible
+
+			drawMeshAtomScale = refMeshAtomScale / radiusC; // normalised to C radius
+
 		}
 
 
@@ -1238,8 +1246,8 @@ public class PolyPepManager : MonoBehaviour {
 			foreach (PolyPepBuilder _ppb in allPolyPepBuilders)
 			{
 				// render ATOMS
-				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, drawMeshAtomScale * vdwScale);
-				RenderMeshTransformList(atomMesh, matC, _ppb.mySideChainCAtomTransforms, drawMeshAtomScale * vdwScale);
+				RenderMeshTransformList(atomMesh, matC, _ppb.myCAtomTransforms, drawMeshAtomScale * radiusC * vdwScale);
+				RenderMeshTransformList(atomMesh, matC, _ppb.mySideChainCAtomTransforms, drawMeshAtomScale * radiusC * vdwScale);
 
 				RenderMeshTransformList(atomMesh, matN, _ppb.myNAtomTransforms, drawMeshAtomScale * radiusN * vdwScale);
 				RenderMeshTransformList(atomMesh, matN, _ppb.mySideChainNAtomTransforms, drawMeshAtomScale * radiusN * vdwScale);
@@ -1313,7 +1321,7 @@ public class PolyPepManager : MonoBehaviour {
 					foreach (Transform _tf in _ppb.myCAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusC));
 					}
 					foreach (Transform _tf in _ppb.myNAtomTransforms)
 					{
@@ -1343,7 +1351,7 @@ public class PolyPepManager : MonoBehaviour {
 					foreach (Transform _tf in _ppb.mySideChainCAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+						myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusC));
 					}
 					foreach (Transform _tf in _ppb.mySideChainNAtomTransforms)
 					{
@@ -1437,7 +1445,7 @@ public class PolyPepManager : MonoBehaviour {
 					foreach (Transform _tf in _ppb.myCAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusC));
 					}
 					foreach (Transform _tf in _ppb.myNAtomTransforms)
 					{
@@ -1467,7 +1475,7 @@ public class PolyPepManager : MonoBehaviour {
 					foreach (Transform _tf in _ppb.mySideChainCAtomTransforms)
 					{
 						//Graphics.DrawMesh(atomMesh, _tf.position, _tf.rotation, _mat, 0, null);
-						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale));
+						_ppb.myAllCAtomMatrices.Add(Matrix4x4.TRS(_tf.position, _tf.rotation, drawMeshAtomScale * vdwScale * radiusC));
 					}
 					foreach (Transform _tf in _ppb.mySideChainNAtomTransforms)
 					{

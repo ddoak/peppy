@@ -201,7 +201,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1106350776754678}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2.8
   m_Drag: 1
   m_AngularDrag: 1
   m_UseGravity: 0
@@ -222,6 +222,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   residue: 0
+  shaderStandard: {fileID: 0}
+  shaderToonOutline: {fileID: 0}
+  shaderOutlinedSilhouette: {fileID: 0}
   activeSequenceSelect: 0
   controllerHoverOn: 0
   controllerSelectOn: 0
@@ -352,7 +355,7 @@ Transform:
   m_GameObject: {fileID: 1263304786574304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.24, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.89411765, y: 0.8941177, z: 0.8941177}
   m_Children: []
   m_Father: {fileID: 4364595589330640}
   m_RootOrder: 0

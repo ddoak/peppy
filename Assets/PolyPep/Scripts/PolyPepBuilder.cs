@@ -564,12 +564,12 @@ public class PolyPepBuilder : MonoBehaviour {
 	private void ScaleAtom(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
 	{
 		// CPK / VDW slider changes rendering
-		float atomDisplayScale = relativeRadiusAtomType * scaleVDW;
+		float atomDisplayScale = scaleVDW * relativeRadiusAtomType / myPolyPepManager.radiusC;
 		myAtom.transform.localScale = new Vector3(atomDisplayScale, atomDisplayScale, atomDisplayScale);
 		// physics collider should be constant radius and independent of rendering scale
 		// BUT in transform hierarchy the SphereCollider inherits the transform.localscale
 		// SO apply inverse scaling to SphereCollider to compensate 
-		myAtom.GetComponent<SphereCollider>().radius = myPolyPepManager.radiusGlobalScale * relativeRadiusAtomType / scaleVDW;
+		myAtom.GetComponent<SphereCollider>().radius = myPolyPepManager.radiusColliderGlobalScale * relativeRadiusAtomType / scaleVDW;
 	}
 
 	private void ScaleFreeze(Transform myAtom, float scaleVDW, float relativeRadiusAtomType)
@@ -643,14 +643,14 @@ public class PolyPepBuilder : MonoBehaviour {
 	{
 		if (myPolyPepManager.dragHigh)
 		{
-			go.GetComponent<Rigidbody>().mass = 1;
+			//go.GetComponent<Rigidbody>().mass = 1;
 			go.GetComponent<Rigidbody>().drag = 25;
 			go.GetComponent<Rigidbody>().angularDrag = 20;
 		}
 		else
 		{
 		// empirical values which seem to behave well
-		go.GetComponent<Rigidbody>().mass = 1;
+		//go.GetComponent<Rigidbody>().mass = 1;
 		go.GetComponent<Rigidbody>().drag = 5;
 		go.GetComponent<Rigidbody>().angularDrag = 5;
 		}
@@ -1814,6 +1814,24 @@ public void SetAllColliderIsTrigger(bool value)
 		UpdateHbonds();
 		UpdateHbondParticleSystems();
 		DoJiggle();
+		//{
+		//	// Geometry check
+		//	int i = 2;
+		//	Vector3 NPos = polyArr[i - 2].transform.position;
+		//	Vector3 CaPos = polyArr[i - 1].transform.position;
+		//	Vector3 RPos = polyArr[i - 1].transform.Find("tf_sidechain/R_sidechain").transform.position;
+		//	Vector3 HPos = polyArr[i - 1].transform.Find("tf_H/H").transform.position;
+		//	Vector3 CPos = polyArr[i].transform.position;
+
+		//	Debug.Log("N Calpha C angle = " + Mathf.Round( Vector3.Angle((NPos - CaPos), (CPos - CaPos))) );
+		//	Debug.Log("N Calpha H angle = " + Mathf.Round( Vector3.Angle((NPos - CaPos), (HPos - CaPos))) );
+		//	Debug.Log("N Calpha R angle = " + Mathf.Round( Vector3.Angle((NPos - CaPos), (RPos - CaPos))) );
+
+		//	Debug.Log("Calpha R H angle = " + Mathf.Round( Vector3.Angle((RPos - CaPos), (HPos - CaPos))) );
+
+		//	Debug.Log("C Calpha H angle = " + Mathf.Round( Vector3.Angle((CPos - CaPos), (HPos - CaPos))) );
+		//	Debug.Log("C Calpha R angle = " + Mathf.Round( Vector3.Angle((CPos - CaPos), (RPos - CaPos))) );
+		//}
 	}
 }
 

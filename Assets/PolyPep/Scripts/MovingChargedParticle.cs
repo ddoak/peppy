@@ -39,7 +39,7 @@ public class MovingChargedParticle : ChargedParticle {
 
 
 		ParticleSystem.MainModule _psMain = myChargedParticle_ps.main;
-		Debug.Log(gameObject + " " + charge);
+		//Debug.Log(gameObject + " " + charge);
 		if (charge < 0)
 		{
 			_psMain.startColor = new Color(0.7f, 0.3f, 0.3f, 0.8f); //Color.red;

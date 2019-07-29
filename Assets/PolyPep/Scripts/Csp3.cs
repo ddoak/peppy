@@ -16,6 +16,8 @@ public class Csp3 : MonoBehaviour {
 	public float sp2ThetaH1 = 120f;
 	public float sp2ThetaH2 = 120f;
 
+	private float massScale = 0.1f; // i.e. 1 AMU = 0.1kg
+
 	// dev: keep prefab dev colours for atoms
 	private bool keepDebugAtomMaterial;
 
@@ -261,6 +263,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToCH3()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 15f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -306,6 +309,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToCH2()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 14f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -348,6 +352,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToCH2KeepH3Bond()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 14f;
 		// PRO CD
 		foreach (Transform _H in HtfList)
 		{
@@ -390,6 +395,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToCH1()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 13f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -432,6 +438,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToS()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 32f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -481,6 +488,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToSH()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 33f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -537,6 +545,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToOH()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 17f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -589,6 +598,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertToNH3()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 17f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -738,6 +748,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToCOO()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 48f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -789,6 +800,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToCO()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 28f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -840,6 +852,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToC(bool keepH1Bond, bool keepH2Bond)
 	{
+		GetComponent<Rigidbody>().mass = massScale * 12f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -893,6 +906,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToO() //ASP GLU
 	{
+		GetComponent<Rigidbody>().mass = massScale * 16f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -944,6 +958,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToNH2()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 16f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -997,6 +1012,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToNH()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 15f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)
@@ -1048,6 +1064,7 @@ public class Csp3 : MonoBehaviour {
 
 	public void ConvertSp2ToCH()
 	{
+		GetComponent<Rigidbody>().mass = massScale * 13f;
 		foreach (Transform _H in HtfList)
 		{
 			switch (_H.name)

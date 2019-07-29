@@ -797,7 +797,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 		// add electrostatics moving charged particle script	
 
-		////GROMOS partical charges
+		////GROMOS partial charges
 		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OE1, -0.635f);
 		//AssignElectrostaticsForAtom(residue_cs.gameObject, _OE2, -0.635f);
 		//AssignElectrostaticsForAtom(residue_cs.gameObject, _CD, 0.27f);
