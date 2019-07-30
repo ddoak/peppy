@@ -12,6 +12,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 	public bool electrostaticsOn = false;
 	public float electrostaticsStrength;
 	public bool showElectrostatics;
+	public float electrostaticsScale = (5.0f * 0.0025f);
 
 	public PolyPepManager myPolyPepManager;
 
@@ -126,7 +127,7 @@ public class ElectrostaticsManager : MonoBehaviour {
 
 
 					float distance = Vector3.Distance(mcp.transform.position, mcp2.transform.position);
-					float force = (5.0f * 0.0025f * electrostaticsStrength * mcp.charge * mcp2.charge) / Mathf.Pow(distance, 2);
+					float force = (electrostaticsScale * electrostaticsStrength * mcp.charge * mcp2.charge) / Mathf.Pow(distance, 2);
 
 					Vector3 direction = mcp.transform.position - mcp2.transform.position;
 					direction.Normalize();

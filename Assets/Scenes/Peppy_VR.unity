@@ -1771,6 +1771,7 @@ MonoBehaviour:
   electrostaticsOn: 0
   electrostaticsStrength: 0
   showElectrostatics: 0
+  electrostaticsScale: 0.012499999
   myPolyPepManager: {fileID: 0}
 --- !u!4 &48948581
 Transform:
@@ -4748,7 +4749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4599515527480974, guid: ccd6fe01c7b903043a3ae5440138c34f, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4599515527480974, guid: ccd6fe01c7b903043a3ae5440138c34f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7667,7 +7668,7 @@ Transform:
   - {fileID: 874065041}
   - {fileID: 1403679120}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!54 &258614771
 Rigidbody:
@@ -11403,7 +11404,7 @@ MonoBehaviour:
   radiusS: 1.0588235
   radiusR: 1.1
   radiusFreeze: 70
-  radiusGlobalScale: 0
+  radiusColliderGlobalScale: 0
   atomMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   bondMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   testMaterial: {fileID: 0}
@@ -11422,6 +11423,7 @@ MonoBehaviour:
   myAllHAtomMatrices: []
   myAllRAtomMatrices: []
   myAllSAtomMatrices: []
+  refMeshAtomScale: {x: 0.1, y: 0.1, z: 0.1}
   drawMeshAtomScale: {x: 0.1, y: 0.1, z: 0.1}
   drawMeshBondScale: {x: 0.025, y: 0.05, z: 0.025}
   doRenderDrawMesh: 1
@@ -24486,7 +24488,7 @@ Transform:
   m_LocalScale: {x: 0.25, y: 0.5, z: 0.25}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &762256688
 BoxCollider:
@@ -29152,7 +29154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4599515527480974, guid: ccd6fe01c7b903043a3ae5440138c34f, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccd6fe01c7b903043a3ae5440138c34f, type: 3}
@@ -45549,7 +45551,7 @@ Transform:
   - {fileID: 1799263095}
   - {fileID: 1802873875}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!1 &1484133722
 GameObject:
@@ -53944,7 +53946,8 @@ MonoBehaviour:
   water: {fileID: 1106350776754678, guid: 5ef5da863412fb147b0da13ac79ae77c, type: 3}
   numMol: 30
   waters: []
-  myPolyPepManager: {fileID: 0}
+  myPolyPepManager: {fileID: 382481194}
+  myElectrostaticsManager: {fileID: 0}
 --- !u!65 &1720028322
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -66763,7 +66766,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4001707555931584, guid: 4b3c8b379c73fb846a8d0b588e46afb2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -10,12 +10,17 @@ public class WaterManager : MonoBehaviour
 	public List<GameObject> waters;
 	public PolyPepManager myPolyPepManager;
 
+	// electrostatics
+	public ElectrostaticsManager myElectrostaticsManager;
+
 	private int molCount;
 
 	// Start is called before the first frame update
 	void Start()
     {
 		myPolyPepManager = GameObject.Find("PolyPepManager").GetComponent<PolyPepManager>();
+		myElectrostaticsManager = GameObject.Find("ElectrostaticsManager").GetComponent<ElectrostaticsManager>();
+
 		DoStartingSpawn(numMol, 1);
     }
 
@@ -43,11 +48,14 @@ public class WaterManager : MonoBehaviour
 
 		_water.gameObject.name = "water_" + molCount;
 
-
+		
 		molCount++;
 
 		waters.Add(_water);
 
+		myElectrostaticsManager.RegisterMovingChargedParticle(_water.transform.Find("O").GetComponent<MovingChargedParticle>());
+		myElectrostaticsManager.RegisterMovingChargedParticle(_water.transform.Find("H1").GetComponent<MovingChargedParticle>());
+		myElectrostaticsManager.RegisterMovingChargedParticle(_water.transform.Find("tf_H/H2").GetComponent<MovingChargedParticle>());
 	}
 
 	private void DoJiggle()
