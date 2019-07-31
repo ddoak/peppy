@@ -16,6 +16,10 @@ public class Csp3 : MonoBehaviour {
 	public float sp2ThetaH1 = 120f;
 	public float sp2ThetaH2 = 120f;
 
+	private float sp2BondLength;
+	private float sp3BondLength;
+	private float cHBondLength;
+
 	private float massScale = 0.1f; // i.e. 1 AMU = 0.1kg
 
 	// dev: keep prefab dev colours for atoms
@@ -23,6 +27,16 @@ public class Csp3 : MonoBehaviour {
 
 	private void Awake()
 	{
+		// from GROMOS
+		// sp2 aromatic C6 is 1.4 
+		// sp2 upper range is ~1.5
+		// sp3 equiv Bond type 27 from GROMOS C, CHn = 1.53
+
+		// simplified
+		sp2BondLength = 0.1f * 1.5f;
+		sp3BondLength = 0.1f * 1.5f; 
+		cHBondLength = 0.1f * 1.0f;
+
 		keepDebugAtomMaterial = false;
 		//Debug.Log(atomType);
 		switch (atomType)
@@ -139,9 +153,8 @@ public class Csp3 : MonoBehaviour {
 		{
 			//  generate tetrahedral sp3 positions from cube vertices
 			//Debug.Log(child);
-			float _scale = 0.1f * 1.46f / Mathf.Pow(3, 0.5f);
-			// unit cube generates bond length of 3^1/2 
-			// PolyPepBuilder.cs: float bondLengthAmideCalpha = 1.46f; 
+			float _scale = sp3BondLength / Mathf.Pow(3, 0.5f);
+
 			bool addSocketOffset = true;
 			switch (child.name)
 			{
@@ -254,7 +267,11 @@ public class Csp3 : MonoBehaviour {
 
 	private void SetAsHydrogenAtom(Transform _H)
 	{
-		_H.transform.position += _H.transform.forward * 0.05f;
+		// same func called for sp2 and sp3 currently - so all -H bonds equiv
+		// _H.transform.forward points back along bond toward sp3 atom
+		// this converts a C-C bond length to a C-H bond length
+		// by moving backward along the bond the difference between the sp3 C-C bond and the C-H bond
+		_H.transform.position += _H.transform.forward * (sp3BondLength - cHBondLength);
 		if (!keepDebugAtomMaterial)
 		{
 			_H.GetComponent<Renderer>().material.color = Color.white;
@@ -275,11 +292,6 @@ public class Csp3 : MonoBehaviour {
 				case "H_2":
 				case "H_3":
 					SetAsHydrogenAtom(_H);
-					//_H.transform.position += _H.transform.forward * 0.05f;
-					//if (!keepDebugAtomMaterial)
-					//{
-					//	_H.GetComponent<Renderer>().material.color = Color.white;
-					//}
 					break;
 				default:
 					break;
@@ -521,9 +533,6 @@ public class Csp3 : MonoBehaviour {
 					SetBondUnused(_bond);
 					break;
 				case "tf_bond_H3":
-					//_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - 0.25f);
-					//_bond.localScale = new Vector3(0.25f, 0.5f, 0.25f);
-					//_bond.GetComponent<Renderer>().material.color = Color.grey;
 					SetAsBondToH(_bond);
 					break;
 				default:
@@ -812,8 +821,8 @@ public class Csp3 : MonoBehaviour {
 				case "H_1":
 					_H.name = "O_1";
 					_H.tag = "O";
-					_H.transform.position += _H.transform.forward * 0.02f; //check COO- bond lengths
-																		   //_H.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f); // will be overwriten by ScaleVDW() - doh!
+					_H.transform.position += _H.transform.forward * 0.025f; //check COO- bond lengths
+					//_H.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f); // will be overwriten by ScaleVDW() - doh!
 					if (!keepDebugAtomMaterial)
 					{
 						_H.GetComponent<Renderer>().material.color = Color.red;
@@ -929,7 +938,7 @@ public class Csp3 : MonoBehaviour {
 					if (!keepDebugAtomMaterial)
 					{
 						// rescaling 0 bond 
-						// TODO - translation is not correct - but will do for now
+						// TODO - translation is not exactly correct 
 						_bond.localPosition = new Vector3(_bond.localPosition.x, _bond.localPosition.y, _bond.localPosition.z - ((1.5f-1.25f)/1.5f));
 						_bond.localScale = new Vector3(0.25f, (0.75f * (1.25f/1.5f)), 0.25f);
 						_bond.GetComponent<Renderer>().material.color = Color.grey;
@@ -1113,7 +1122,8 @@ public class Csp3 : MonoBehaviour {
 		{
 			//  generate sp2 positions at trigonal 120 degree rotations
 			//Debug.Log(child);
-			float _scale = 0.146f; //  C-C bond will be 1.46
+			//float _scale = 0.146f; //  C-C bond will be 1.46
+			float _scale = sp2BondLength;
 			bool addSocketOffset = true;
 			//float theta = 120.0f * Mathf.Deg2Rad;
 			switch (child.name)

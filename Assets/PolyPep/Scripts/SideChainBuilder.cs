@@ -771,7 +771,8 @@ public class SideChainBuilder : MonoBehaviour {
 		{
 			_OE1.transform.position = _CD.transform.Find("H_1").position;
 			_OE1.transform.LookAt(_CD.transform.position);
-			//OC bond should be 1.25 vs 1.5 (approx - from CHARRM toppar)
+			//TODO - tidy this up!
+			//OC bond should be 1.25 vs 1.5 (approx - from CHARRM / GROMOS)
 			Vector3 OCBond = _CD.transform.position - _OE1.transform.position;
 			_OE1.transform.position += OCBond * (( 1.5f - 1.25f) / 1.5f);
 
@@ -1238,7 +1239,7 @@ public class SideChainBuilder : MonoBehaviour {
 
 			// H-CD bond is longer than N-H	
 			Vector3 NtoH = HN.position - amide.transform.position;
-			_CD.transform.position = amide.transform.position + (1.5f * NtoH);
+			_CD.transform.position = amide.transform.position + (1.4f * NtoH);
 
 			{
 				// align along bond

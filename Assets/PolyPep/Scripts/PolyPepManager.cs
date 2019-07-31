@@ -72,7 +72,7 @@ public class PolyPepManager : MonoBehaviour {
 
 	public bool hbondsOn = false;
 	public float hbondStrength = 100.0f;
-	public float hbondScale = 500.0f; // multiplier between UI slider strength and value used in config joint
+	public float hbondScale = 1000.0f; // prev 500.0f multiplier between UI slider strength and value used in config joint
 
 	public int UIDefinedSecondaryStructure { get; set; }
 

@@ -39,8 +39,8 @@ public class PolyPepBuilder : MonoBehaviour {
 
 	// used in dynamic hbond configurable joints
 	// highly empirical magic numbers
-	float hBondModelInnerLength = 1.2f;
-	float hBondModelOuterLength = 3.5f;
+	float hBondModelInnerLength = 1.6f; // prev 1.2f;
+	float hBondModelOuterLength = 3.2f; // prev 3.5f;
 
 	public int secondaryStructure { get; set; } // = 0;
 
@@ -888,9 +888,11 @@ public void SetAllColliderIsTrigger(bool value)
 			float HBondLength = hBondModelInnerLength;
 
 			sjHbond.minDistance = HBondLength * scale;
-			sjHbond.maxDistance = HBondLength * scale;
+			sjHbond.maxDistance = -Mathf.Infinity; // prev HBondLength * scale;
 			sjHbond.tolerance = HBondLength * scale * 0.1f;
 			sjHbond.enableCollision = true;
+
+
 		}
 
 		{
@@ -923,7 +925,7 @@ public void SetAllColliderIsTrigger(bool value)
 			float HBondLength = hBondModelOuterLength;
 
 			sjHbond2.minDistance = HBondLength * scale;
-			sjHbond2.maxDistance = HBondLength * scale;
+			sjHbond2.maxDistance = Mathf.Infinity; // prev HBondLength * scale;
 			sjHbond2.tolerance = HBondLength * scale * 0.1f;
 			sjHbond2.enableCollision = true;
 		}
@@ -958,7 +960,7 @@ public void SetAllColliderIsTrigger(bool value)
 			float HBondLength = hBondModelOuterLength;
 
 			sjHbond3.minDistance = HBondLength * scale;
-			sjHbond3.maxDistance = HBondLength * scale;
+			sjHbond3.maxDistance = Mathf.Infinity; // prev HBondLength * scale;
 			sjHbond3.tolerance = HBondLength * scale * 0.1f;
 			sjHbond3.enableCollision = true;
 		}
