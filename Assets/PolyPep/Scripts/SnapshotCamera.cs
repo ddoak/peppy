@@ -117,3 +117,7 @@ public class SnapshotCamera : MonoBehaviour {
 }
 
 // https://forum.unity.com/threads/how-to-save-manually-save-a-png-of-a-camera-view.506269/
+//
+// Quest? /sdcard ?
+// https://twitter.com/ID_AA_Carmack/status/1159130817936941057
+// https://unitycoder.com/blog/2019/08/18/read-file-from-oculus-quest-sdcard-folder/

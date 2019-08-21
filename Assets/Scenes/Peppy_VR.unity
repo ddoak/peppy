@@ -11432,7 +11432,7 @@ MonoBehaviour:
   renderBonds: 1
   renderMat4x4: 1
   skylight: {fileID: 170076734}
-  collidersOn: 0
+  collidersOn: 1
   vdwScale: 1
   dragHigh: 0
   dragStrength: 5

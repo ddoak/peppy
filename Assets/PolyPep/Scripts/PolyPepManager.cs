@@ -63,7 +63,7 @@ public class PolyPepManager : MonoBehaviour {
 	public Light skylight;
 	private Quaternion skylightTargetRot;
 
-	public bool collidersOn = false;
+	public bool collidersOn = true;
 	public float vdwScale = 1.0f;
 
 	public bool dragHigh = false;
