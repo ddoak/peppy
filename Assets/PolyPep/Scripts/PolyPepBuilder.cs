@@ -588,11 +588,15 @@ public class PolyPepBuilder : MonoBehaviour {
 			SetRbDrag(GetCalphaForResidue(resid));
 			SetRbDrag(GetCarbonylForResidue(resid));
 
-			//Debug.Log(chainArr[resid].GetComponent<Residue>().sidechain);
-			foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
-			{
-				SetRbDrag(_sidechainGO);
-			}
+			UpdateSidechainDrag(resid);
+		}
+	}
+
+	public void UpdateSidechainDrag(int resid)
+	{
+		foreach (GameObject _sidechainGO in chainArr[resid].GetComponent<Residue>().sideChainList)
+		{
+			SetRbDrag(_sidechainGO);
 		}
 	}
 

@@ -60,6 +60,9 @@ public class PolyPepManager : MonoBehaviour {
 	public bool renderBonds = false;
 	public bool renderMat4x4 = true;
 
+	public bool autoMutate = true;
+	public bool mutateClearSelection = false;
+
 	public Light skylight;
 	private Quaternion skylightTargetRot;
 
@@ -555,6 +558,19 @@ public class PolyPepManager : MonoBehaviour {
 		}
 	}
 
+	public void UpdateAutoMutateFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
+		autoMutate = value;
+	}
+	public void UpdateMutateClearSelectionFromUI(bool value)
+	{
+		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
+		myAudioManager.PlayOnOffSfx(value);
+		mutateClearSelection = value;
+	}
+
 	public void UpdateRendertestFromUI(bool value)
 	{
 		//Debug.Log("hello from the manager! ---> " + scaleVDWx10);
@@ -900,6 +916,7 @@ public class PolyPepManager : MonoBehaviour {
 			_ppb.SetAllColliderIsTrigger(!collidersOn);
 
 			//force update of H Atom rendering
+
 			UpdateShowHAtomsFromUI(showHydrogenAtoms);
 
 			UpdateAllBackboneRenderTransformLists();
@@ -995,6 +1012,21 @@ public class PolyPepManager : MonoBehaviour {
 			}
 		}
 		UISelectedAminoAcid = storedUISelectedAminoAcid;
+
+		{
+			// auto mutate and clear toggle and selection
+			// GD request 21/08/2019
+			if (autoMutate)
+			{
+				MutateSelectedResiduesFromUI();
+				myToggle.isOn = false;
+			}
+			if (mutateClearSelection)
+			{
+				SelectAllFromUI(false);
+			}
+		}
+
 	}
 
 	public void UpdateShowHAtomsFromUI(bool value)

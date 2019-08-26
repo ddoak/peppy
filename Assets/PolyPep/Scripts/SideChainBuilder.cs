@@ -201,7 +201,8 @@ public class SideChainBuilder : MonoBehaviour {
 			}
 		}
 
-
+		// built sidechain will have default drag
+		ppb_cs.UpdateSidechainDrag(resid);
 	}
 
 	void Build_GLY(Residue residue_cs)
