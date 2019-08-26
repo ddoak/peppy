@@ -1,7 +1,7 @@
 # “Peppy” Interactive Peptide
 Latest versions:
 
-<b>Oculus Rift/PC</b> https://github.com/ddoak/peppy/releases/tag/v0.63
+<b>Oculus Rift/PC</b> https://github.com/ddoak/peppy/releases/tag/v0.64b
 
 <b>Oculus Quest</b> https://github.com/ddoak/peppy/releases/tag/v0.63-q
 
